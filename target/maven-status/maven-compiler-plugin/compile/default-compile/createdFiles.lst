@@ -1,0 +1,12 @@
+com\rottentomatoes\movieapi\domain\repository\CastPersonRepository.class
+com\rottentomatoes\movieapi\domain\repository\MovieRepository.class
+com\rottentomatoes\movieapi\domain\model\Movie.class
+com\rottentomatoes\movieapi\domain\model\Person.class
+com\rottentomatoes\movieapi\domain\repository\MovieToCastPersonsRepository.class
+com\rottentomatoes\movieapi\WebConfig.class
+com\rottentomatoes\movieapi\domain\repository\PersonRepository.class
+com\rottentomatoes\movieapi\filter\MovieApiKatharsisFilter$1.class
+com\rottentomatoes\movieapi\MovieApiApplication.class
+com\rottentomatoes\movieapi\domain\repository\CastPersonToPersonRepository.class
+com\rottentomatoes\movieapi\domain\model\CastPerson.class
+com\rottentomatoes\movieapi\filter\MovieApiKatharsisFilter.class
