@@ -1,4 +1,5 @@
-# spring-boot-simple-example
+# movie-api
+Core Movie API
 
 ## How to run with Maven
 
