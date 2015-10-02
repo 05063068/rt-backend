@@ -1,7 +1,7 @@
 # movie-api
 Core Movie API
 
-## Set up DB tunnels to RDS DB
+## Set up DB tunnel to RDS DB
     Account on jump server required (jump.aws.prod.flixster.com)
     
     Edit your ~/.ssh/config 
@@ -10,6 +10,10 @@ Core Movie API
      User peterl 
      HostName jump.aws.prod.flixster.com
      LocalForward 10001 rds-shared-slave.cfzxgxfxhefu.us-west-2.rds.amazonaws.com:3306
+     
+    
+    After setting this up, establish your tunnel by connecting to the jump server
+    >ssh jump
 
 ## How to run with Maven
 
