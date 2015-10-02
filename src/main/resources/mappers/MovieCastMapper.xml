@@ -4,7 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieCastMapper">
-    <select id="selectMovieCastById" resultMap="castPersonResultMap">
+    <select id="selectMovieCastById" resultMap="movieCastResultMap">
         SELECT movie_cast.id, movie_cast.role, movie_person.name movie_person_name, movie_person.id movie_person_id, movie_character.name character_name
         FROM movie_person, movie_cast, movie_character
         WHERE movie_cast.id = #{id}
@@ -16,7 +16,7 @@
         AND movie_person.public_ind = 1 
     </select>
 
-    <select id="selectPersonsForMovie" resultMap="castPersonResultMap">
+    <select id="selectPersonsForMovie" resultMap="movieCastResultMap">
         SELECT movie_cast.id, movie_cast.role, movie_person.name movie_person_name, movie_person.id movie_person_id, movie_character.name character_name
         FROM movie_person, movie_cast, movie_character
         WHERE movie_cast.movie_id = #{id}
@@ -29,7 +29,7 @@
     </select>
     
         
-    <resultMap id="castPersonResultMap" type="com.rottentomatoes.movieapi.domain.model.CastPerson">
+    <resultMap id="movieCastResultMap" type="com.rottentomatoes.movieapi.domain.model.MovieCast">
         <id property="id" column="id" />
         <result property="role" column="role" />
         

@@ -29,7 +29,7 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
-public class MovieToCastPersonRepository implements RelationshipRepository<Movie, Long, MovieCast, Long> {
+public class MovieToMovieCastRepository implements RelationshipRepository<Movie, Long, MovieCast, Long> {
     @Autowired
     private SqlSession sqlSession;
     

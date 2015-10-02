@@ -20,6 +20,7 @@ import io.katharsis.resource.annotations.JsonApiId;
 import io.katharsis.resource.annotations.JsonApiIncludeByDefault;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;
+import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +36,6 @@ public class Movie {
     
     @JsonApiToMany
     @JsonApiIncludeByDefault
-    private Iterable<MovieCast> castPersons;
+    private Iterable<MovieCast> movieCast;
     
 }

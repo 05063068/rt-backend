@@ -13,7 +13,7 @@
         <id property="id" column="movie_id" />
         <result property="title" column="title"/>
        
-        <collection property="castPersons" column="movie_id" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie" />
+        <collection property="movieCast" column="movie_id" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie" />
     </resultMap>
 
 
