@@ -36,6 +36,7 @@
                 
         <association property="person" javaType="com.rottentomatoes.movieapi.domain.model.Person">
             <id property="id" column="movie_person_id" />
+            <result property="name" column="movie_person_name" />
         </association>
         
         <collection property="characters" javaType="list" ofType="java.lang.String">

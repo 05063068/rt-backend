@@ -35,7 +35,9 @@ public class Movie {
     private String title;
     
     @JsonApiToMany
-    @JsonApiIncludeByDefault
     private Iterable<MovieCast> movieCast;
+    
+    @JsonApiToMany
+    private Iterable<Review> reviews;
     
 }

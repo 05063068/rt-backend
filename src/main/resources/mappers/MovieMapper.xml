@@ -14,6 +14,8 @@
         <result property="title" column="title"/>
        
         <collection property="movieCast" column="movie_id" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie" />
+        
+        <collection property="reviews" column="movie_id" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />
     </resultMap>
 
 
