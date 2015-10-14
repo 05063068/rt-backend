@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
+    <select id="selectReviewById" resultMap="reviewResultMap">
+        SELECT review.*, critic.name critic_name, publication.name publication_name
+        FROM review
+        LEFT JOIN critic ON review.critic_id=critic.id 
+        LEFT JOIN publication ON review.publication_id=publication.id
+        WHERE review.id = #{id}
+    </select>
+    
+    <select id="selectReviewsForMovie" resultMap="reviewResultMap">
+        SELECT review.*, critic.name critic_name, publication.name publication_name 
+        FROM review 
+        LEFT JOIN critic ON review.critic_id=critic.id 
+        LEFT JOIN publication ON review.publication_id=publication.id
+        WHERE review.movie_id = #{movie_id}
+    </select>
+
+    
+    <resultMap id="reviewResultMap" type="com.rottentomatoes.movieapi.domain.model.Review">
+        <id property="id" column="id" />
+        <result property="movie_id" column="movie_id"/>
+        <result property="quote" column="quote"/>
+        
+        <association property="critic" javaType="com.rottentomatoes.movieapi.domain.model.Critic">
+            <id property="id" column="critic_id"/>
+            <result property="name" column="critic_name"/>
+        </association>
+        <association property="publication" javaType="com.rottentomatoes.movieapi.domain.model.Publication">
+            <id property="id" column="publication_id"/>
+            <result property="name" column="publication_name"/>
+        </association>
+       
+
+    </resultMap>
+
+
+</mapper>
