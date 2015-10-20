@@ -59,8 +59,16 @@
     <dependency>
         <groupId>io.katharsis</groupId>
         <artifactId>katharsis-servlet</artifactId>
-        <version>0.9.4</version>
+        <version>1.0.1</version>
     </dependency>
+    
+    <!-- 
+    <dependency>
+        <groupId>io.katharsis</groupId>
+        <artifactId>katharsis-core</artifactId>
+        <version>1.0.1-FLIXSTER-1</version>
+    </dependency>
+     -->
     <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
@@ -81,6 +89,16 @@
         <groupId>org.mybatis</groupId>
         <artifactId>mybatis-spring</artifactId>
         <version>1.2.3</version>
+    </dependency>
+    <dependency>
+     <groupId>org.scala-lang</groupId>
+     <artifactId>scala-library</artifactId>
+     <version>2.10.4</version>
+    </dependency>
+    <dependency>
+     <groupId>org.scala-lang</groupId>
+     <artifactId>scala-library</artifactId>
+     <version>2.10.4</version>
     </dependency>
   </dependencies>
 

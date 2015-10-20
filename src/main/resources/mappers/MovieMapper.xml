@@ -16,6 +16,8 @@
         <collection property="movieCast" column="movie_id" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie" />
         
         <collection property="reviews" column="movie_id" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />
+        
+        <collection property="videoClips" column="movie_id" select="com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie" />
     </resultMap>
 
 

@@ -27,17 +27,17 @@ import lombok.Setter;
 @JsonApiResource(type = "movie")
 @Getter 
 @Setter
-public class Movie {
-
-    @JsonApiId
-    private Long id;
+public class Movie extends AbstractModel  {
 
     private String title;
     
-    @JsonApiToMany
+    @JsonApiToMany(lazy=false)
     private Iterable<MovieCast> movieCast;
     
-    @JsonApiToMany
+    @JsonApiToMany(lazy=false)
     private Iterable<Review> reviews;
+    
+    @JsonApiToMany(lazy=false)
+    private Iterable<VideoClip> videoClips;
     
 }

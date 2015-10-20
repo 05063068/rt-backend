@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.rottentomatoes.movieapi.mappers.VideoClipMapper">
+    <select id="selectVideoClipById" resultMap="videoClipResultMap">
+        SELECT * FROM video_clip WHERE id=#{id}
+    </select>
+    
+    <select id="selectVideoClipsForMovie" resultMap="videoClipResultMap">
+        SELECT * FROM video_clip WHERE movie_id=#{movie_id}
+    </select>
+
+    <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip">
+        <id property="id" column="id" />
+        <result property="url" column="url"/>
+    </resultMap>
+
+
+</mapper>

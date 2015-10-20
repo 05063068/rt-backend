@@ -29,9 +29,7 @@ import lombok.Setter;
 @JsonApiResource(type = "movieCast")
 @Getter
 @Setter
-public class MovieCast {
-    @JsonApiId
-    private Long id;
+public class MovieCast extends AbstractModel{
 
     protected String role;
     

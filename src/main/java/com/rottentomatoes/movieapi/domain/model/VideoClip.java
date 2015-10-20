@@ -5,11 +5,11 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonApiResource(type = "person")
+@JsonApiResource(type = "publication")
 @Getter 
 @Setter
-public class Person extends AbstractModel{
+public class VideoClip extends AbstractModel{
 
-    protected String name;
+    protected String url;
 
 }
