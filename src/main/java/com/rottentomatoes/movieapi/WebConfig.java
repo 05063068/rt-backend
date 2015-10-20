@@ -12,7 +12,7 @@ import com.rottentomatoes.movieapi.filter.MovieApiKatharsisFilter;
  * Declares Katharsis Filter as a Bean in this configuration class.
  */
 @Configuration
-@ImportResource("applicationContext.xml")
+@ImportResource("classpath:applicationContext.xml")
 public class WebConfig {
 
     @Bean

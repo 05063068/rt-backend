@@ -18,14 +18,16 @@
 
     <select id="selectPersonsForMovie" resultMap="movieCastResultMap">
         SELECT movie_cast.id, movie_cast.role, movie_person.name movie_person_name, movie_person.id movie_person_id, movie_character.name character_name
-        FROM movie_person, movie_cast, movie_character
+        FROM movie_cast
+        LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
+        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id 
         WHERE movie_cast.movie_id = #{id}
-        AND movie_cast.person_id = movie_person.id
-        AND movie_cast.id = movie_character.cast_id
+        /*
         AND movie_cast.deleted_ind = 0 
         AND movie_character.deleted_ind = 0
         AND movie_person.deleted_ind = 0
-        AND movie_person.public_ind = 1 
+        AND movie_person.public_ind = 1
+        */ 
     </select>
     
         
