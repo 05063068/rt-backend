@@ -63,4 +63,100 @@ After setting this up, establish your tunnel by connecting to the jump server `s
     $ curl -v http://localhost:8080/movie/9
 ```
 
+## JSON-API and Katharsis concepts
+  JSON-API is one particular flavor of a HATEOAS.  http://jsonapi.org/
+
+  Katharsis is the prevalent framework for Java implementing this standard. http://katharsis.io/
+
+  The main advantage of JSON-API is a well defined mechanism for including resources by reference, without duplication.
+  
+## Relationships vs Resource Inclusion
+In this section I want to clarify the distinction between the inclusion of relationships and resources.
+
+### No relationships or resources included
+A minimal Katharsis response looks like this
+```
+{
+   data: {
+      type: "movie",
+      id: "9",
+      attributes: {
+         studio: "20th Century Fox",
+         year: 2005,
+         title: "Star Wars: Episode III - Revenge of the Sith 3D",
+      },
+      relationships: {
+         movieCast: {
+            links: {
+               self: "http://localhost:8080/movie/9/relationships/movieCast",
+               related: "http://localhost:8080/movie/9/movieCast"
+            }
+         }
+      },
+      links: {
+         self: "http://localhost:8080/movie/9"
+      }
+   },
+   included: [ ]
+}
+```
+Note that the list of cast memebers (part of the `relationships` object) is provided not immediately, but only as a reference. This is the default behavior when the lazy annotation is used
+```
+@JsonApiToMany(lazy=true)
+protected Iterable<MovieCast> movieCast;
+```
+and no `include` URL param is applied to the request.
+```
+http://localhost:8080/movie/9
+```
+
+This response can be composed efficiently with one single SQL call to the `movie` table. It is useful for isntances where we only need basic data about an object. 
+
+### Relationships provided but related resources NOT included
+Without the `lazy` attribute on the `@JsonApiToMany` annotation, we would get this result:
+
+```
+{
+   data: {
+      type: "movie",
+      id: "9",
+      attributes: {
+         studio: "20th Century Fox",
+         year: 2005,
+         title: "Star Wars: Episode III - Revenge of the Sith 3D",
+      },
+      relationships: {
+        movieCast: {
+          links: {
+            self: "http://localhost:8080/movie/9/relationships/movieCast",
+            related: "http://localhost:8080/movie/9/movieCast"
+          },
+          data: [
+            {
+              type: "movieCast",
+              id: "551936484"
+            },
+            {
+              type: "movieCast",
+              id: "112312412"
+            },
+            ...etc.
+          ]
+        }
+      },
+      links: {
+         self: "http://localhost:8080/movie/9"
+      }
+   },
+   included: [ ]
+}
+```
+In this example, the `relationships` object is populated with a `data` array consisting of the `type` and `id` of the referenced `movieCast` objects. However note that the `included` array remains empty. A response in this form is not particularly useful because it is unlikely that one would use the `type` and `id` fields alone. We would need to retrieve each `movieCast` to access the missing information and this triggers the *n+1* problem. Furthermore, the way myBatis works means that in order to construct data array we're retrieving (and throwing away) the rest of the fields in `movieCast`.
+
+### Relationships provided but related resources NOT included
+
+
+
+
+
 
