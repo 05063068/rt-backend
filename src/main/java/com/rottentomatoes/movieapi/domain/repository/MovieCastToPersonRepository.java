@@ -23,45 +23,39 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.domain.model.Person;
 
-import io.katharsis.queryParams.RequestParams;
+import io.katharsis.queryParams.QueryParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
-public class MovieCastToPersonRepository implements RelationshipRepository<MovieCast, Long, Person, Long> {
+public class MovieCastToPersonRepository implements RelationshipRepository<MovieCast, String, Person, String> {
     @Autowired
     private SqlSession sqlSession;
     
     @Override
-    public Iterable<Person> findManyTargets(Long movieId, String fieldName, RequestParams requestParams) {
+    public Iterable<Person> findManyTargets(String movieId, String fieldName, QueryParams requestParams) {
         return null;
     }
 
     @Override
-    public void addRelations(MovieCast arg0, Iterable<Long> arg1, String arg2) {
+    public void addRelations(MovieCast arg0, Iterable<String> arg1, String arg2) {
         
     }
 
     @Override
-    public Person findOneTarget(Long movieCastId, String fieldName, RequestParams requestParms) {
+    public Person findOneTarget(String movieCastId, String fieldName, QueryParams requestParms) {
         Person person = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PersonMapper.selectPersonForMovieCast", movieCastId);
         return person;
     }
 
     @Override
-    public void removeRelations(MovieCast arg0, Iterable<Long> arg1, String arg2) {
-        // TODO Auto-generated method stub
-        
+    public void removeRelations(MovieCast arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public void setRelation(MovieCast arg0, Long arg1, String arg2) {
-        // TODO Auto-generated method stub
-        
+    public void setRelation(MovieCast arg0, String arg1, String arg2) {
     }
 
     @Override
-    public void setRelations(MovieCast arg0, Iterable<Long> arg1, String arg2) {
-        // TODO Auto-generated method stub
-        
+    public void setRelations(MovieCast arg0, Iterable<String> arg1, String arg2) {
     }
 }

@@ -23,3 +23,4 @@ Core Movie API
 
     $ curl -v http://localhost:8080/movie/9
     ...
+# Example Requests

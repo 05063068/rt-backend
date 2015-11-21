@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+  Notes: Reviews sorted by top status first and then by descending creation date
+         A 'top review's is one made by a top critic (one appearing in the critic_top table)
+         
+  TODO: Account for top publications too?
+
+ -->
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
     <select id="selectReviewById" resultMap="reviewResultMap">
@@ -13,11 +18,23 @@
     </select>
     
     <select id="selectReviewsForMovie" resultMap="reviewResultMap">
-        SELECT review.*, critic.name critic_name, publication.name publication_name 
+        SELECT review.*, 
+        	critic.name critic_name, 
+        	publication.name publication_name,
+        	IF(critic_top.critic_id,1,0) is_top_critic
+        	 
         FROM review 
         LEFT JOIN critic ON review.critic_id=critic.id 
         LEFT JOIN publication ON review.publication_id=publication.id
+        LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US') 
         WHERE review.movie_id = #{movie_id}
+        AND review.status = 'A'
+        ORDER BY is_top_critic DESC, creation_date DESC
+        
+		<if test="limit != null">
+			LIMIT #{limit}		
+		</if>
+        
     </select>
 
     
@@ -34,9 +51,6 @@
             <id property="id" column="publication_id"/>
             <result property="name" column="publication_name"/>
         </association>
-       
-
     </resultMap>
-
-
 </mapper>
+

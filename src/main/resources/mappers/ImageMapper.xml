@@ -5,23 +5,22 @@
 
  -->
 
-<mapper namespace="com.rottentomatoes.movieapi.mappers.VideoClipMapper">
-    <select id="selectVideoClipById" resultMap="videoClipResultMap">
+<mapper namespace="com.rottentomatoes.movieapi.mappers.ImageMapper">
+    <select id="selectImageByIdAndType" resultMap="imageResultMap">
         SELECT * FROM video_clip WHERE id=#{id}
     </select>
     
-    <select id="selectVideoClipsForMovie" resultMap="videoClipResultMap">
+    <select id="selectImagesForMovie" resultMap="imageResultMap">
         SELECT * 
-        FROM video_clip 
+        FROM movie_img 
         WHERE movie_id=#{movie_id}
         <if test="limit != null">
         LIMIT #{limit}
-        </if>
-        
+        </if>        
     </select>
 
-    <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip">
+    <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
         <id property="id" column="id" />
-        <result property="url" column="url"/>
+        <result property="url" column="id" typeHandler="com.rottentomatoes.movieapi.mappers.ImageUrlTypeHandler"/>
     </resultMap>
 </mapper>

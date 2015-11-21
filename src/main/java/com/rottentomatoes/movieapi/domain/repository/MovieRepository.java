@@ -16,17 +16,26 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-import io.katharsis.queryParams.RequestParams;
+import io.katharsis.queryParams.QueryParams;
+import io.katharsis.queryParams.params.FilterParams;
+import io.katharsis.queryParams.params.TypedParams;
 import io.katharsis.repository.ResourceRepository;
+import lombok.extern.log4j.Log4j;
 
 @Component
-public class MovieRepository implements ResourceRepository<Movie, Long> {
+@Log4j
+public class MovieRepository implements ResourceRepository<Movie, String> {
     @Autowired
     private SqlSession sqlSession;
     
@@ -36,24 +45,39 @@ public class MovieRepository implements ResourceRepository<Movie, Long> {
     }
 
     @Override
-    public Movie findOne(Long movieId, RequestParams requestParams) {
-        Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", movieId);
-        return movie;
+    public Movie findOne(String movieId, QueryParams requestParams) {
         
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("id", movieId);
+        selectParams.put("castLimit", 10);
+        selectParams.put("reviewLimit", 10);
+        
+        Map<String, FilterParams> typedFilters = requestParams.getFilters().getParams();
+        
+        FilterParams movieCastFilter = typedFilters.get("MovieCast");
+        if(movieCastFilter != null){
+        	Map<String, Set<String>> movieCastFilterParams = movieCastFilter.getParams();
+            if(movieCastFilterParams.get("limit") != null){
+            	log.info("MovieCast Limit:" + movieCastFilterParams.get("limit"));
+                //selectParams.put("castLimit", filters.get("castLimit"));
+            }
+        }
+        
+        Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", selectParams);
+        return movie;
     }
 
     @Override
-    public Iterable<Movie> findAll(RequestParams requestParams) {
-        return findAll(null, requestParams);
-    }
-
-    @Override
-    public Iterable<Movie> findAll(Iterable<Long> taskIds, RequestParams requestParams) {
+    public Iterable<Movie> findAll(QueryParams requestParams) {
         return null;
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(String aLong) {
     }
+
+	@Override
+	public Iterable<Movie> findAll(Iterable<String> ids, QueryParams queryParams) {
+		return null;
+	}
 }

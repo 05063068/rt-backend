@@ -8,18 +8,18 @@ import lombok.Setter;
 @Setter
 public class AbstractModel {
     @JsonApiId
-    protected long id;
+    protected String id;
     
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AbstractModel that = (AbstractModel) o;
-        return id == that.id;
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Long.hashCode(id);
+        return id.hashCode();
     }
 }

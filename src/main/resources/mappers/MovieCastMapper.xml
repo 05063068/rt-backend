@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  
+  Notes:
+    Returns all non-cast roles (directors, producers, screenwriters)
+    Returns requested number of cast (actor) items, if a limit is specified.
+    
+    If a movie_cast item references a movie_person that has been marked deleted, the movie_cast item
+    will be hidden and the total number of movie_cast items returned may be less than the requested number.
+  
+
+  TODO:  
+ 	How to handle public_ind?
+ -->
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieCastMapper">
     <select id="selectMovieCastById" resultMap="movieCastResultMap">
         SELECT movie_cast.id, movie_cast.role, movie_person.name movie_person_name, movie_person.id movie_person_id, movie_character.name character_name
@@ -10,22 +19,42 @@
         WHERE movie_cast.id = #{id}
         AND movie_cast.person_id = movie_person.id
         AND movie_cast.id = movie_character.cast_id
-        AND movie_cast.deleted_ind = 0 
-        AND movie_character.deleted_ind = 0
-        AND movie_person.deleted_ind = 0
-        AND movie_person.public_ind = 1 
-    </select>
-
-    <select id="selectPersonsForMovie" resultMap="movieCastResultMap">
-        SELECT movie_cast.id, movie_cast.role, movie_person.name movie_person_name, movie_person.id movie_person_id, movie_character.name character_name
-        FROM movie_cast
-        LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
-        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id 
-        WHERE movie_cast.movie_id = #{id}
+        
         /*
         AND movie_cast.deleted_ind = 0 
         AND movie_character.deleted_ind = 0
         AND movie_person.deleted_ind = 0
+        AND movie_person.public_ind = 1
+        */ 
+    </select>
+
+    <select id="selectPersonsForMovie" resultMap="movieCastResultMap">
+        SELECT 
+        	movie_cast.*,
+        	movie_person.name movie_person_name, 
+        	movie_person.id movie_person_id, 
+        	movie_character.name character_name
+        FROM (
+       		(SELECT id FROM movie_cast
+       			WHERE movie_id = #{movie_id}
+       			AND role = 'ACT'
+				AND deleted_ind = 0
+       			<if test="actorLimit != null">LIMIT #{actorLimit}</if>
+       		)        		
+       		UNION
+       		(SELECT id FROM movie_cast
+       			WHERE movie_id = #{movie_id}
+       			AND role != 'ACT'
+       			AND deleted_ind = 0
+       		)) cast_ids
+        LEFT JOIN movie_cast ON movie_cast.id = cast_ids.id
+        LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
+        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id 
+        WHERE movie_character.deleted_ind = 0
+        AND movie_person.deleted_ind = 0
+		ORDER BY movie_cast.role, movie_cast.sortkey
+        		
+        /* 
         AND movie_person.public_ind = 1
         */ 
     </select>
