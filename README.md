@@ -1,26 +1,220 @@
 # movie-api
 Core Movie API
 
-## Set up DB tunnel to RDS DB
-    Account on jump server required (jump.aws.prod.flixster.com)
+## Setup and Build Notes
+
+### Configuring JRE
+movie-api requires JRE1.8. If you have multiple JRE's installed you can configure maven to use the correct one by setting your `~/.m2/settings.xml`. E.g.
+
+```
+<settings>
+  <profiles>
+  <profile>
+      <id>compiler</id>
+      <properties>
+        <JAVA_1_8_HOME>C:\Program Files\Java\jdk1.8.0_60</JAVA_1_8_HOME>
+      </properties>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>compiler</activeProfile>
+  </activeProfiles>
+</settings>
+```
+
+The POM expects `JAVA_1_8_HOME` to be defined via `settings.xml`. If Jave 8 is your default JRE or default JRE or if you're building via Eclipse and selecting the JRE from inside Eclipse, you comment out this block in pom.xml. 
+```
+ 	<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <verbose>true</verbose>
+          <fork>true</fork>
+          <executable>${JAVA_1_8_HOME}/bin/javac</executable>
+          <compilerVersion>1.8</compilerVersion>
+        </configuration>
+    </plugin>	
+```
+
+### Custom Katharsis build
+This project requires a custom build of katharsis-core and katharsis-servlet (2.0.0-FLIXSTER). I'm in conversation with the maintainers to do an official PR but until then the pom is wired up to use the pre-built custom repo at `https://raw.githubusercontent.com/flixster/mvn-repo/master`. No further action is necessary.
+
+### Set up DB tunnel to RDS DB
+Account on jump server required (jump.aws.prod.flixster.com)
     
-    Edit your ~/.ssh/config 
-    
-    Host jump
-     User peterl 
-     HostName jump.aws.prod.flixster.com
-     LocalForward 10001 rds-shared-slave.cfzxgxfxhefu.us-west-2.rds.amazonaws.com:3306
-     
-    
-    After setting this up, establish your tunnel by connecting to the jump server
-    >ssh jump
+Edit your `~/.ssh/config`
 
-## How to run with Maven
+```    
+Host jump
+  User peterl 
+  HostName jump.aws.prod.flixster.com
+  LocalForward 10001 rds-shared-slave.cfzxgxfxhefu.us-west-2.rds.amazonaws.com:3306
+``` 
+After setting this up, establish your tunnel by connecting to the jump server `ssh jump`
 
-    $ mvn clean spring-boot:run
-
-## How to test with curl
-
+### How to run with Maven
+``` 
+    $ mvn clean compile
+    $ mvn spring-boot:run
+```
+### How to test with curl
+```
     $ curl -v http://localhost:8080/movie/9
+<<<<<<< HEAD
     ...
 # Example Requests
+=======
+```
+
+## JSON-API and Katharsis concepts
+JSON-API is one particular flavor of a HATEOAS.  http://jsonapi.org/
+
+Katharsis is the prevalent framework for Java implementing this standard. http://katharsis.io/
+
+The main advantage of JSON-API is a well defined mechanism for including resources by reference, without duplication.
+
+  
+## Relationships vs Resource Inclusion
+In this section I want to clarify the distinction between the inclusion of relationships and resources.
+
+### No relationships or resources included
+A minimal Katharsis response looks like this
+```
+{
+   data: {
+      type: "movie",
+      id: "9",
+      attributes: {
+         studio: "20th Century Fox",
+         year: 2005,
+         title: "Star Wars: Episode III - Revenge of the Sith 3D",
+      },
+      relationships: {
+         movieCast: {
+            links: {
+               self: "http://localhost:8080/movie/9/relationships/movieCast",
+               related: "http://localhost:8080/movie/9/movieCast"
+            }
+         }
+      },
+      links: {
+         self: "http://localhost:8080/movie/9"
+      }
+   },
+   included: [ ]
+}
+```
+Note that the list of cast memebers (part of the `relationships` object) is provided not immediately, but only as a reference. This is the default behavior when the lazy annotation is used
+```
+@JsonApiToMany(lazy=true)
+protected Iterable<MovieCast> movieCast;
+```
+and no `include` URL param is applied to the request.
+```
+http://localhost:8080/movie/9
+```
+
+This response can be composed efficiently with one single SQL call to the `movie` table. It is useful for isntances where we only need basic data about an object. 
+
+### Relationships provided but related resources NOT included
+Without the `lazy` attribute on the `@JsonApiToMany` annotation, we would get this result:
+
+```
+{
+   data: {
+      type: "movie",
+      id: "9",
+      attributes: {
+         studio: "20th Century Fox",
+         year: 2005,
+         title: "Star Wars: Episode III - Revenge of the Sith 3D",
+      },
+      relationships: {
+        movieCast: {
+          links: {
+            self: "http://localhost:8080/movie/9/relationships/movieCast",
+            related: "http://localhost:8080/movie/9/movieCast"
+          },
+          data: [
+            {
+              type: "movieCast",
+              id: "551936484"
+            },
+            {
+              type: "movieCast",
+              id: "112312412"
+            },
+            ...etc.
+          ]
+        }
+      },
+      links: {
+         self: "http://localhost:8080/movie/9"
+      }
+   },
+   included: [ ]
+}
+```
+In this example, the `relationships` object is populated with a `data` array consisting of the `type` and `id` of the referenced `movieCast` objects. However note that the `included` array remains empty. A response in this form is not particularly useful because it is unlikely that one would use the `type` and `id` fields alone. We would need to retrieve each `movieCast` to access the missing information and this triggers the *n+1* problem. Furthermore, the way myBatis works means that in order to construct data array we're retrieving (and throwing away) the rest of the fields in `movieCast`.
+
+### Relationships provided and related resources included
+A response in this form can be obtained by making the following request
+http://localhost:8080/movie/9?include[movie]=movieCast
+
+In this example, the relationship is provided (`relationships->movieCast->data` is populated). The `movieCast` object ID's can in turn be dereferenced by iterating through the `include` array.
+
+This response is self contained and captures all its relationship data internally. The response can be fulfilled in 2 SQL queries - one for the movie itself and one for the `movieCast` objects.
+
+
+
+```
+{
+   data: {
+      type: "movie",
+      id: "9",
+      attributes: {
+         studio: "20th Century Fox",
+         year: 2005,
+         title: "Star Wars: Episode III - Revenge of the Sith 3D",
+      },
+      relationships: {
+        movieCast: {
+          links: {
+            self: "http://localhost:8080/movie/9/relationships/movieCast",
+            related: "http://localhost:8080/movie/9/movieCast"
+          },
+          data: [
+            {
+              type: "movieCast",
+              id: "551936484"
+            },
+            {
+              type: "movieCast",
+              id: "112312412"
+            },
+            ...etc.
+          ]
+        }
+      },
+      links: {
+         self: "http://localhost:8080/movie/9"
+      }
+  },
+  included: [
+    {
+      type: "movieCast",
+      id: "551936484",
+      attributes: {
+        characters: [ "Darth Vader" ],
+        role: "ACT"
+      },
+      relationships: {},
+      links: {
+        self: "http://localhost:8080/movieCast/771360177"
+      }
+    }
+  ]
+}
+```
+
