@@ -64,11 +64,12 @@ After setting this up, establish your tunnel by connecting to the jump server `s
 ```
 
 ## JSON-API and Katharsis concepts
-  JSON-API is one particular flavor of a HATEOAS.  http://jsonapi.org/
+JSON-API is one particular flavor of a HATEOAS.  http://jsonapi.org/
 
-  Katharsis is the prevalent framework for Java implementing this standard. http://katharsis.io/
+Katharsis is the prevalent framework for Java implementing this standard. http://katharsis.io/
 
-  The main advantage of JSON-API is a well defined mechanism for including resources by reference, without duplication.
+The main advantage of JSON-API is a well defined mechanism for including resources by reference, without duplication.
+
   
 ## Relationships vs Resource Inclusion
 In this section I want to clarify the distinction between the inclusion of relationships and resources.
@@ -153,10 +154,62 @@ Without the `lazy` attribute on the `@JsonApiToMany` annotation, we would get th
 ```
 In this example, the `relationships` object is populated with a `data` array consisting of the `type` and `id` of the referenced `movieCast` objects. However note that the `included` array remains empty. A response in this form is not particularly useful because it is unlikely that one would use the `type` and `id` fields alone. We would need to retrieve each `movieCast` to access the missing information and this triggers the *n+1* problem. Furthermore, the way myBatis works means that in order to construct data array we're retrieving (and throwing away) the rest of the fields in `movieCast`.
 
-### Relationships provided but related resources NOT included
+### Relationships provided and related resources included
+A response in this form can be obtained by making the following request
+http://localhost:8080/movie/9?include[movie]=movieCast
+
+In this example, the relationship is provided (`relationships->movieCast->data` is populated). The `movieCast` object ID's can in turn be dereferenced by iterating through the `include` array.
+
+This response is self contained and captures all its relationship data internally. The response can be fulfilled in 2 SQL queries - one for the movie itself and one for the `movieCast` objects.
 
 
 
-
-
-
+```
+{
+   data: {
+      type: "movie",
+      id: "9",
+      attributes: {
+         studio: "20th Century Fox",
+         year: 2005,
+         title: "Star Wars: Episode III - Revenge of the Sith 3D",
+      },
+      relationships: {
+        movieCast: {
+          links: {
+            self: "http://localhost:8080/movie/9/relationships/movieCast",
+            related: "http://localhost:8080/movie/9/movieCast"
+          },
+          data: [
+            {
+              type: "movieCast",
+              id: "551936484"
+            },
+            {
+              type: "movieCast",
+              id: "112312412"
+            },
+            ...etc.
+          ]
+        }
+      },
+      links: {
+         self: "http://localhost:8080/movie/9"
+      }
+  },
+  included: [
+    {
+      type: "movieCast",
+      id: "551936484",
+      attributes: {
+        characters: [ "Darth Vader" ],
+        role: "ACT"
+      },
+      relationships: {},
+      links: {
+        self: "http://localhost:8080/movieCast/771360177"
+      }
+    }
+  ]
+}
+```
