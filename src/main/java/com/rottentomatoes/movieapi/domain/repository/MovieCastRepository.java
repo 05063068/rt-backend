@@ -16,7 +16,7 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
-import io.katharsis.queryParams.RequestParams;
+import io.katharsis.queryParams.QueryParams;
 import io.katharsis.repository.ResourceRepository;
 
 import org.apache.ibatis.session.SqlSession;
@@ -26,34 +26,33 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
 
 @Component
-public class MovieCastRepository implements ResourceRepository<MovieCast, Long> {
+public class MovieCastRepository implements ResourceRepository<MovieCast, String> {
     @Autowired
     private SqlSession sqlSession;
     
     @Override
-    public MovieCast findOne(Long movieCastId, RequestParams requestParams) {
+    public MovieCast findOne(String movieCastId, QueryParams requestParams) {
         MovieCast movieCast = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastById", movieCastId);
         return movieCast;
     }
 
     @Override
-    public Iterable<MovieCast> findAll(RequestParams requestParams) {
+    public Iterable<MovieCast> findAll(QueryParams requestParams) {
         return null;
     }
 
     @Override
-    public Iterable<MovieCast> findAll(Iterable<Long> projectIds, RequestParams requestParams) {
-        return null;
-    }
-
-    @Override
-    public void delete(Long aLong) {
+    public void delete(String aString) {
 
     }
 
     @Override
     public <S extends MovieCast> S save(S arg0) {
-        // TODO Auto-generated method stub
         return null;
     }
+
+	@Override
+	public Iterable<MovieCast> findAll(Iterable<String> ids, QueryParams queryParams) {
+		return null;
+	}
 }

@@ -18,8 +18,6 @@ package com.rottentomatoes.movieapi.domain.model;
 
 import java.util.List;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiIncludeByDefault;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToOne;
 import com.rottentomatoes.movieapi.domain.model.Person;

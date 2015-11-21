@@ -26,46 +26,38 @@ import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.domain.model.Review;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-import io.katharsis.queryParams.RequestParams;
+import io.katharsis.queryParams.QueryParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
-public class MovieToReviewRepository implements RelationshipRepository<Movie, Long, Review, Long> {
+public class MovieToReviewRepository implements RelationshipRepository<Movie, String, Review, String> {
     @Autowired
     private SqlSession sqlSession;
     
     @Override
-    public Iterable<Review> findManyTargets(Long movieId, String fieldName, RequestParams requestParams) {
+    public Iterable<Review> findManyTargets(String movieId, String fieldName, QueryParams requestParams) {
         List<Review> reviewList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie", movieId);
         return reviewList;
     }
 
     @Override
-    public void addRelations(Movie arg0, Iterable<Long> arg1, String arg2) {
-        // TODO Auto-generated method stub
-        
+    public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public Review findOneTarget(Long movieId, String fieldName, RequestParams requestParms) {
+    public Review findOneTarget(String movieId, String fieldName, QueryParams requestParms) {
         return null;
     }
 
     @Override
-    public void removeRelations(Movie arg0, Iterable<Long> arg1, String arg2) {
-        // TODO Auto-generated method stub
-        
+    public void removeRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public void setRelation(Movie arg0, Long arg1, String arg2) {
-        // TODO Auto-generated method stub
-        
+    public void setRelation(Movie arg0, String arg1, String arg2) {
     }
-
+    
     @Override
-    public void setRelations(Movie arg0, Iterable<Long> arg1, String arg2) {
-        // TODO Auto-generated method stub
-        
+    public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
 }

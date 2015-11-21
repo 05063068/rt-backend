@@ -57,7 +57,7 @@ public class MovieApiKatharsisFilter extends SampleKatharsisFilter implements Be
 
     @Override
     protected KatharsisInvokerBuilder createKatharsisInvokerBuilder() {
-        KatharsisInvokerBuilder builder = new KatharsisInvokerBuilder();;
+        KatharsisInvokerBuilder builder = new CustomKatharsisInvokerBuilder();
 
         builder.resourceSearchPackage(getResourceSearchPackage())
             .resourceDefaultDomain(getResourceDefaultDomain())

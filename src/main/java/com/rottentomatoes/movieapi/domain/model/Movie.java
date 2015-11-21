@@ -16,11 +16,14 @@
  */
 package com.rottentomatoes.movieapi.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiIncludeByDefault;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.rottentomatoes.movieapi.domain.model.MovieCast;
+import com.rottentomatoes.movieapi.enums.MpaaRating;
+
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;
-import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,16 +31,37 @@ import lombok.Setter;
 @Getter 
 @Setter
 public class Movie extends AbstractModel  {
+    
+    protected String title;
+    protected Integer year;
+    protected Date theaterReleaseDate;
+    protected Date dvdReleaseDate;
+    protected Integer tomatometer;
+    protected Integer boxOffice;
+    protected MpaaRating mpaaRating;
+    protected String studio;
+    protected Date creationDate;    
+    protected Date lastModifiedDate;    
+    
+    @JsonApiToMany(lazy=true)
+    protected Iterable<MovieCast> movieCast;
+    
+    @JsonApiToMany(lazy=true)
+    protected Iterable<Review> reviews;
+    
+    @JsonApiToMany(lazy=true)
+    protected Iterable<VideoClip> videoClips;
+    
+    @JsonApiToMany(lazy=true)
+    protected Iterable<Image> images;
 
-    private String title;
-    
-    @JsonApiToMany(lazy=false)
-    private Iterable<MovieCast> movieCast;
-    
-    @JsonApiToMany(lazy=false)
-    private Iterable<Review> reviews;
-    
-    @JsonApiToMany(lazy=false)
-    private Iterable<VideoClip> videoClips;
-    
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

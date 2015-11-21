@@ -16,7 +16,7 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
-import io.katharsis.queryParams.RequestParams;
+import io.katharsis.queryParams.QueryParams;
 import io.katharsis.repository.ResourceRepository;
 
 import org.apache.ibatis.session.SqlSession;
@@ -26,28 +26,23 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.Person;
 
 @Component
-public class PersonRepository implements ResourceRepository<Person, Long> {
+public class PersonRepository implements ResourceRepository<Person, String> {
     @Autowired
     private SqlSession sqlSession;
     
     @Override
-    public Person findOne(Long personId, RequestParams requestParams) {
+    public Person findOne(String personId, QueryParams requestParams) {
         Person person = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PersonMapper.selectPersonById", personId);
         return person;
     }
 
     @Override
-    public Iterable<Person> findAll(RequestParams requestParams) {
+    public Iterable<Person> findAll(QueryParams requestParams) {
         return null;
     }
 
     @Override
-    public Iterable<Person> findAll(Iterable<Long> projectIds, RequestParams requestParams) {
-        return null;
-    }
-
-    @Override
-    public void delete(Long aLong) {
+    public void delete(String aString) {
 
     }
 
@@ -55,4 +50,9 @@ public class PersonRepository implements ResourceRepository<Person, Long> {
     public <S extends Person> S save(S arg0) {
         return null;
     }
+
+	@Override
+	public Iterable<Person> findAll(Iterable<String> ids, QueryParams queryParams) {
+		return null;
+	}
 }

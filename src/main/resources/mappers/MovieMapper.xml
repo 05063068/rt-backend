@@ -4,20 +4,40 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieMapper">
-    <select id="selectMovieById" resultMap="movieResultMap">
-        SELECT * FROM movie WHERE movie_id = #{id}
+    <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
+        SELECT 
+        	#{actorLimit} actorLimit,   /* Dummy columns used for passing subselect params */
+        	#{reviewLimit} reviewLimit, 
+        	#{videoLimit} videoLimit,
+            movie.*, 
+            movie_studio.name studio_name
+        FROM movie 
+        LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
+        WHERE movie_id = #{id}
     </select>
 
     
     <resultMap id="movieResultMap" type="com.rottentomatoes.movieapi.domain.model.Movie">
         <id property="id" column="movie_id" />
         <result property="title" column="title"/>
+        <result property="year" column="year" />
+        <result property="theaterReleaseDate" column="theater_release_date" javaType="java.sql.Date"/>
+        <result property="dvdReleaseDate" column="dvd_release_date" javaType="java.sql.Date" />
+        <result property="tomatometer" column="tomatometer" />
+        <result property="boxOffice" column="box_office" />
+        <result property="mpaaRating" column="mpaa_rating" javaType="com.rottentomatoes.movieapi.enums.MpaaRating"  typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <result property="creationDate" column="creation_date" javaType="java.sql.Timestamp" />
+        <result property="lastModifiedDate" column="last_modified_date" javaType="java.sql.Timestamp" />
+        <result property="studio" column="studio_name" />
+        
+        <collection property="movieCast" column="{movie_id=movie_id,actorLimit=actorLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie" />
        
-        <collection property="movieCast" column="movie_id" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie" />
+        <collection property="reviews" column="{movie_id=movie_id,limit=reviewLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />
         
-        <collection property="reviews" column="movie_id" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />
+        <collection property="videoClips" column="{movie_id=movie_id,limit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie" />
         
-        <collection property="videoClips" column="movie_id" select="com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie" />
+        <collection property="images" column="{movie_id=movie_id,limit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie" />
+         
     </resultMap>
 
 

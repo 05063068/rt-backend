@@ -1,7 +1,7 @@
 /**
  * Make sure model objects are tested for equality by ID 
  * */
-package com.orttentomatoes.movieapi.test;
+package com.rottentomatoes.movieapi.test;
 
 import static org.junit.Assert.*;
 
@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-import io.katharsis.queryParams.RequestParams;
 import io.katharsis.request.path.JsonPath;
 import io.katharsis.request.path.PathBuilder;
 import io.katharsis.request.path.PathIds;
@@ -28,19 +27,19 @@ public class ModelEqualityTest {
     @Test
     public void test() {
         Movie m1 = new Movie();
-        m1.setId(1);
+        m1.setId("1");
         
         Movie m2 = new Movie();
-        m2.setId(1);
+        m2.setId("1");
         
         Movie m3 = new Movie();
-        m2.setId(2);
+        m3.setId("2");
         
-        assertEquals(m1,m2);
-        assertNotEquals(m1,m3);
+        assertTrue(m1.equals(m2));
+        assertFalse(m1.equals(m3));
         
-        assertEquals(m1.hashCode(), m2.hashCode());
-        assertNotEquals(m1.hashCode(),m3.hashCode());        
+        assertTrue(m1.hashCode() == m2.hashCode());
+        assertFalse(m1.hashCode() == m3.hashCode());        
         
     }
 
