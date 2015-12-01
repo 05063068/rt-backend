@@ -14,15 +14,6 @@ import org.junit.Test;
 
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-import io.katharsis.request.path.JsonPath;
-import io.katharsis.request.path.PathBuilder;
-import io.katharsis.request.path.PathIds;
-import io.katharsis.request.path.ResourcePath;
-import io.katharsis.response.LinksInformation;
-import io.katharsis.response.MetaInformation;
-import io.katharsis.response.ResourceResponse;
-import scala.annotation.meta.setter;
-
 public class ModelEqualityTest {
     @Test
     public void test() {
