@@ -116,7 +116,7 @@
 			
 			<!--  This block assumes JAVA_1_8_HOME is set in your ~/.m2/settings.xml. If this is
 			      not the case and you want to use the default JRE (or if you're building via Eclipse and 
-			      setting the JRE there), comment out this block -->
+			      setting the JRE there), comment out this block
  			<plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-compiler-plugin</artifactId>
@@ -128,6 +128,7 @@
 		          <compilerVersion>1.8</compilerVersion>
 		        </configuration>
 		    </plugin>			
+		    -->
 		</plugins>
 	</build>
 </project>
