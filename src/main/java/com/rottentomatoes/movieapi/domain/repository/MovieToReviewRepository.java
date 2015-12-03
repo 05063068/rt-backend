@@ -28,31 +28,16 @@ import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.domain.model.Review;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-import io.katharsis.queryParams.QueryParams;
+import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
 public class MovieToReviewRepository implements RelationshipRepository<Movie, String, Review, String> {
     @Autowired
     private SqlSession sqlSession;
-    
-    @Override
-    public Iterable<Review> findManyTargets(String movieId, String fieldName, QueryParams requestParams) {
-        Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);        
-        selectParams.put("reviewLimit", 10);
-        
-        List<Review> reviewList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie", selectParams);
-        return reviewList;
-    }
 
     @Override
     public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
-    }
-
-    @Override
-    public Review findOneTarget(String movieId, String fieldName, QueryParams requestParms) {
-        return null;
     }
 
     @Override
@@ -66,4 +51,20 @@ public class MovieToReviewRepository implements RelationshipRepository<Movie, St
     @Override
     public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
+
+	@Override
+	public Review findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Review> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("movie_id", movieId);        
+        selectParams.put("reviewLimit", 10);
+        
+        List<Review> reviewList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie", selectParams);
+        return reviewList;
+	}
 }

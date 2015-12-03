@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.Review;
 
-import io.katharsis.queryParams.QueryParams;
+import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
@@ -37,24 +37,25 @@ public class ReviewRepository implements ResourceRepository<Review, String> {
     }
 
     @Override
-    public Review findOne(String reviewId, QueryParams requestParams) {
-        Review review = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewById", reviewId);
-        return review;
-        
-    }
-
-    @Override
-    public Iterable<Review> findAll(QueryParams requestParams) {
-        return null;
-    }
-
-    @Override
     public void delete(String aString) {
 
     }
 
 	@Override
-	public Iterable<Review> findAll(Iterable<String> ids, QueryParams queryParams) {
+	public Review findOne(String reviewId, RequestParams requestParams) {
+        Review review = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewById", reviewId);
+        return review;
+	}
+
+	@Override
+	public Iterable<Review> findAll(RequestParams requestParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Review> findAll(Iterable<String> ids, RequestParams requestParams) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }
