@@ -26,12 +26,9 @@ public class PropertyUtils {
 	
 	@PostConstruct
 	private void init(){
-		log.info("Initializing PropertyUtils: " + props.toString());		
 		staticProps = props;
 	}
-	
-
-	
+		
 	public static String getProperty(String key){
 		if(staticProps != null){
 			return staticProps.getProperty(key);

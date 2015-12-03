@@ -25,27 +25,16 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-import io.katharsis.queryParams.QueryParams;
+import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
 public class MovieToMovieCastRepository implements RelationshipRepository<Movie, String, MovieCast, String> {
     @Autowired
     private SqlSession sqlSession;
-    
-    @Override
-    public Iterable<MovieCast> findManyTargets(String movieId, String fieldName, QueryParams requestParams) {
-        List<MovieCast> personList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie", movieId);
-        return personList;
-    }
 
     @Override
     public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
-    }
-
-    @Override
-    public MovieCast findOneTarget(String movieId, String fieldName, QueryParams requestParms) {
-        return null;
     }
 
     @Override
@@ -59,4 +48,16 @@ public class MovieToMovieCastRepository implements RelationshipRepository<Movie,
     @Override
     public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
+
+	@Override
+	public MovieCast findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<MovieCast> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+        List<MovieCast> personList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie", movieId);
+        return personList;
+	}
 }

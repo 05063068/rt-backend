@@ -27,9 +27,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-import io.katharsis.queryParams.QueryParams;
-import io.katharsis.queryParams.params.FilterParams;
-import io.katharsis.queryParams.params.TypedParams;
+import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 import lombok.extern.log4j.Log4j;
 
@@ -45,13 +43,18 @@ public class MovieRepository implements ResourceRepository<Movie, String> {
     }
 
     @Override
-    public Movie findOne(String movieId, QueryParams requestParams) {
-        
+    public void delete(String aLong) {
+    }
+
+	@Override
+	public Movie findOne(String movieId, RequestParams requestParams) {
+
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("id", movieId);
         selectParams.put("actorLimit", 10);
         selectParams.put("reviewLimit", 10);
         
+        /*
         Map<String, FilterParams> typedFilters = requestParams.getFilters().getParams();
         
         FilterParams movieCastFilter = typedFilters.get("MovieCast");
@@ -62,22 +65,20 @@ public class MovieRepository implements ResourceRepository<Movie, String> {
        
             }
         }
-        
+        */
         Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", selectParams);
         return movie;
-    }
-
-    @Override
-    public Iterable<Movie> findAll(QueryParams requestParams) {
-        return null;
-    }
-
-    @Override
-    public void delete(String aLong) {
-    }
+	}
 
 	@Override
-	public Iterable<Movie> findAll(Iterable<String> ids, QueryParams queryParams) {
+	public Iterable<Movie> findAll(RequestParams requestParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Movie> findAll(Iterable<String> ids, RequestParams requestParams) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

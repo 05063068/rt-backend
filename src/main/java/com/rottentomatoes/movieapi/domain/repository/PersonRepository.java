@@ -16,7 +16,7 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
-import io.katharsis.queryParams.QueryParams;
+import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 import org.apache.ibatis.session.SqlSession;
@@ -29,17 +29,6 @@ import com.rottentomatoes.movieapi.domain.model.Person;
 public class PersonRepository implements ResourceRepository<Person, String> {
     @Autowired
     private SqlSession sqlSession;
-    
-    @Override
-    public Person findOne(String personId, QueryParams requestParams) {
-        Person person = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PersonMapper.selectPersonById", personId);
-        return person;
-    }
-
-    @Override
-    public Iterable<Person> findAll(QueryParams requestParams) {
-        return null;
-    }
 
     @Override
     public void delete(String aString) {
@@ -52,7 +41,20 @@ public class PersonRepository implements ResourceRepository<Person, String> {
     }
 
 	@Override
-	public Iterable<Person> findAll(Iterable<String> ids, QueryParams queryParams) {
+	public Person findOne(String personId, RequestParams requestParams) {
+        Person person = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PersonMapper.selectPersonById", personId);
+        return person;
+	}
+
+	@Override
+	public Iterable<Person> findAll(RequestParams requestParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Person> findAll(Iterable<String> ids, RequestParams requestParams) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

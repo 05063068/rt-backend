@@ -26,7 +26,7 @@ import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.domain.model.Image;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-import io.katharsis.queryParams.QueryParams;
+import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
@@ -35,18 +35,7 @@ public class MovieToImageRepository implements RelationshipRepository<Movie, Str
     private SqlSession sqlSession;
     
     @Override
-    public Iterable<Image> findManyTargets(String movieId, String fieldName, QueryParams requestParams) {
-        List<Image> ImageList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", movieId);
-        return ImageList;
-    }
-
-    @Override
     public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
-    }
-
-    @Override
-    public Image findOneTarget(String movieId, String fieldName, QueryParams requestParms) {
-        return null;
     }
 
     @Override
@@ -60,4 +49,15 @@ public class MovieToImageRepository implements RelationshipRepository<Movie, Str
     @Override
     public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
+
+	@Override
+	public Image findOneTarget(String id, String fieldName, RequestParams requestParams) {
+		return null;
+	}
+
+	@Override
+	public Iterable<Image> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+        List<Image> imageList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", movieId);
+        return imageList;
+	}
 }
