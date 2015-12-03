@@ -6,14 +6,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class MovieApiApplication extends SpringBootServletInitializer {
+public class CatalogApiApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(MovieApiApplication.class);
+        return application.sources(CatalogApiApplication.class);
     }
     
     public static void main(String[] args) {
-        SpringApplication.run(MovieApiApplication.class, args);
+        SpringApplication.run(CatalogApiApplication.class, args);
     }
 }

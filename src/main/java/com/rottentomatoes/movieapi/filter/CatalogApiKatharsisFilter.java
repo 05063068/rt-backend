@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
  * by the repository class type from the underlying {@link BeanFactory}.
  * </P>
  */
-public class MovieApiKatharsisFilter extends SampleKatharsisFilter implements BeanFactoryAware {
+public class CatalogApiKatharsisFilter extends SampleKatharsisFilter implements BeanFactoryAware {
 
     private static final String DEFAULT_RESOURCE_SEARCH_PACKAGE = "com.rottentomatoes.movieapi.domain";
 
