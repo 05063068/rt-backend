@@ -49,17 +49,17 @@ public class MovieRepository implements ResourceRepository<Movie, String> {
         
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("id", movieId);
-        selectParams.put("castLimit", 10);
+        selectParams.put("actorLimit", 10);
         selectParams.put("reviewLimit", 10);
         
         Map<String, FilterParams> typedFilters = requestParams.getFilters().getParams();
         
         FilterParams movieCastFilter = typedFilters.get("MovieCast");
         if(movieCastFilter != null){
+        	System.out.println("params" + movieCastFilter.getParams());
         	Map<String, Set<String>> movieCastFilterParams = movieCastFilter.getParams();
             if(movieCastFilterParams.get("limit") != null){
-            	log.info("MovieCast Limit:" + movieCastFilterParams.get("limit"));
-                //selectParams.put("castLimit", filters.get("castLimit"));
+       
             }
         }
         
