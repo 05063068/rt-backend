@@ -16,7 +16,9 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,11 @@ public class MovieToReviewRepository implements RelationshipRepository<Movie, St
     
     @Override
     public Iterable<Review> findManyTargets(String movieId, String fieldName, QueryParams requestParams) {
-        List<Review> reviewList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie", movieId);
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("movie_id", movieId);        
+        selectParams.put("reviewLimit", 10);
+        
+        List<Review> reviewList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie", selectParams);
         return reviewList;
     }
 
