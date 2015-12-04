@@ -49,23 +49,18 @@ public class MovieRepository implements ResourceRepository<Movie, String> {
 	@Override
 	public Movie findOne(String movieId, RequestParams requestParams) {
 
+        Map<String, Object> filters = requestParams.getFilters();
         Map<String, Object> selectParams = new HashMap<>();
+        
         selectParams.put("id", movieId);
-        selectParams.put("actorLimit", 10);
-        selectParams.put("reviewLimit", 10);
         
-        /*
-        Map<String, FilterParams> typedFilters = requestParams.getFilters().getParams();
-        
-        FilterParams movieCastFilter = typedFilters.get("MovieCast");
-        if(movieCastFilter != null){
-        	System.out.println("params" + movieCastFilter.getParams());
-        	Map<String, Set<String>> movieCastFilterParams = movieCastFilter.getParams();
-            if(movieCastFilterParams.get("limit") != null){
-       
-            }
+        // Do not just blindly pass filters into myBatis. Explicitly cast and assign for security's sake.
+        if(filters != null){
+            // NPE will not be thrown if filters.get("xx") is null. MyBatis mapper expects nulls (wide open no limit).
+	        selectParams.put("actorLimit", (Integer)filters.get("actorLimit"));
+	        selectParams.put("reviewLimit", (Integer)filters.get("reviewLimit"));
         }
-        */
+        
         Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", selectParams);
         return movie;
 	}
