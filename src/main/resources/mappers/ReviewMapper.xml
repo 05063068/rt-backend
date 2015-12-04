@@ -9,8 +9,15 @@
  -->
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
+	<sql id="selectColumns">
+       	review.*, 
+       	critic.name critic_name, 
+       	publication.name publication_name,
+       	IF(critic_top.critic_id,1,0) is_top_critic
+	</sql>
+
     <select id="selectReviewById" resultMap="reviewResultMap">
-        SELECT review.*, critic.name critic_name, publication.name publication_name
+        SELECT <include refid="selectColumns" />
         FROM review
         LEFT JOIN critic ON review.critic_id=critic.id 
         LEFT JOIN publication ON review.publication_id=publication.id
@@ -18,11 +25,7 @@
     </select>
     
     <select id="selectReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
-        SELECT review.*, 
-        	critic.name critic_name, 
-        	publication.name publication_name,
-        	IF(critic_top.critic_id,1,0) is_top_critic
-        	 
+        SELECT <include refid="selectColumns" />        	 
         FROM review 
         LEFT JOIN critic ON review.critic_id=critic.id 
         LEFT JOIN publication ON review.publication_id=publication.id

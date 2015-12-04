@@ -19,6 +19,9 @@ package com.rottentomatoes.movieapi.domain.repository;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,7 +45,9 @@ public class MovieCastRepository implements ResourceRepository<MovieCast, String
 
 	@Override
 	public MovieCast findOne(String movieCastId, RequestParams requestParams) {
-        MovieCast movieCast = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastById", movieCastId);
+		Map<String, Object> selectParams = new HashMap<>();
+		selectParams.put("movieCastId", movieCastId);
+        MovieCast movieCast = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastById", selectParams);
         return movieCast;
 	}
 
