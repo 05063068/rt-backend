@@ -19,7 +19,6 @@
     <select id="selectMovieCastById" resultMap="movieCastResultMap" parameterType="map">
         SELECT <include refid="selectColumns" />               
         FROM movie_cast
-        LEFT JOIN movie_cast ON movie_cast.id = cast_ids.id
         LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
         LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id         
         
