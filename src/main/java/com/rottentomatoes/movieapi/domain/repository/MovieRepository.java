@@ -59,6 +59,7 @@ public class MovieRepository implements ResourceRepository<Movie, String> {
             // NPE will not be thrown if filters.get("xx") is null. MyBatis mapper expects nulls (wide open no limit).
 	        selectParams.put("actorLimit", (Integer)filters.get("actorLimit"));
 	        selectParams.put("reviewLimit", (Integer)filters.get("reviewLimit"));
+            selectParams.put("videoLimit", (Integer)filters.get("videoLimit"));
         }
         
         Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", selectParams);

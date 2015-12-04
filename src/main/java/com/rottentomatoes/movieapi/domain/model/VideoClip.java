@@ -4,7 +4,7 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonApiResource(type = "publication")
+@JsonApiResource(type = "videoClip")
 @Getter 
 @Setter
 public class VideoClip extends AbstractModel{

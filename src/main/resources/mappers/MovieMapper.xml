@@ -34,7 +34,7 @@
        
         <collection property="reviews" column="{movie_id=movie_id,reviewLimit=reviewLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />
         
-        <collection property="videoClips" column="{movie_id=movie_id,limit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie" />
+        <collection property="videoClips" column="{movie_id=movie_id,videoLimit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie" />
         
         <collection property="images" column="{movie_id=movie_id,limit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie" />
          
