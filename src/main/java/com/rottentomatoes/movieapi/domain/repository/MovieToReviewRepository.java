@@ -62,7 +62,6 @@ public class MovieToReviewRepository implements RelationshipRepository<Movie, St
 	public Iterable<Review> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);        
-        selectParams.put("reviewLimit", 10);
         
         List<Review> reviewList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie", selectParams);
         return reviewList;

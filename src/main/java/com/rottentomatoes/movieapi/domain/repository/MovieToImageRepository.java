@@ -16,7 +16,9 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,10 @@ public class MovieToImageRepository implements RelationshipRepository<Movie, Str
 
 	@Override
 	public Iterable<Image> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
-        List<Image> imageList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", movieId);
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("movie_id", movieId);
+		
+        List<Image> imageList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", selectParams);
         return imageList;
 	}
 }
