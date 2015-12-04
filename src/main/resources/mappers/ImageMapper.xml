@@ -7,16 +7,13 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ImageMapper">
     <select id="selectImageByIdAndType" resultMap="imageResultMap">
-        SELECT * FROM video_clip WHERE id=#{id}
+        SELECT * FROM movie_img WHERE id=#{id}
     </select>
     
-    <select id="selectImagesForMovie" resultMap="imageResultMap">
+    <select id="selectImagesForMovie" resultMap="imageResultMap" parameterType="map">
         SELECT * 
         FROM movie_img 
-        WHERE movie_id=#{movie_id}
-        <if test="limit != null">
-        LIMIT #{limit}
-        </if>        
+        WHERE movie_id=#{movie_id}      
     </select>
 
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">

@@ -59,7 +59,7 @@ public class MovieToMovieCastRepository implements RelationshipRepository<Movie,
 	@Override
 	public Iterable<MovieCast> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
 		Map<String, Object> selectParams = new HashMap<>();
-		selectParams.put("movieId", movieId);
+		selectParams.put("movie_id", movieId);
 		
         List<MovieCast> personList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie", selectParams);
         return personList;
