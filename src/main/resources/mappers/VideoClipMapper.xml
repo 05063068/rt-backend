@@ -10,14 +10,11 @@
         SELECT * FROM video_clip WHERE id=#{id}
     </select>
     
-    <select id="selectVideoClipsForMovie" resultMap="videoClipResultMap">
+    <select id="selectVideoClipsForMovie" resultMap="videoClipResultMap" parameterType="map">
         SELECT * 
         FROM video_clip 
         WHERE movie_id=#{movie_id}
-        <if test="limit != null">
-        LIMIT #{limit}
-        </if>
-        
+        <if test="videoLimit != null">LIMIT #{videoLimit}</if>
     </select>
 
     <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip">
