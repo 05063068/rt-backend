@@ -16,7 +16,9 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,13 +53,15 @@ public class MovieToMovieCastRepository implements RelationshipRepository<Movie,
 
 	@Override
 	public MovieCast findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Iterable<MovieCast> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
-        List<MovieCast> personList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie", movieId);
+		Map<String, Object> selectParams = new HashMap<>();
+		selectParams.put("movieId", movieId);
+		
+        List<MovieCast> personList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie", selectParams);
         return personList;
 	}
 }

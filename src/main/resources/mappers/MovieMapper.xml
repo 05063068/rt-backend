@@ -30,7 +30,7 @@
         <result property="lastModifiedDate" column="last_modified_date" javaType="java.sql.Timestamp" />
         <result property="studio" column="studio_name" />
         
-        <collection property="movieCast" column="{movie_id=movie_id,actorLimit=actorLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectPersonsForMovie" />
+        <collection property="movieCast" column="{movie_id=movie_id,actorLimit=actorLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie" />
        
         <collection property="reviews" column="{movie_id=movie_id,reviewLimit=reviewLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />
         

@@ -9,7 +9,8 @@
     </select>
 
     <select id="selectPersonForMovieCast" resultMap="personMap">
-        SELECT movie_person.* FROM movie_person, movie_cast 
+        SELECT movie_person.* 
+        FROM movie_person, movie_cast 
         WHERE movie_cast.id = #{id}
         AND movie_person.id = movie_cast.person_id;
     </select>
