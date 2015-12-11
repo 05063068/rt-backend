@@ -46,7 +46,6 @@ public class MovieToVideoClipRepository implements RelationshipRepository<Movie,
     public Iterable<VideoClip> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
-        selectParams.put("movie_id", movieId);
 
         List<VideoClip> videoClipList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie", selectParams);
         return videoClipList;

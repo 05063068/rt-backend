@@ -10,10 +10,12 @@ import lombok.Setter;
 @Setter
 public class Review extends AbstractModel{
 
-    protected Long movie_id;
-
+    protected Long movieId;
+    protected String scoreOri;
     protected String quote;
-    
+    protected String url;
+    protected String creationDate;
+
     @JsonApiToOne
     protected Critic critic;
     

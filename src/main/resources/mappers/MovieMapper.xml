@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieMapper">
+
+
     <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
         SELECT 
         	#{actorLimit} actorLimit,   /* Dummy columns used for passing subselect params */
-        	#{reviewLimit} reviewLimit, 
+        	#{reviewLimit} reviewLimit,
         	#{videoLimit} videoLimit,
             movie.*, 
-            movie_studio.name studio_name
-        FROM movie 
+            movie_studio.name               as "studioName",
+            rating_summary.num_scores       as "numScores",
+            rating_summary.average_score    as "averageScore",
+            rating_summary.num_wts          as "numWts",
+            rating_summary.num_ni           as "numNi",
+            rating_summary.num_reviews      as "numReviews"
+        FROM movie
         LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
-        WHERE movie_id = #{id}
+        LEFT JOIN rating_summary ON movie.movie_id=rating_summary.movie_id
+        WHERE movie.movie_id = #{id}
+    </select>
+
+    <select id="selectGenreByMovieId" resultType="string"  parameterType="map">
+          SELECT genre.name
+          FROM movie_genre
+          LEFT JOIN genre ON movie_genre.genre_id = genre.id
+          WHERE movie_genre.movie_id = #{movie_id}
     </select>
 
     
@@ -28,8 +41,9 @@
         <result property="mpaaRating" column="mpaa_rating" javaType="com.rottentomatoes.movieapi.enums.MpaaRating"  typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result property="creationDate" column="creation_date" javaType="java.sql.Timestamp" />
         <result property="lastModifiedDate" column="last_modified_date" javaType="java.sql.Timestamp" />
-        <result property="studio" column="studio_name" />
-        
+
+        <collection property="genres" column="{movie_id=movie_id}" fetchType="lazy" select="selectGenreByMovieId" />
+
         <collection property="movieCast" column="{movie_id=movie_id,actorLimit=actorLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie" />
        
         <collection property="reviews" column="{movie_id=movie_id,reviewLimit=reviewLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />

@@ -17,6 +17,7 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
@@ -39,10 +40,17 @@ public class Movie extends AbstractModel  {
     protected Integer tomatometer;
     protected Integer boxOffice;
     protected MpaaRating mpaaRating;
-    protected String studio;
+    protected String studioName;
     protected Date creationDate;    
-    protected Date lastModifiedDate;    
-    
+    protected Date lastModifiedDate;
+    protected Integer numScores;
+    protected Double averageScore;
+    protected Integer numWts;
+    protected Integer numNi;
+    protected Integer numReviews;
+    protected Integer status;
+    protected Iterable<String> genres;
+
     @JsonApiToMany(lazy=true)
     protected Iterable<MovieCast> movieCast;
     
@@ -51,7 +59,7 @@ public class Movie extends AbstractModel  {
     
     @JsonApiToMany(lazy=true)
     protected Iterable<VideoClip> videoClips;
-    
+
     @JsonApiToMany(lazy=true)
     protected Iterable<Image> images;
 
