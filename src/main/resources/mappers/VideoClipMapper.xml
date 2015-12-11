@@ -11,14 +11,23 @@
     </select>
     
     <select id="selectVideoClipsForMovie" resultMap="videoClipResultMap" parameterType="map">
-        SELECT * 
+        SELECT
+            id,
+            url,
+            language,
+            source,
+            format,
+            title,
+            duration,
+            status,
+            fav_count as "favoriteCount",
+            thumb_url as "thumbUrl"
         FROM video_clip 
         WHERE movie_id=#{movie_id}
+        ORDER BY fav_count DESC
         <if test="videoLimit != null">LIMIT #{videoLimit}</if>
     </select>
 
-    <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip">
-        <id property="id" column="id" />
-        <result property="url" column="url"/>
-    </resultMap>
+    <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip" />
+
 </mapper>
