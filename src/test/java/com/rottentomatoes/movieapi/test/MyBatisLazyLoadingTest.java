@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import static org.hamcrest.CoreMatchers.is;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(locations={ "classpath:application.properties" })
 @ContextConfiguration(locations = { "classpath:applicationContext.xml" })
+@Ignore
 public class MyBatisLazyLoadingTest {
     @Autowired
     private SqlSession sqlSession;
