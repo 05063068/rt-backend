@@ -9,5 +9,6 @@ import lombok.Setter;
 @Getter 
 @Setter
 public class Image extends AbstractModel {
-    protected String url;
+    protected Integer originalHeight;
+    protected Integer originalWidth;
 }

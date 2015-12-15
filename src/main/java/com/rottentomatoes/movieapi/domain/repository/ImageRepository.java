@@ -1,5 +1,12 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +21,7 @@ public class ImageRepository implements ResourceRepository<Image, String> {
     @Autowired
     private SqlSession sqlSession;
     
+    private static Set<String> VALID_IMG_TYPES = new HashSet<String>(Arrays.asList(new String[]{"movie_img"}));    
     @Override
     public <S extends Image> S save(S entity) {
         return null;
@@ -25,8 +33,27 @@ public class ImageRepository implements ResourceRepository<Image, String> {
     }
 
 	@Override
-	public Image findOne(String imageId, RequestParams requestParams) {
-        Image image = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImageById", imageId);
+	public Image findOne(String id, RequestParams requestParams) {
+		// Validate imageId
+		String[] idParts = id.split("-");
+		String imageType;
+		String imageId;
+		if(idParts.length != 2){
+			return null;
+		}
+		else if(!VALID_IMG_TYPES.contains(idParts[0])){
+			return null;
+		}
+		else {
+			imageType = idParts[0];
+			imageId = idParts[1];
+		}
+		
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("type",imageType);
+        selectParams.put("id", imageId);
+        
+        Image image = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImageByIdAndType", selectParams);
         return image;
 	}
 

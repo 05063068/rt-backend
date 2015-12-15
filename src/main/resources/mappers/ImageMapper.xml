@@ -7,17 +7,24 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ImageMapper">
     <select id="selectImageByIdAndType" resultMap="imageResultMap">
-        SELECT * FROM movie_img WHERE id=#{id}
+        SELECT CONCAT('${type}-' , id) AS id, img_width, img_height 
+        FROM ${type}        
+        WHERE id=#{id}
     </select>
     
     <select id="selectImagesForMovie" resultMap="imageResultMap" parameterType="map">
-        SELECT * 
+        SELECT CONCAT('movie_img-' , id) AS id, img_width, img_height
         FROM movie_img 
         WHERE movie_id=#{movie_id}      
     </select>
 
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
         <id property="id" column="id" />
+        <result property="originalWidth" column="img_width" />
+        <result property="originalHeight" column="img_height" />
+        
+        <!-- 
         <result property="url" column="id" typeHandler="com.rottentomatoes.movieapi.mappers.ImageUrlTypeHandler"/>
+         -->
     </resultMap>
 </mapper>
