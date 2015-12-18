@@ -56,6 +56,9 @@ The project can be deployed to AWS simply by executing the following command:
 mvn beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
 ```
 
+#### About Spring profiles
+Spring supports convention-driven profiles. When the `spring.profiles.active` environment variable is set, the corresponding application.properties file (application-prod.properties in the case of `spring.profiles.active=prod`) will be read. This is the mechanism used to customize environment-based properties e.g. DB hostname.
+
 # Example Requests
 
 ## JSON-API and Katharsis concepts
