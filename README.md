@@ -34,6 +34,28 @@ After setting this up, establish your tunnel by connecting to the jump server `s
 
 ```
 
+### Setting up AWS Elastic Beanstalk deployments
+You can deploy automatically to Elastic Beanstalk using the beanstalker plugin.
+
+Find your .m2 directory (usually in ~/.m2 e.g. C:\Users\Peter\.m2) and add/edit your settings.xml
+```
+<settings>
+  <servers>
+     ... other settings e.g. Github ...
+    <server>
+      <id>aws.amazon.com</id>
+      <username>[Your personal AWS access key]</username>
+      <password>[Your personal AWS access token]</password>
+    </server>
+  </servers>
+</settings>
+``` 
+
+The project can be deployed to AWS simply by executing the following command:
+```
+mvn beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
+```
+
 # Example Requests
 
 ## JSON-API and Katharsis concepts
