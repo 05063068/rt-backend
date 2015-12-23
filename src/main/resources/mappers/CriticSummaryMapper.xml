@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper">
+
+    <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
+        SELECT * FROM tomatometer_info WHERE movie_id = #{movie_id}
+    </select>
+
+    <resultMap id="criticSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticSummary">
+        <id property="id" column="id" />
+        <result property="criticReviewCount" column="num_reviews"/>
+        <result property="criticAverageScore" column="avg_score"/>
+        <result property="criticConsensus" column="consensus"/>
+        <result property="criticCertifiedFresh" column="certified_fresh"/>
+        <result property="criticPendingCertifiedFresh" column="pending_certified"/>
+    </resultMap>
+</mapper>
