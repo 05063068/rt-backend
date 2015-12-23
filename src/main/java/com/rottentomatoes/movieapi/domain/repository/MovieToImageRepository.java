@@ -24,7 +24,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.domain.model.Image;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 

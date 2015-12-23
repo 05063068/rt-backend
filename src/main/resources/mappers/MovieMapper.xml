@@ -10,15 +10,19 @@
         	#{reviewLimit} reviewLimit,
         	#{videoLimit} videoLimit,
             movie.*, 
-            movie_studio.name               as "studioName",
-            rating_summary.num_scores       as "numScores",
-            rating_summary.average_score    as "averageScore",
-            rating_summary.num_wts          as "numWts",
-            rating_summary.num_ni           as "numNi",
-            rating_summary.num_reviews      as "numReviews"
+            movie_studio.name                   as "studioName",
+
+            rating_summary.num_scores           as "audienceScoreCount",
+            rating_summary.average_score        as "audienceAverageScore",
+            rating_summary.num_wts              as "audienceWTSCount",
+            rating_summary.num_ni               as "audienceNotInterestedCount",
+            rating_summary.num_reviews          as "audienceReviewsCount",
+            tomatometer_info.avg_score          as "criticAverageScore",
+            tomatometer_info.certified_fresh    as "criticCertifiedFresh"
         FROM movie
         LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
         LEFT JOIN rating_summary ON movie.movie_id=rating_summary.movie_id
+        LEFT JOIN tomatometer_info ON movie.movie_id = tomatometer_info.movie_id
         WHERE movie.movie_id = #{id}
     </select>
 
@@ -28,7 +32,6 @@
           LEFT JOIN genre ON movie_genre.genre_id = genre.id
           WHERE movie_genre.movie_id = #{movie_id}
     </select>
-
     
     <resultMap id="movieResultMap" type="com.rottentomatoes.movieapi.domain.model.Movie">
         <id property="id" column="movie_id" />
@@ -36,11 +39,14 @@
         <result property="year" column="year" />
         <result property="theaterReleaseDate" column="theater_release_date" javaType="java.sql.Date"/>
         <result property="dvdReleaseDate" column="dvd_release_date" javaType="java.sql.Date" />
-        <result property="tomatometer" column="tomatometer" />
         <result property="boxOffice" column="box_office" />
         <result property="mpaaRating" column="mpaa_rating" javaType="com.rottentomatoes.movieapi.enums.MpaaRating"  typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result property="creationDate" column="creation_date" javaType="java.sql.Timestamp" />
         <result property="lastModifiedDate" column="last_modified_date" javaType="java.sql.Timestamp" />
+
+        <association property="criticSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper.selectCriticSummaryForMovie" />
+
+        <association property="audienceSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.AudienceSummaryMapper.selectAudienceSummaryForMovie" />
 
         <collection property="genres" column="{movie_id=movie_id}" fetchType="lazy" select="selectGenreByMovieId" />
 
@@ -51,7 +57,7 @@
         <collection property="videoClips" column="{movie_id=movie_id,videoLimit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie" />
         
         <collection property="images" column="{movie_id=movie_id,limit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie" />
-         
+
     </resultMap>
 
 

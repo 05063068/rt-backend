@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.AudienceSummaryMapper">
+
+    <select id="selectAudienceSummaryForMovie" resultMap="audienceSummaryResultMap">
+        SELECT * FROM rating_summary WHERE movie_id = #{movie_id}
+    </select>
+
+    <resultMap id="audienceSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.AudienceSummary">
+        <id property="id" column="movie_id" />
+        <result property="audienceScoreCount" column="num_scores"/>
+        <result property="audienceAverageScore" column="average_score"/>
+        <result property="audienceWTSCount" column="num_wts"/>
+        <result property="audienceNotInterestedCount" column="num_ni"/>
+        <result property="audienceReviewsCount" column="num_reviews"/>
+    </resultMap>
+
+</mapper>

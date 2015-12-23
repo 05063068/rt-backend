@@ -17,14 +17,11 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 import java.util.Date;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.enums.MpaaRating;
 
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;
+import io.katharsis.resource.annotations.JsonApiToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,7 +29,7 @@ import lombok.Setter;
 @Getter 
 @Setter
 public class Movie extends AbstractModel  {
-    
+
     protected String title;
     protected Integer year;
     protected Date theaterReleaseDate;
@@ -41,13 +38,15 @@ public class Movie extends AbstractModel  {
     protected Integer boxOffice;
     protected MpaaRating mpaaRating;
     protected String studioName;
-    protected Date creationDate;    
+    protected Date creationDate;
     protected Date lastModifiedDate;
-    protected Integer numScores;
-    protected Double averageScore;
-    protected Integer numWts;
-    protected Integer numNi;
-    protected Integer numReviews;
+
+    @JsonApiToOne
+    protected CriticSummary criticSummary;
+
+    @JsonApiToOne
+    protected AudienceSummary audienceSummary;
+
     protected Integer status;
     protected Iterable<String> genres;
 
