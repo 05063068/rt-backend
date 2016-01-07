@@ -16,10 +16,18 @@
                  WHEN (tomatometer >= 60 AND NOT certified_fresh) THEN 'fresh'
                  WHEN (tomatometer >= 60 AND certified_fresh) THEN 'certified_fresh'
                  ELSE 'rotten'
-                 END AS state
+            END AS state,
+			(SELECT url
+				FROM vanity_movie_url
+				WHERE movie_id = #{id}
+				AND primary_ind = 1
+				AND platform = 'RTO'
+				ORDER BY url ASC LIMIT 1
+			) AS vanity_token
         FROM movie
         LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
         LEFT JOIN tomatometer_info ON tomatometer_info.movie_id = #{id}
+
         WHERE movie.movie_id = #{id}
     </select>
 
@@ -27,13 +35,17 @@
         <id property="id" column="movie_id" />
         <result property="title" column="title"/>
         <result property="year" column="year" />
-        <result property="theaterReleaseDate" column="theater_release_date" javaType="java.sql.Date"/>
-        <result property="dvdReleaseDate" column="dvd_release_date" javaType="java.sql.Date" />
         <result property="boxOffice" column="box_office" />
         <result property="mpaaRating" column="mpaa_rating" javaType="com.rottentomatoes.movieapi.enums.MpaaRating"  typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result property="creationDate" column="creation_date" javaType="java.sql.Timestamp" />
         <result property="lastModifiedDate" column="last_modified_date" javaType="java.sql.Timestamp" />
-        <result property="status" column="status" />
+        <result property="status" column="status" />		
+		<result property="vanityToken" column="vanity_token" />
+		
+		<association property="releaseDates" javaType="map">
+	        <result property="theater" column="theater_release_date" javaType="java.sql.Date"/>
+	        <result property="dvd" column="dvd_release_date" javaType="java.sql.Date" />	
+		</association>
 		
 		<association property="tomatometer" javaType="map">
 			<result property="value" column="value" /> 
