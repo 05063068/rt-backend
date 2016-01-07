@@ -41,8 +41,13 @@ public class Movie extends AbstractModel  {
     protected String studioName;
     protected Date creationDate;
     protected Date lastModifiedDate;
+    protected String advisory;
     protected Integer status;
     protected String vanityToken;
+    protected String synopsis;
+    protected Integer runningTime;
+    protected String officialUrl;
+    protected String shopLink;
     
     protected Map<String, Object> tomatometer;
     protected Map<String, Object> releaseDates;
@@ -55,6 +60,7 @@ public class Movie extends AbstractModel  {
     @JsonApiToOne
     @JsonApiLazy
     protected AudienceSummary audienceSummary;
+    
     
     @JsonApiToMany
     @JsonApiLazy   
