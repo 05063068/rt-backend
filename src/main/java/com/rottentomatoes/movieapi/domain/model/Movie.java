@@ -17,8 +17,11 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 import java.util.Date;
+import java.util.Map;
+
 import com.rottentomatoes.movieapi.enums.MpaaRating;
 
+import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;
 import io.katharsis.resource.annotations.JsonApiToOne;
@@ -34,32 +37,40 @@ public class Movie extends AbstractModel  {
     protected Integer year;
     protected Date theaterReleaseDate;
     protected Date dvdReleaseDate;
-    protected Integer tomatometer;
+    protected Map<String, Object> tomatometer;
     protected Integer boxOffice;
     protected MpaaRating mpaaRating;
     protected String studioName;
     protected Date creationDate;
     protected Date lastModifiedDate;
+    protected Integer status;
 
     @JsonApiToOne
+    @JsonApiLazy
     protected CriticSummary criticSummary;
 
     @JsonApiToOne
+    @JsonApiLazy
     protected AudienceSummary audienceSummary;
-
-    protected Integer status;
-    protected Iterable<String> genres;
-
-    @JsonApiToMany(lazy=true)
+    
+    @JsonApiToMany
+    @JsonApiLazy   
+    protected Iterable<Genre> genres;
+   
+    @JsonApiToMany
+    @JsonApiLazy
     protected Iterable<MovieCast> movieCast;
     
-    @JsonApiToMany(lazy=true)
+    @JsonApiToMany
+    @JsonApiLazy
     protected Iterable<Review> reviews;
     
-    @JsonApiToMany(lazy=true)
+    @JsonApiToMany
+    @JsonApiLazy
     protected Iterable<VideoClip> videoClips;
 
-    @JsonApiToMany(lazy=true)
+    @JsonApiToMany
+    @JsonApiLazy
     protected Iterable<Image> images;
 
     @Override
