@@ -1,0 +1,8 @@
+logging.level.org.apache.ibatis=WARN
+db.url=jdbc:mysql://rdssharedslave04.aws.prod.flixster.com:3306/flixster
+db.username=
+db.password=
+
+
+#Create a local file named application-prod.properties and fill in the missing username and password. This info should
+#never be committed to the repo.

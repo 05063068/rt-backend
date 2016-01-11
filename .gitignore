@@ -8,4 +8,7 @@
 *.iml
 *~
 
+application.properties
+application-prod.properties
+
 
