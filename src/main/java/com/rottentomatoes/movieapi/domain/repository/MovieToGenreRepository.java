@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Genre;
-import com.rottentomatoes.movieapi.domain.model.Image;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
 import io.katharsis.queryParams.RequestParams;

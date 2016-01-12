@@ -7,8 +7,10 @@
  
 
   <setting name="aggressiveLazyLoading" value="false" />
+  <setting name="lazyLoadingEnabled" value="true" />
+  <setting name="lazyLoadTriggerMethods" value="" />
  <!--  
- <setting name="lazyLoadingEnabled" value="true" />
+ 
  <setting name="cacheEnabled" value="true" />
  <setting name="multipleResultSetsEnabled" value="true" />
  <setting name="useColumnLabel" value="true" />

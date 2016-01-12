@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.rottentomatoes.movieapi.mappers.VanityTokenMapper">
+    <select id="selectVanityToken" resultMap="vanityTokenResultMap">
+		SELECT *
+			FROM vanity_movie_url
+			WHERE url = #{vanityToken}
+			AND primary_ind = 1
+			AND platform = 'RTO'
+    </select>
+    
+	<resultMap id="vanityTokenResultMap" type="com.rottentomatoes.movieapi.domain.model.VanityToken">
+        <id property="id" column="url" />
+        <result property="movieId" column="movie_id" />
+        <result property="platform" column="platform" />
+         <!-- 
+        <result property="url" column="id" typeHandler="com.rottentomatoes.movieapi.mappers.ImageUrlTypeHandler"/>
+         -->
+    </resultMap>
+</mapper>

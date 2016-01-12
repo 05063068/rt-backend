@@ -4,8 +4,6 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @JsonApiResource(type = "audienceSummary")
 @Getter
 @Setter

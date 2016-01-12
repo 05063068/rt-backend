@@ -1,13 +1,16 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 import io.katharsis.resource.annotations.JsonApiResource;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonApiResource(type = "genre")
+@JsonApiResource(type = "vanity-token")
 @Getter 
 @Setter
-public class Genre extends AbstractModel {
-    protected String name;    
-    protected String tag;
+public class VanityToken extends AbstractModel {
+
+	protected String movieId;
+	protected String platform;
+
 }

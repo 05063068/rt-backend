@@ -32,8 +32,9 @@ public class VideoClipRepository implements ResourceRepository<VideoClip, String
         return null;
     }
 
-    @Override
-    public Iterable<VideoClip> findAll(Iterable<String> iterable, RequestParams requestParams) {
-        return null;
-    }
+	@Override
+	public Iterable<VideoClip> findAll(Iterable<String> ids, RequestParams requestParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

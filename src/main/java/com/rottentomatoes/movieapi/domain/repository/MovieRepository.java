@@ -18,21 +18,17 @@ package com.rottentomatoes.movieapi.domain.repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
-import lombok.extern.log4j.Log4j;
 
 @Component
-@Log4j
 public class MovieRepository implements ResourceRepository<Movie, String> {
     @Autowired
     private SqlSession sqlSession;

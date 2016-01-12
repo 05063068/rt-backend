@@ -1,0 +1,12 @@
+# Default Profile is dev
+logging.level.org.apache.ibatis=DEBUG
+db.url=jdbc:mysql://localhost:10001/flixster
+db.username=
+db.password=
+
+images.resizer.host=http://resizing.flixster.com
+images.resizer.key=
+images.origin.host=d2l7bkmy761dib.cloudfront.net
+
+#Create a local file named application.properties and fill in the missing keys and passwords. This info should never
+#be committed to the repo.

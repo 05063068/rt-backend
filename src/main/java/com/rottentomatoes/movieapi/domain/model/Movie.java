@@ -63,7 +63,7 @@ public class Movie extends AbstractModel  {
     
     
     @JsonApiToMany
-    @JsonApiLazy   
+    @JsonApiLazy
     protected Iterable<Genre> genres;
    
     @JsonApiToMany

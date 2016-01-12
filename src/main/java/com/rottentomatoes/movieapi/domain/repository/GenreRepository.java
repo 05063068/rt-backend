@@ -1,18 +1,13 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Genre;
-import com.rottentomatoes.movieapi.domain.model.Image;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
@@ -22,7 +17,6 @@ public class GenreRepository implements ResourceRepository<Genre, String> {
     @Autowired
     private SqlSession sqlSession;
     
-    private static Set<String> VALID_IMG_TYPES = new HashSet<String>(Arrays.asList(new String[]{"movie_img"}));    
     @Override
     public <S extends Genre> S save(S entity) {
         return null;
@@ -54,4 +48,5 @@ public class GenreRepository implements ResourceRepository<Genre, String> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

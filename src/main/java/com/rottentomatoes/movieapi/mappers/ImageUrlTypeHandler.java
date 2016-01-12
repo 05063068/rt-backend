@@ -4,24 +4,14 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.utils.PropertyUtils;
 import com.squareup.pollexor.Thumbor;
 import com.squareup.pollexor.ThumborUrlBuilder;
-
-import lombok.extern.log4j.Log4j;
-
-@Log4j
 @MappedJdbcTypes(JdbcType.INTEGER)
 
 public class ImageUrlTypeHandler extends BaseTypeHandler<String> {

@@ -31,7 +31,7 @@ public class MovieCast extends AbstractModel{
 
     protected String role;
     
-    private List<String> characters;
+    protected List<String> characters;
     
     @JsonApiToOne
     private Person person;

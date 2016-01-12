@@ -24,44 +24,43 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.rottentomatoes.movieapi.domain.model.Image;
 import com.rottentomatoes.movieapi.domain.model.Movie;
+import com.rottentomatoes.movieapi.domain.model.MovieList;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
-public class MovieToImageRepository implements RelationshipRepository<Movie, String, Image, String> {
+public class MovieListToMovieRepository implements RelationshipRepository<MovieList, String, Movie, String> {
     @Autowired
     private SqlSession sqlSession;
     
     @Override
-    public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
+    public void addRelations(MovieList arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public void removeRelations(Movie arg0, Iterable<String> arg1, String arg2) {
+    public void removeRelations(MovieList arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public void setRelation(Movie arg0, String arg1, String arg2) {
+    public void setRelation(MovieList arg0, String arg1, String arg2) {
     }
     
     @Override
-    public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
+    public void setRelations(MovieList arg0, Iterable<String> arg1, String arg2) {
     }
 
 	@Override
-	public Image findOneTarget(String id, String fieldName, RequestParams requestParams) {
+	public Movie findOneTarget(String id, String fieldName, RequestParams requestParams) {
 		return null;
 	}
 
 	@Override
-	public Iterable<Image> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+	public Iterable<Movie> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
-		
-        List<Image> imageList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", selectParams);
-        return imageList;
+        
+        List<Movie> movieList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectBoxOfficeMovies", selectParams);
+        return movieList;
 	}
 }

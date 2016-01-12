@@ -3,9 +3,8 @@
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieMapper">
 
-
-    <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
-        SELECT 
+    <sql id="movieSelectSql">
+		SELECT 
         	#{actorLimit} actorLimit,   /* Dummy columns used for passing subselect params */
         	#{reviewLimit} reviewLimit,
         	#{videoLimit} videoLimit,
@@ -19,7 +18,7 @@
             END AS state,
 			(SELECT url
 				FROM vanity_movie_url
-				WHERE movie_id = #{id}
+				WHERE movie_id = movie.movie_id
 				AND primary_ind = 1
 				AND platform = 'RTO'
 				ORDER BY url ASC LIMIT 1
@@ -28,11 +27,14 @@
 			movie_meta_data.running_time,
 			movie_meta_data.official_url,
 			movie_meta_data.shop_link
-
         FROM movie
         LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
-        LEFT JOIN movie_meta_data ON movie_meta_data.movie_id = #{id}
-        LEFT JOIN tomatometer_info ON tomatometer_info.movie_id = #{id}
+        LEFT JOIN movie_meta_data ON movie_meta_data.movie_id = movie.movie_id
+        LEFT JOIN tomatometer_info ON tomatometer_info.movie_id = movie.movie_id
+	</sql>
+
+    <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
+		<include refid="movieSelectSql" />
         WHERE movie.movie_id = #{id}
     </select>
 
@@ -62,7 +64,6 @@
 			<result property="value" column="value" /> 
 			<result property="state" column="state" />
 		</association>
-
 		
         <association property="criticSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper.selectCriticSummaryForMovie" />
 
