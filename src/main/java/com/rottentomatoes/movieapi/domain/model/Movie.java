@@ -55,6 +55,10 @@ public class Movie extends AbstractModel  {
     
     @JsonApiToOne
     @JsonApiLazy
+    protected Image posterImage;
+
+    @JsonApiToOne
+    @JsonApiLazy
     protected CriticSummary criticSummary;
 
     @JsonApiToOne

@@ -8,6 +8,7 @@
         	#{actorLimit} actorLimit,   /* Dummy columns used for passing subselect params */
         	#{reviewLimit} reviewLimit,
         	#{videoLimit} videoLimit,
+        	'movie_img' main_image_type, 
             movie.*, 
             movie_studio.name AS studioName,
             tomatometer AS value, 
@@ -64,6 +65,8 @@
 			<result property="value" column="value" /> 
 			<result property="state" column="state" />
 		</association>
+		
+		<association property="posterImage" column="{id=main_image,type=main_image_type}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ImageMapper.selectImageByIdAndType" />
 		
         <association property="criticSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper.selectCriticSummaryForMovie" />
 
