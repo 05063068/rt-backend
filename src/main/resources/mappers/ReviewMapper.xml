@@ -48,6 +48,7 @@
         <result property="movieId" column="movie_id"/>
         <result property="quote" column="quote"/>
         <result property="scoreOri" column="score_ori"/>
+        <result property="score" column="score"/>
         <result property="url" column="url"/>
         <result property="creationDate" column="creation_date"/>
         <result property="topCritic" column="is_top_critic"/>
