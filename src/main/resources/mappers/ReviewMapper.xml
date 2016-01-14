@@ -11,7 +11,9 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
 	<sql id="selectColumns">
        	review.*, 
-       	critic.name critic_name, 
+       	critic.name critic_name,
+       	critic.image_id critic_image_id,
+       	critic.vanity_url critic_vanity_url,
        	publication.name publication_name,
        	IF(critic_top.critic_id,1,0) is_top_critic
 	</sql>
@@ -48,11 +50,15 @@
         <result property="scoreOri" column="score_ori"/>
         <result property="url" column="url"/>
         <result property="creationDate" column="creation_date"/>
+        <result property="topCritic" column="is_top_critic"/>
 
         <association property="critic" javaType="com.rottentomatoes.movieapi.domain.model.Critic">
             <id property="id" column="critic_id"/>
             <result property="name" column="critic_name"/>
+            <result property="imageId" column="critic_image_id"/>
+            <result property="vanityUrl" column="critic_vanity_url"/>
         </association>
+
         <association property="publication" javaType="com.rottentomatoes.movieapi.domain.model.Publication">
             <id property="id" column="publication_id"/>
             <result property="name" column="publication_name"/>
