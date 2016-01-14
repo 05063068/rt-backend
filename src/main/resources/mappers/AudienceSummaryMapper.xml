@@ -9,11 +9,11 @@
 
     <resultMap id="audienceSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.AudienceSummary">
         <id property="id" column="movie_id" />
-        <result property="audienceScoreCount" column="num_scores"/>
-        <result property="audienceAverageScore" column="average_score"/>
-        <result property="audienceWTSCount" column="num_wts"/>
-        <result property="audienceNotInterestedCount" column="num_ni"/>
-        <result property="audienceReviewsCount" column="num_reviews"/>
+        <result property="scoreCount" column="num_scores"/>
+        <result property="score" column="average_score"/>
+        <result property="wtsCount" column="num_wts"/>
+        <result property="notInterestedCount" column="num_ni"/>
+        <result property="reviewsCount" column="num_reviews"/>
     </resultMap>
 
 </mapper>

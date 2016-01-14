@@ -9,11 +9,11 @@ import lombok.Setter;
 @Setter
 public class AudienceSummary extends AbstractModel {
 
-    protected Integer audienceScoreCount;
-    protected Double audienceAverageScore;
-    protected Integer audienceWTSCount;
-    protected Integer audienceNotInterestedCount;
-    protected Integer audienceReviewsCount;
+    protected Integer scoreCount;
+    protected Double score;
+    protected Integer wtsCount;
+    protected Integer notInterestedCount;
+    protected Integer reviewsCount;
 }
 
 
