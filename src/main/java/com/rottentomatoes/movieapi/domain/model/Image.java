@@ -11,4 +11,6 @@ import lombok.Setter;
 public class Image extends AbstractModel {
     protected Integer originalHeight;
     protected Integer originalWidth;
+    protected String imageType;
+    protected String databaseId;
 }

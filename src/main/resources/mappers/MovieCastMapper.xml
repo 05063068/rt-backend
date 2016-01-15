@@ -13,7 +13,8 @@
         movie_cast.*,
        	movie_person.name movie_person_name, 
        	movie_person.id movie_person_id, 
-       	movie_character.name character_name
+       	movie_character.name character_name,
+		<include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonImageColumns" />
 	</sql>
 
     <select id="selectMovieCastById" resultMap="movieCastResultMap" parameterType="map">
@@ -46,7 +47,7 @@
        		)) cast_ids
         LEFT JOIN movie_cast ON movie_cast.id = cast_ids.id
         LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
-        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id 
+        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id        
         WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
         AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
 		ORDER BY movie_cast.role, movie_cast.sortkey
@@ -61,6 +62,8 @@
         <association property="person" javaType="com.rottentomatoes.movieapi.domain.model.Person">
             <id property="id" column="movie_person_id" />
             <result property="name" column="movie_person_name" />
+            
+			<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" />    	            
         </association>
         
         <collection property="characters" javaType="list" ofType="java.lang.String">

@@ -4,7 +4,6 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieMapper">
 
     <sql id="movieSelectSql">
-		SELECT 
         	#{actorLimit} actorLimit,   /* Dummy columns used for passing subselect params */
         	#{reviewLimit} reviewLimit,
         	#{videoLimit} videoLimit,
@@ -32,9 +31,11 @@
         LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
         LEFT JOIN movie_meta_data ON movie_meta_data.movie_id = movie.movie_id
         LEFT JOIN tomatometer_info ON tomatometer_info.movie_id = movie.movie_id
+        <!--  TODO: Check status=active -->
 	</sql>
 
     <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
+		SELECT 
 		<include refid="movieSelectSql" />
         WHERE movie.movie_id = #{id}
     </select>
