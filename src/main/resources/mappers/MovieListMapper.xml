@@ -4,7 +4,7 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieListMapper">
 
     <select id="selectBoxOfficeMovies"  resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
-		<include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
+		SELECT <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         WHERE movie.movie_id IN (SELECT * FROM 
         (
         	SELECT movie_id FROM movie_box_office WHERE country='us' ORDER BY id DESC LIMIT 10
