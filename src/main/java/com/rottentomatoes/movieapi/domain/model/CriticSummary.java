@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 public class CriticSummary extends AbstractModel {
 
-    protected Integer criticReviewCount;
-    protected Integer criticAverageScore;
-    protected String criticConsensus;
-    protected Integer criticCertifiedFresh;
-    protected Integer criticPendingCertifiedFresh;
+    protected Integer reviewCount;
+    protected Integer averageScore;
+    protected String consensus;
+    protected Integer certifiedFresh;
+    protected Integer pendingCertifiedFresh;
 
 }
