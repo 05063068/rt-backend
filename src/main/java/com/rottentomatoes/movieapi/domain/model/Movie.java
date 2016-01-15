@@ -54,8 +54,7 @@ public class Movie extends AbstractModel  {
     
     
     @JsonApiToOne
-    @JsonApiLazy
-    protected Image posterImage;
+    protected Image mainImage;
 
     @JsonApiToOne
     @JsonApiLazy

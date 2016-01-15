@@ -8,7 +8,28 @@
         	#{reviewLimit} reviewLimit,
         	#{videoLimit} videoLimit,
         	'movie_img' main_image_type, 
-            movie.*, 
+            movie.movie_id,
+            movie.title,
+            movie.year,
+            movie.theater_release_date,
+            movie.dvd_release_date,
+            movie.status,
+            movie.tomatometer,
+            movie.box_office,
+            movie.sequence,
+            movie.feature_level,
+            movie.mpaa_rating,
+            movie.creation_date,
+            movie.last_modified_date,
+            movie.version,
+            CONCAT('movie_img-' , movie.main_image) AS img_id,
+            'movie_img' AS img_type,
+            movie.main_trailer,
+            movie.advisory,
+            movie.studio_id,
+            movie.auto_update_ind,
+            movie.trailer_update_ind,
+                        
             movie_studio.name AS studioName,
             tomatometer AS value, 
             CASE WHEN tomatometer IS NULL THEN null
@@ -67,7 +88,7 @@
 			<result property="state" column="state" />
 		</association>
 		
-		<association property="posterImage" column="{id=main_image,type=main_image_type}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ImageMapper.selectImageByIdAndType" />
+		<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
 		
         <association property="criticSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper.selectCriticSummaryForMovie" />
 
