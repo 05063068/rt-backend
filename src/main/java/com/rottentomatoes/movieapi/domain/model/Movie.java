@@ -48,7 +48,7 @@ public class Movie extends AbstractModel  {
     protected Integer runningTime;
     protected String officialUrl;
     protected String shopLink;
-    
+
     protected Map<String, Object> tomatometer;
     protected Map<String, Object> releaseDates;
     

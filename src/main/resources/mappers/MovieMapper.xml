@@ -56,7 +56,7 @@
 		<result property="officialUrl" column="official_url" />
 		<result property="shopLink" column="shop_link" />
 		<result property="studioName" column="studioName" />
-		
+
 		<association property="releaseDates" javaType="map">
 	        <result property="theater" column="theater_release_date" javaType="java.sql.Date"/>
 	        <result property="dvd" column="dvd_release_date" javaType="java.sql.Date" />	

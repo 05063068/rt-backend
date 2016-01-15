@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "person")
-@Getter 
+@Getter
 @Setter
 public class Person extends AbstractModel{
 
