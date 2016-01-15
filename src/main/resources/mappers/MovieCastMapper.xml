@@ -63,7 +63,7 @@
             <id property="id" column="movie_person_id" />
             <result property="name" column="movie_person_name" />
             
-			<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" />    	            
+			<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
         </association>
         
         <collection property="characters" javaType="list" ofType="java.lang.String">
