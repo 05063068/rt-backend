@@ -9,10 +9,10 @@
 
     <resultMap id="criticSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticSummary">
         <id property="id" column="id" />
-        <result property="criticReviewCount" column="num_reviews"/>
-        <result property="criticAverageScore" column="avg_score"/>
-        <result property="criticConsensus" column="consensus"/>
-        <result property="criticCertifiedFresh" column="certified_fresh"/>
-        <result property="criticPendingCertifiedFresh" column="pending_certified"/>
+        <result property="reviewCount" column="num_reviews"/>
+        <result property="averageScore" column="avg_score"/>
+        <result property="consensus" column="consensus"/>
+        <result property="certifiedFresh" column="certified_fresh"/>
+        <result property="pendingCertifiedFresh" column="pending_certified"/>
     </resultMap>
 </mapper>

@@ -10,7 +10,7 @@
     <resultMap id="audienceSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.AudienceSummary">
         <id property="id" column="movie_id" />
         <result property="scoreCount" column="num_scores"/>
-        <result property="score" column="average_score"/>
+        <result property="avgScore" column="average_score"/>
         <result property="wtsCount" column="num_wts"/>
         <result property="notInterestedCount" column="num_ni"/>
         <result property="reviewsCount" column="num_reviews"/>

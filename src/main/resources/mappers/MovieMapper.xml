@@ -92,6 +92,8 @@
 		
         <association property="criticSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper.selectCriticSummaryForMovie" />
 
+        <association property="franchise" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.FranchiseMapper.selectFranchiseForMovie" />
+
         <association property="audienceSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.AudienceSummaryMapper.selectAudienceSummaryForMovie" />
 
         <collection property="genres" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.GenreMapper.selectGenresForMovie" />
