@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.FranchiseMapper">
+
+    <select id="selectFranchiseById" resultMap="franchiseResultMap" parameterType="map">
+        SELECT * FROM franchise WHERE franchise.id = #{id}
+    </select>
+
+    <select id="selectFranchiseForMovie" resultMap="franchiseResultMap"  parameterType="map">
+        SELECT
+          franchise.id,
+          franchise.name AS franchise_name,
+          franchise.main_image AS franchise_main_image,
+          franchise.banner_image AS franchise_banner_image
+        FROM franchise_item
+        INNER JOIN franchise
+        ON franchise_item.franchise_id = franchise.id
+        WHERE franchise_item.media_id = #{movie_id}
+        AND franchise_item.media_type = "MV"
+    </select>
+
+    <resultMap id="franchiseResultMap" type="com.rottentomatoes.movieapi.domain.model.Franchise">
+        <id property="id" column="id" />
+        <result property="name" column="franchise_name" />
+        <result property="mainImageId" column="franchise_main_image" />
+        <result property="bannerImageId" column="franchise_banner_image" />
+    </resultMap>
+</mapper>
