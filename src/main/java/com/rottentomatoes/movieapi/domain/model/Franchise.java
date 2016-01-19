@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Franchise extends AbstractModel {
+
     protected String name;
     protected Integer mainImageId;
     protected Integer bannerImageId;

@@ -67,12 +67,11 @@ public class Movie extends AbstractModel  {
     @JsonApiToOne
     @JsonApiLazy
     protected AudienceSummary audienceSummary;
-    
-    
+
     @JsonApiToMany
     @JsonApiLazy
     protected Iterable<Genre> genres;
-   
+
     @JsonApiToMany
     @JsonApiLazy
     protected Iterable<MovieCast> movieCast;
@@ -80,11 +79,15 @@ public class Movie extends AbstractModel  {
     @JsonApiToMany
     @JsonApiLazy
     protected Iterable<ItunesInfo> itunesInfo;
-    
+
+    @JsonApiToMany
+    @JsonApiLazy
+    protected Iterable<AmazonInfo> amazonInfo;
+
     @JsonApiToMany
     @JsonApiLazy
     protected Iterable<Review> reviews;
-    
+
     @JsonApiToMany
     @JsonApiLazy
     protected Iterable<VideoClip> videoClips;
