@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.ItunesInfoMapper">
+
+    <select id="selectItunesInfoById" resultMap="itunesInfoResultMap" parameterType="map">
+         SELECT
+          id,
+          media_profile AS mediaProfile,
+          type,
+          currency,
+          price,
+          country
+        FROM itunes_price
+        WHERE id=#{id}
+        AND (type='ITR' OR type='ITB') AND currency='USD'
+        AND country='us' AND deleted_ind=0
+    </select>
+
+    <select id="selectItunesInfoForMovie" resultMap="itunesInfoResultMap"  parameterType="map">
+        SELECT
+          p.id,
+          p.media_profile AS mediaProfile,
+          p.type,
+          p.currency,
+          p.price,
+          p.country
+        FROM itunes_price p, movie_source s
+        WHERE p.source_id=s.id AND s.movie_id=#{movie_id}
+        AND (p.type='ITR' OR p.type='ITB') AND p.currency='USD'
+        AND p.country='us' AND p.deleted_ind=0
+    </select>
+
+    <resultMap id="itunesInfoResultMap" type="com.rottentomatoes.movieapi.domain.model.ItunesInfo">
+        <id property="id" column="id" />
+    </resultMap>
+</mapper>

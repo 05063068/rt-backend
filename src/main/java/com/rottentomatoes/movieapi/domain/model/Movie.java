@@ -76,6 +76,10 @@ public class Movie extends AbstractModel  {
     @JsonApiToMany
     @JsonApiLazy
     protected Iterable<MovieCast> movieCast;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    protected Iterable<ItunesInfo> itunesInfo;
     
     @JsonApiToMany
     @JsonApiLazy
