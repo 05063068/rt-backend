@@ -22,6 +22,7 @@ import java.util.Map;
 import com.rottentomatoes.movieapi.enums.MpaaRating;
 
 import io.katharsis.resource.annotations.JsonApiLazy;
+import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;
 import io.katharsis.resource.annotations.JsonApiToOne;
@@ -65,6 +66,10 @@ public class Movie extends AbstractModel  {
     protected Franchise franchise;
 
     @JsonApiToOne
+    @JsonApiLookupIncludeAutomatically
+    protected Affiliates affiliates;
+
+    @JsonApiToOne
     @JsonApiLazy
     protected AudienceSummary audienceSummary;
 
@@ -75,14 +80,6 @@ public class Movie extends AbstractModel  {
     @JsonApiToMany
     @JsonApiLazy
     protected Iterable<MovieCast> movieCast;
-
-    @JsonApiToMany
-    @JsonApiLazy
-    protected Iterable<ItunesInfo> itunesInfo;
-
-    @JsonApiToMany
-    @JsonApiLazy
-    protected Iterable<AmazonInfo> amazonInfo;
 
     @JsonApiToMany
     @JsonApiLazy

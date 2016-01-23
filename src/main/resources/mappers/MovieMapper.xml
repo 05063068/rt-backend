@@ -98,10 +98,6 @@
 
         <collection property="genres" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.GenreMapper.selectGenresForMovie" />
 
-        <collection property="itunesInfo" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ItunesInfoMapper.selectItunesInfoForMovie" />
-
-        <collection property="amazonInfo" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.AmazonInfoMapper.selectAmazonInfoForMovie" />
-
         <collection property="movieCast" column="{movie_id=movie_id,actorLimit=actorLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie" />
        
         <collection property="reviews" column="{movie_id=movie_id,reviewLimit=reviewLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />

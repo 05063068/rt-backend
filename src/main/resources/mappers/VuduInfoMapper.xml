@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.VuduInfoMapper">
+
+    <select id="selectVuduInfoById" resultMap="vuduInfoResultMap" parameterType="map">
+       SELECT
+          b.id,
+          b.format,
+          b.type,
+          b.price,
+          b.currency,
+          b.start_date,
+          b.end_date
+        FROM vudu_avail a, vudu_format_avail b, movie_source c
+        WHERE a.id = b.vudu_avail_id AND a.source_id = #{id} a.uv_enabled = 1;
+    </select>
+
+    <select id="selectVuduInfoForMovie" resultMap="vuduInfoResultMap"  parameterType="map">
+        SELECT
+          b.id,
+          b.format,
+          b.type,
+          b.price,
+          b.currency,
+          b.start_date,
+          b.end_date
+        FROM vudu_avail a, vudu_format_avail b, movie_source c
+        WHERE a.id = b.vudu_avail_id AND a.source_id = c.id AND c.movie_id = #{movie_id} AND a.uv_enabled = 1;
+    </select>
+
+    <resultMap id="vuduInfoResultMap" type="com.rottentomatoes.movieapi.domain.model.VuduInfo">
+        <id property="id" column="id" />
+    </resultMap>
+</mapper>
