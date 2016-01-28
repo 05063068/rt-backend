@@ -1,10 +1,10 @@
-# movie-api
-Core Movie API
+# catalog-api
+Catalog API
 
 ## Setup and Build Notes
 
 ### Configuring JRE
-movie-api requires JRE1.8. If you have multiple JRE's installed you'll need to configure your IDE (Eclipse/IDEA) to use the right one.
+catalog-api requires JRE1.8. If you have multiple JRE's installed you'll need to configure your IDE (Eclipse/IDEA) to use the right one.
 
 ### Custom Katharsis build
 This project requires a custom build of katharsis-core and katharsis-servlet (1.0.x-FLIXSTER). I'm in conversation with the maintainers to do an official PR but until then the pom is wired up by default to use the pre-built custom repo at `https://raw.githubusercontent.com/flixster/mvn-repo/master`. No action is necessary to get the build going.
