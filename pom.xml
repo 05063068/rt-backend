@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.rottentomatoes</groupId>
-	<artifactId>movie-api</artifactId>
+	<artifactId>catalog-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>Flixster Movie API</name>
+	<name>Flixster Catalog API</name>
 	<description>Peter</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -139,7 +139,7 @@
 				<artifactId>beanstalk-maven-plugin</artifactId>
 				<version>1.4.0</version>
 				<configuration>
-				  <applicationName>movie-api</applicationName>
+				  <applicationName>catalog-api</applicationName>
 				  <environmentRef>staging</environmentRef>
 				  <s3Bucket>flx-movie-api</s3Bucket>
 				  <s3Key>${project.artifactId}/${project.build.finalName}-${maven.build.timestamp}.war</s3Key>
