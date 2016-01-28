@@ -77,35 +77,15 @@
 		<result property="officialUrl" column="official_url" />
 		<result property="shopLink" column="shop_link" />
 		<result property="studioName" column="studioName" />
-
 		<association property="releaseDates" javaType="map">
 	        <result property="theater" column="theater_release_date" javaType="java.sql.Date"/>
 	        <result property="dvd" column="dvd_release_date" javaType="java.sql.Date" />	
 		</association>
-		
 		<association property="tomatometer" javaType="map">
 			<result property="value" column="value" /> 
 			<result property="state" column="state" />
 		</association>
-		
 		<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
-		
-        <association property="criticSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper.selectCriticSummaryForMovie" />
-
-        <association property="franchise" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.FranchiseMapper.selectFranchiseForMovie" />
-
-        <association property="audienceSummary" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.AudienceSummaryMapper.selectAudienceSummaryForMovie" />
-
-        <collection property="genres" column="{movie_id=movie_id}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.GenreMapper.selectGenresForMovie" />
-
-        <collection property="movieCast" column="{movie_id=movie_id,actorLimit=actorLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie" />
-       
-        <collection property="reviews" column="{movie_id=movie_id,reviewLimit=reviewLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie" />
-        
-        <collection property="videoClips" column="{movie_id=movie_id,videoLimit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie" />
-        
-        <collection property="images" column="{movie_id=movie_id,limit=videoLimit}" fetchType="lazy" select="com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie" />
-
     </resultMap>
 
 </mapper>
