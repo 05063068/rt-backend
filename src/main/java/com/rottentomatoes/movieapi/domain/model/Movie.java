@@ -27,6 +27,8 @@ import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;
 import io.katharsis.resource.annotations.JsonApiToOne;
+
+import io.katharsis.response.MetaDataEnabledList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -96,7 +98,7 @@ public class Movie extends AbstractModel  {
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected Iterable<VideoClip> videoClips;
+    protected MetaDataEnabledList<VideoClip> videoClips;
 
     @JsonApiToMany
     @JsonApiLazy

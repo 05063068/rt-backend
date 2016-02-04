@@ -3,7 +3,10 @@ package com.rottentomatoes.movieapi.domain.repository;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.VideoClip;
 import io.katharsis.queryParams.RequestParams;
+import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
+import io.katharsis.response.MetaDataEnabledList;
+import io.katharsis.response.MetaInformation;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class MovieToVideoClipRepository implements RelationshipRepository<Movie, String, VideoClip, String> {
+public class MovieToVideoClipRepository implements RelationshipRepository<Movie, String, VideoClip, String>, MetaRepository {
     @Autowired
     private SqlSession sqlSession;
 
@@ -43,11 +46,20 @@ public class MovieToVideoClipRepository implements RelationshipRepository<Movie,
     }
 
     @Override
-    public Iterable<VideoClip> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+    public MetaDataEnabledList<VideoClip> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
-
-        List<VideoClip> videoClipList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie", selectParams);
+        MetaDataEnabledList<VideoClip> videoClipList;
+        videoClipList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie", selectParams));
         return videoClipList;
+    }
+
+    @Override
+    public MetaInformation getMetaInformation(Iterable resources, RequestParams requestParams) {
+        class VideoClipMetaData implements MetaInformation {
+            public int size = 20;
+
+        }
+        return new VideoClipMetaData();
     }
 }
