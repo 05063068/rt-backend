@@ -1,7 +1,5 @@
 package com.rottentomatoes.movieapi.domain.model;
 
-import com.rottentomatoes.movieapi.domain.model.AbstractModel;
-import com.sun.org.apache.xpath.internal.operations.String;
 import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;

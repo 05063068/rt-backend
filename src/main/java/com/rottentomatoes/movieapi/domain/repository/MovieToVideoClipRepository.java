@@ -1,5 +1,7 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
+import com.rottentomatoes.movieapi.domain.model.AbstractModel;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.VideoClip;
 import io.katharsis.queryParams.RequestParams;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -49,17 +50,22 @@ public class MovieToVideoClipRepository implements RelationshipRepository<Movie,
     public MetaDataEnabledList<VideoClip> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
+        selectParams.put("limit", getLimit(fieldName, requestParams));
+
         MetaDataEnabledList<VideoClip> videoClipList;
         videoClipList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie", selectParams));
+
+        this.getClass();
         return videoClipList;
     }
 
     @Override
-    public MetaInformation getMetaInformation(Iterable resources, RequestParams requestParams) {
-        class VideoClipMetaData implements MetaInformation {
-            public int size = 20;
+    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams) {
+        String movieId = ((AbstractModel)root).getId();
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("movie_id", movieId);
 
-        }
-        return new VideoClipMetaData();
+        RelatedMetaDataInformation videoClipMetaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipCountForMovie", selectParams);
+        return videoClipMetaData;
     }
 }

@@ -25,9 +25,19 @@
         FROM video_clip 
         WHERE movie_id=#{movie_id}
         ORDER BY fav_count DESC
-        <if test="videoLimit != null">LIMIT #{videoLimit}</if>
+        <if test="limit != null">LIMIT #{limit}</if>
     </select>
 
     <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip" />
+
+
+    <select id="selectVideoClipCountForMovie" resultMap="videoClipMetaDataResultMap" parameterType="map">
+        SELECT
+          count(*) AS totalCount
+        FROM video_clip
+        WHERE movie_id=#{movie_id}
+    </select>
+
+    <resultMap id="videoClipMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
 
 </mapper>

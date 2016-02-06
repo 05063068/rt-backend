@@ -19,6 +19,9 @@ package com.rottentomatoes.movieapi.domain.repository;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
+import io.katharsis.repository.MetaRepository;
+import io.katharsis.response.MetaInformation;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,10 +32,10 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class MovieRepository implements ResourceRepository<Movie, String> {
+public class MovieRepository implements ResourceRepository<Movie, String>, MetaRepository {
     @Autowired
     private SqlSession sqlSession;
-    
+
     @Override
     public <S extends Movie> S save(S entity) {
         return null;
@@ -42,35 +45,27 @@ public class MovieRepository implements ResourceRepository<Movie, String> {
     public void delete(String aLong) {
     }
 
-	@Override
-	public Movie findOne(String movieId, RequestParams requestParams) {
-
-        Map<String, Object> filters = requestParams.getFilters();
+    @Override
+    public Movie findOne(String movieId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        
         selectParams.put("id", movieId);
-        
-        // Do not just blindly pass filters into myBatis. Explicitly cast and assign for security's sake.
-        if(filters != null){
-            // NPE will not be thrown if filters.get("xx") is null. MyBatis mapper expects nulls (wide open no limit).
-	        selectParams.put("actorLimit", (Integer)filters.get("actorLimit"));
-	        selectParams.put("reviewLimit", (Integer)filters.get("reviewLimit"));
-            selectParams.put("videoLimit", (Integer)filters.get("videoLimit"));
-        }
-        
         Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", selectParams);
         return movie;
-	}
+    }
 
-	@Override
-	public Iterable<Movie> findAll(RequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Iterable<Movie> findAll(RequestParams requestParams) {
+        return null;
+    }
 
-	@Override
-	public Iterable<Movie> findAll(Iterable<String> ids, RequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Iterable<Movie> findAll(Iterable<String> ids, RequestParams requestParams) {
+        return null;
+    }
+
+    @Override
+    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams) {
+        RootMetaDataInformation metaData = new RootMetaDataInformation(requestParams);
+        return metaData;
+    }
 }
