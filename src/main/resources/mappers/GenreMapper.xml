@@ -12,6 +12,7 @@
           FROM movie_genre
           LEFT JOIN genre ON movie_genre.genre_id = genre.id
           WHERE movie_genre.movie_id = #{movie_id}
+        <if test="limit != null">LIMIT #{limit}</if>
     </select>
     
     <resultMap id="genreResultMap" type="com.rottentomatoes.movieapi.domain.model.Genre">

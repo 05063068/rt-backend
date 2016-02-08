@@ -60,6 +60,7 @@ public class MovieToGenreRepository implements RelationshipRepository<Movie, Str
 	public Iterable<Genre> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
+        selectParams.put("limit", getLimit(fieldName, requestParams));
 		
         List<Genre> genreList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.GenreMapper.selectGenresForMovie", selectParams);
         return genreList;

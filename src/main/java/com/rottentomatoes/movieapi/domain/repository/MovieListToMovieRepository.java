@@ -59,6 +59,7 @@ public class MovieListToMovieRepository implements RelationshipRepository<MovieL
 	@Override
 	public Iterable<Movie> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("limit", getLimit(fieldName, requestParams));
         
         List<Movie> movieList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectBoxOfficeMovies", selectParams);
         return movieList;

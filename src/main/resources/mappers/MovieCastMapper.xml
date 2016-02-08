@@ -37,7 +37,7 @@
        			WHERE movie_id = #{movie_id}
        			AND role = 'ACT'
 				AND deleted_ind != 1
-       			<if test="actorLimit != null">LIMIT #{actorLimit}</if>
+       			<if test="limit != null">LIMIT #{limit}</if>
        		)        		
        		UNION
        		(SELECT id FROM movie_cast

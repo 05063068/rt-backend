@@ -60,6 +60,7 @@ public class MovieToImageRepository implements RelationshipRepository<Movie, Str
 	public Iterable<Image> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
+        selectParams.put("limit", getLimit(fieldName, requestParams));
 		
         List<Image> imageList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", selectParams);
         return imageList;

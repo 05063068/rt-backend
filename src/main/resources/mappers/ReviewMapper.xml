@@ -36,8 +36,8 @@
         AND review.status = 'A'
         ORDER BY is_top_critic DESC, creation_date DESC
         
-		<if test="reviewLimit != null">
-			LIMIT #{reviewLimit}		
+		<if test="limit != null">
+			LIMIT #{limit}
 		</if>
         
     </select>
@@ -65,5 +65,19 @@
             <result property="name" column="publication_name"/>
         </association>
     </resultMap>
+
+    <select id="selectReviewCountForMovie" resultMap="reviewMetaDataResultMap" parameterType="map">
+        SELECT
+          count(*) as totalCount
+        FROM review
+        LEFT JOIN critic ON review.critic_id=critic.id
+        LEFT JOIN publication ON review.publication_id=publication.id
+        LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US')
+        WHERE review.movie_id = #{movie_id}
+        AND review.status = 'A'
+    </select>
+
+    <resultMap id="reviewMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
+
 </mapper>
 

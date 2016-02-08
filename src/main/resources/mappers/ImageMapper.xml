@@ -19,7 +19,8 @@
         'movie_img' AS img_type, 
         img_width, img_height
         FROM movie_img 
-        WHERE movie_id=#{movie_id}      
+        WHERE movie_id=#{movie_id}
+        <if test="limit != null">LIMIT #{limit}</if>
     </select>
 
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
