@@ -20,6 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
+import com.rottentomatoes.movieapi.domain.model.AbstractModel;
+import io.katharsis.repository.MetaRepository;
+import io.katharsis.response.MetaDataEnabledList;
+import io.katharsis.response.MetaInformation;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +36,7 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
-public class MovieToMovieCastRepository implements RelationshipRepository<Movie, String, MovieCast, String> {
+public class MovieToMovieCastRepository implements RelationshipRepository<Movie, String, MovieCast, String>, MetaRepository {
     @Autowired
     private SqlSession sqlSession;
 
@@ -57,12 +62,22 @@ public class MovieToMovieCastRepository implements RelationshipRepository<Movie,
 	}
 
 	@Override
-	public Iterable<MovieCast> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+	public MetaDataEnabledList<MovieCast> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
 		Map<String, Object> selectParams = new HashMap<>();
 		selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
-		
-        List<MovieCast> personList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie", selectParams);
+
+        MetaDataEnabledList<MovieCast> personList = new MetaDataEnabledList(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie", selectParams));
         return personList;
 	}
+
+    @Override
+    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams) {
+        String movieId = ((AbstractModel)root).getId();
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("movie_id", movieId);
+
+        RelatedMetaDataInformation castMetaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastCountForMovie", selectParams);
+        return castMetaData;
+    }
 }

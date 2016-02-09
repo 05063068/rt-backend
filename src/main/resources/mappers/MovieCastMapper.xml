@@ -36,9 +36,7 @@
        		(SELECT id FROM movie_cast
        			WHERE movie_id = #{movie_id}
        			AND role = 'ACT'
-				AND deleted_ind != 1
-       			<if test="limit != null">LIMIT #{limit}</if>
-       		)        		
+				AND deleted_ind != 1)
        		UNION
        		(SELECT id FROM movie_cast
        			WHERE movie_id = #{movie_id}
@@ -51,6 +49,7 @@
         WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
         AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
 		ORDER BY movie_cast.role, movie_cast.sortkey
+        <if test="limit != null">LIMIT #{limit}</if>
     </select>
     
         
@@ -70,5 +69,28 @@
             <result column="character_name" />
         </collection>
     </resultMap>
+
+    <select id="selectMovieCastCountForMovie" resultMap="movieCastMetaDataResultMap" parameterType="map">
+        SELECT
+          count(*) as totalCount
+        FROM (
+        (SELECT id FROM movie_cast
+        WHERE movie_id = #{movie_id}
+        AND role = 'ACT'
+        AND deleted_ind != 1)
+        UNION
+        (SELECT id FROM movie_cast
+        WHERE movie_id = #{movie_id}
+        AND role != 'ACT'
+        AND deleted_ind != 1
+        )) cast_ids
+        LEFT JOIN movie_cast ON movie_cast.id = cast_ids.id
+        LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
+        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id
+        WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
+        AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
+    </select>
+
+    <resultMap id="movieCastMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
 
 </mapper>
