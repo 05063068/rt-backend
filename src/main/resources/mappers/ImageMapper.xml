@@ -16,8 +16,10 @@
     
     <select id="selectImagesForMovie" resultMap="imageResultMap" parameterType="map">
         SELECT CONCAT('movie_img-' , id) AS img_id,
-        'movie_img' AS img_type, 
-        img_width, img_height
+        id AS databaseId,
+        'movie_img' AS imageType,
+        img_width AS originalWidth,
+        img_height AS originalHeight
         FROM movie_img 
         WHERE movie_id=#{movie_id}
         <if test="limit != null">LIMIT #{limit}</if>
@@ -25,7 +27,6 @@
 
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
         <id property="id" column="img_id" />
-        <result property="imageType" column="img_type" />
     </resultMap>
 
     <select id="selectImageCountForMovie" resultMap="imageMataDataResultMap" parameterType="map">
