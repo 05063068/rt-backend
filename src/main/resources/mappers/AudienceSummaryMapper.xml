@@ -4,16 +4,18 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.AudienceSummaryMapper">
 
     <select id="selectAudienceSummaryForMovie" resultMap="audienceSummaryResultMap">
-        SELECT * FROM rating_summary WHERE movie_id = #{movie_id}
+        SELECT
+        movie_id,
+        num_scores AS scoreCount,
+        average_score AS avgScore,
+        num_wts AS wtsCount,
+        num_ni AS notInterestedCount,
+        num_reviews AS reviewsCount
+        FROM rating_summary WHERE movie_id = #{movie_id}
     </select>
 
     <resultMap id="audienceSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.AudienceSummary">
-        <id property="id" column="movie_id" />
-        <result property="scoreCount" column="num_scores"/>
-        <result property="avgScore" column="average_score"/>
-        <result property="wtsCount" column="num_wts"/>
-        <result property="notInterestedCount" column="num_ni"/>
-        <result property="reviewsCount" column="num_reviews"/>
+        <id property="id" column="movie_id"/>
     </resultMap>
 
 </mapper>

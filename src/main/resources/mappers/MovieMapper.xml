@@ -44,14 +44,15 @@
 				AND platform = 'RTO'
 				ORDER BY url ASC LIMIT 1
 			) AS vanity_token,
-			movie_meta_data.synopsis,
 			movie_meta_data.running_time,
 			movie_meta_data.official_url,
-			movie_meta_data.shop_link
+			movie_meta_data.shop_link,
+            movie_synopsis.synopsis
         FROM movie
         LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
         LEFT JOIN movie_meta_data ON movie_meta_data.movie_id = movie.movie_id
         LEFT JOIN tomatometer_info ON tomatometer_info.movie_id = movie.movie_id
+        LEFT JOIN movie_synopsis ON movie_synopsis.id = movie_meta_data.synopsis_id
         <!--  TODO: Check status=active -->
 	</sql>
 
