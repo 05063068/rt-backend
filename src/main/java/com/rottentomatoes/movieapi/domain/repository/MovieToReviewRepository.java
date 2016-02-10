@@ -16,6 +16,7 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,10 +74,9 @@ public class MovieToReviewRepository implements RelationshipRepository<Movie, St
 	}
 
     @Override
-    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams) {
-        String movieId = ((AbstractModel)root).getId();
+    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
+        selectParams.put("movie_id", castedResourceId);
 
         RelatedMetaDataInformation reviewMetaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewCountForMovie", selectParams);
         return reviewMetaData;

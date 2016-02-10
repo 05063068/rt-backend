@@ -13,6 +13,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,10 +61,9 @@ public class MovieToVideoClipRepository implements RelationshipRepository<Movie,
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams) {
-        String movieId = ((AbstractModel)root).getId();
+    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
+        selectParams.put("movie_id", castedResourceId);
 
         RelatedMetaDataInformation videoClipMetaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipCountForMovie", selectParams);
         return videoClipMetaData;

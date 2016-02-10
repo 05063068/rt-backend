@@ -16,6 +16,7 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class MovieRepository implements ResourceRepository<Movie, String>, MetaR
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams) {
+    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         RootMetaDataInformation metaData = new RootMetaDataInformation(requestParams);
         return metaData;
     }
