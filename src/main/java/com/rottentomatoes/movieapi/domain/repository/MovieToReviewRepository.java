@@ -68,6 +68,7 @@ public class MovieToReviewRepository implements RelationshipRepository<Movie, St
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
+        selectParams.put("offset", getOffset(fieldName, requestParams));
 
         MetaDataEnabledList<Review> reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie", selectParams));
         return reviewList;

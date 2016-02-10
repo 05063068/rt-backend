@@ -35,11 +35,16 @@
         WHERE review.movie_id = #{movie_id}
         AND review.status = 'A'
         ORDER BY is_top_critic DESC, creation_date DESC
-        
-		<if test="limit != null">
-			LIMIT #{limit}
-		</if>
-        
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+
     </select>
 
     
