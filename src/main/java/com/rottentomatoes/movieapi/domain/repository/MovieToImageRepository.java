@@ -77,7 +77,10 @@ public class MovieToImageRepository implements RelationshipRepository<Movie, Str
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", castedResourceId);
 
-        RelatedMetaDataInformation imageMetaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImageCountForMovie", selectParams);
-        return imageMetaData;
+        RelatedMetaDataInformation metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImageCountForMovie", selectParams);
+        if(root instanceof RelationshipRepository) {
+            metaData.setRequestParams(requestParams);
+        }
+        return metaData;
     }
 }

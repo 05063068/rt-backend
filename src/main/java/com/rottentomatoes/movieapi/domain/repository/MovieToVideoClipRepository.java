@@ -65,7 +65,11 @@ public class MovieToVideoClipRepository implements RelationshipRepository<Movie,
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", castedResourceId);
 
-        RelatedMetaDataInformation videoClipMetaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipCountForMovie", selectParams);
-        return videoClipMetaData;
+        RelatedMetaDataInformation metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipCountForMovie", selectParams);
+        if(root instanceof RelationshipRepository) {
+            metaData.setRequestParams(requestParams);
+        }
+
+        return metaData;
     }
 }

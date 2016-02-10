@@ -77,7 +77,11 @@ public class MovieToMovieCastRepository implements RelationshipRepository<Movie,
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", castedResourceId);
 
-        RelatedMetaDataInformation castMetaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastCountForMovie", selectParams);
-        return castMetaData;
+        RelatedMetaDataInformation metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastCountForMovie", selectParams);
+        if(root instanceof RelationshipRepository) {
+            metaData.setRequestParams(requestParams);
+        }
+
+        return metaData;
     }
 }
