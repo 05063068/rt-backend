@@ -67,6 +67,7 @@ public class MovieToMovieCastRepository implements RelationshipRepository<Movie,
 		Map<String, Object> selectParams = new HashMap<>();
 		selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
+        selectParams.put("offset", getOffset(fieldName, requestParams));
 
         MetaDataEnabledList<MovieCast> personList = new MetaDataEnabledList(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie", selectParams));
         return personList;

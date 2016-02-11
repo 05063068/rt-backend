@@ -1,92 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieMapper">
 
     <sql id="movieSelectSql">
-        	#{actorLimit} actorLimit,   /* Dummy columns used for passing subselect params */
-        	#{reviewLimit} reviewLimit,
-        	#{videoLimit} videoLimit,
-        	'movie_img' main_image_type, 
-            movie.movie_id,
-            movie.title,
-            movie.year,
-            movie.theater_release_date,
-            movie.dvd_release_date,
-            movie.status,
-            movie.tomatometer,
-            movie.box_office,
-            movie.sequence,
-            movie.feature_level,
-            movie.mpaa_rating,
-            movie.creation_date,
-            movie.last_modified_date,
-            movie.version,
-            CONCAT('movie_img-' , movie.main_image) AS img_id,
-            'movie_img' AS img_type,
-            movie.main_trailer,
-            movie.advisory,
-            movie.studio_id,
-            movie.auto_update_ind,
-            movie.trailer_update_ind,
-                        
-            movie_studio.name AS studioName,
-            tomatometer AS value, 
-            CASE WHEN tomatometer IS NULL THEN null
-                 WHEN (tomatometer >= 60 AND NOT certified_fresh) THEN 'fresh'
-                 WHEN (tomatometer >= 60 AND certified_fresh) THEN 'certified_fresh'
-                 ELSE 'rotten'
-            END AS state,
-			(SELECT url
-				FROM vanity_movie_url
-				WHERE movie_id = movie.movie_id
-				AND primary_ind = 1
-				AND platform = 'RTO'
-				ORDER BY url ASC LIMIT 1
-			) AS vanity_token,
-			movie_meta_data.running_time,
-			movie_meta_data.official_url,
-			movie_meta_data.shop_link,
-            movie_synopsis.synopsis
+        #{actorLimit} actorLimit, /* Dummy columns used for passing subselect params */
+        #{reviewLimit} reviewLimit,
+        #{videoLimit} videoLimit,
+        'movie_img' main_image_type,
+        movie.movie_id,
+        movie.title,
+        movie.year,
+        movie.theater_release_date,
+        movie.dvd_release_date,
+        movie.status,
+        movie.tomatometer,
+        movie.box_office,
+        movie.sequence,
+        movie.feature_level,
+        movie.mpaa_rating,
+        movie.creation_date,
+        movie.last_modified_date,
+        movie.version,
+        CONCAT('movie_img-' , movie.main_image) AS img_id,
+        'movie_img' AS img_type,
+        movie.main_trailer,
+        movie.advisory,
+        movie.studio_id,
+        movie.auto_update_ind,
+        movie.trailer_update_ind,
+
+        movie_studio.name AS studioName,
+        tomatometer AS value,
+        CASE WHEN tomatometer IS NULL THEN null
+        WHEN (tomatometer >= 60 AND NOT certified_fresh) THEN 'fresh'
+        WHEN (tomatometer >= 60 AND certified_fresh) THEN 'certified_fresh'
+        ELSE 'rotten'
+        END AS state,
+        (SELECT url
+        FROM vanity_movie_url
+        WHERE movie_id = movie.movie_id
+        AND primary_ind = 1
+        AND platform = 'RTO'
+        ORDER BY url ASC LIMIT 1
+        ) AS vanity_token,
+        movie_meta_data.running_time,
+        movie_meta_data.official_url,
+        movie_synopsis.synopsis
         FROM movie
         LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
         LEFT JOIN movie_meta_data ON movie_meta_data.movie_id = movie.movie_id
         LEFT JOIN tomatometer_info ON tomatometer_info.movie_id = movie.movie_id
         LEFT JOIN movie_synopsis ON movie_synopsis.id = movie_meta_data.synopsis_id
         <!--  TODO: Check status=active -->
-	</sql>
+    </sql>
 
     <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
-		SELECT 
-		<include refid="movieSelectSql" />
+        SELECT
+        <include refid="movieSelectSql"/>
         WHERE movie.movie_id = #{id}
     </select>
 
     <resultMap id="movieResultMap" type="com.rottentomatoes.movieapi.domain.model.Movie">
-        <id property="id" column="movie_id" />
+        <id property="id" column="movie_id"/>
         <result property="title" column="title"/>
-        <result property="year" column="year" />
-        <result property="boxOffice" column="box_office" />
-        <result property="mpaaRating" column="mpaa_rating" javaType="com.rottentomatoes.movieapi.enums.MpaaRating"  typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
-        <result property="creationDate" column="creation_date" javaType="java.sql.Timestamp" />
-        <result property="lastModifiedDate" column="last_modified_date" javaType="java.sql.Timestamp" />
-        <result property="status" column="status" />
-        <result property="advisory" column="advisory" />				
-		<result property="vanityToken" column="vanity_token" />
-		<result property="synopsis" column="synopsis" />
-		<result property="runningTime" column="running_time" />
-		<result property="officialUrl" column="official_url" />
-		<result property="shopLink" column="shop_link" />
-		<result property="studioName" column="studioName" />
-		<association property="releaseDates" javaType="map">
-	        <result property="theater" column="theater_release_date" javaType="java.sql.Date"/>
-	        <result property="dvd" column="dvd_release_date" javaType="java.sql.Date" />	
-		</association>
-		<association property="tomatometer" javaType="map">
-			<result property="value" column="value" /> 
-			<result property="state" column="state" />
-		</association>
-		<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
+        <result property="year" column="year"/>
+        <result property="boxOffice" column="box_office"/>
+        <result property="mpaaRating" column="mpaa_rating" javaType="com.rottentomatoes.movieapi.enums.MpaaRating"
+                typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <result property="creationDate" column="creation_date" javaType="java.sql.Timestamp"/>
+        <result property="lastModifiedDate" column="last_modified_date" javaType="java.sql.Timestamp"/>
+        <result property="status" column="status"/>
+        <result property="advisory" column="advisory"/>
+        <result property="vanityToken" column="vanity_token"/>
+        <result property="synopsis" column="synopsis"/>
+        <result property="runningTime" column="running_time"/>
+        <result property="officialUrl" column="official_url"/>
+        <result property="studioName" column="studioName"/>
+        <association property="releaseDates" javaType="map">
+            <result property="theater" column="theater_release_date" javaType="java.sql.Date"/>
+            <result property="dvd" column="dvd_release_date" javaType="java.sql.Date"/>
+        </association>
+        <association property="tomatometer" javaType="map">
+            <result property="value" column="value"/>
+            <result property="state" column="state"/>
+        </association>
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap"
+                     notNullColumn="img_id"/>
     </resultMap>
 
 </mapper>

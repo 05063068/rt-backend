@@ -52,6 +52,7 @@ public class MovieToVideoClipRepository implements RelationshipRepository<Movie,
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
+        selectParams.put("offset", getOffset(fieldName, requestParams));
 
         MetaDataEnabledList<VideoClip> videoClipList;
         videoClipList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie", selectParams));

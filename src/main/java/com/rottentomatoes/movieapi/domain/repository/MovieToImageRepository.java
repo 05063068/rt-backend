@@ -67,6 +67,7 @@ public class MovieToImageRepository implements RelationshipRepository<Movie, Str
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
+        selectParams.put("offset", getOffset(fieldName, requestParams));
 
         MetaDataEnabledList<Image> imageList = new MetaDataEnabledList(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", selectParams));
         return imageList;

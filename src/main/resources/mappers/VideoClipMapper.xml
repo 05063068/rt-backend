@@ -25,7 +25,14 @@
         FROM video_clip 
         WHERE movie_id=#{movie_id}
         ORDER BY fav_count DESC
-        <if test="limit != null">LIMIT #{limit}</if>
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
     </select>
 
     <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip" />

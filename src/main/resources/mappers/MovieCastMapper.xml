@@ -9,64 +9,75 @@
  	How to handle public_ind?
  -->
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieCastMapper">
-	<sql id="selectColumns">
+    <sql id="selectColumns">
         movie_cast.*,
-       	movie_person.name movie_person_name, 
-       	movie_person.id movie_person_id, 
-       	movie_character.name character_name,
-		<include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonImageColumns" />
-	</sql>
+        movie_person.name movie_person_name,
+        movie_person.id movie_person_id,
+        movie_character.name character_name,
+        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonImageColumns"/>
+    </sql>
 
     <select id="selectMovieCastById" resultMap="movieCastResultMap" parameterType="map">
-        SELECT <include refid="selectColumns" />               
+        SELECT
+        <include refid="selectColumns"/>
         FROM movie_cast
         LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
-        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id         
-        
+        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id
+
         WHERE movie_cast.id = #{movieCastId}
-        
-        AND movie_cast.deleted_ind != 1 
+
+        AND movie_cast.deleted_ind != 1
         AND movie_person.deleted_ind != 1
-		AND (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
+        AND (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
     </select>
 
     <select id="selectMovieCastForMovie" resultMap="movieCastResultMap" parameterType="map">
-        SELECT <include refid="selectColumns" /> 
+        SELECT
+        <include refid="selectColumns"/>
         FROM (
-       		(SELECT id FROM movie_cast
-       			WHERE movie_id = #{movie_id}
-       			AND role = 'ACT'
-				AND deleted_ind != 1)
-       		UNION
-       		(SELECT id FROM movie_cast
-       			WHERE movie_id = #{movie_id}
-       			AND role != 'ACT'
-       			AND deleted_ind != 1
-       		)) cast_ids
+        (SELECT id FROM movie_cast
+        WHERE movie_id = #{movie_id}
+        AND role = 'ACT'
+        AND deleted_ind != 1)
+        UNION
+        (SELECT id FROM movie_cast
+        WHERE movie_id = #{movie_id}
+        AND role != 'ACT'
+        AND deleted_ind != 1
+        )) cast_ids
         LEFT JOIN movie_cast ON movie_cast.id = cast_ids.id
         LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
-        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id        
+        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id
         WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
         AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
-		ORDER BY movie_cast.role, movie_cast.sortkey
-        <if test="limit != null">LIMIT #{limit}</if>
+        ORDER BY movie_cast.role, movie_cast.sortkey
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
     </select>
-    
-        
+
+
     <resultMap id="movieCastResultMap" type="com.rottentomatoes.movieapi.domain.model.MovieCast">
-        <id property="id" column="id" />
-        <result property="role" column="role" />
-        
-                
+        <id property="id" column="id"/>
+        <result property="role" column="role"/>
+
+
         <association property="person" javaType="com.rottentomatoes.movieapi.domain.model.Person">
-            <id property="id" column="movie_person_id" />
-            <result property="name" column="movie_person_name" />
-            
-			<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
+            <id property="id" column="movie_person_id"/>
+            <result property="name" column="movie_person_name"/>
+
+            <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap"
+                         notNullColumn="img_id"/>
         </association>
-        
+
         <collection property="characters" javaType="list" ofType="java.lang.String">
-            <result column="character_name" />
+            <result column="character_name"/>
         </collection>
     </resultMap>
 
@@ -91,6 +102,7 @@
         AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
     </select>
 
-    <resultMap id="movieCastMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
+    <resultMap id="movieCastMetaDataResultMap"
+               type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation"/>
 
 </mapper>

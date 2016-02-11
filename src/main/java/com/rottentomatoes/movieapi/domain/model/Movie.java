@@ -21,7 +21,6 @@ import java.util.Map;
 
 import com.rottentomatoes.movieapi.enums.MpaaRating;
 
-import io.katharsis.resource.annotations.JsonApiIncludeByDefault;
 import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
@@ -51,7 +50,6 @@ public class Movie extends AbstractModel  {
     protected String synopsis;
     protected Integer runningTime;
     protected String officialUrl;
-    protected String shopLink;
 
     protected Map<String, Object> tomatometer;
     protected Map<String, Object> releaseDates;
