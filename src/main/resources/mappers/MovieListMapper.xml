@@ -23,4 +23,18 @@
     </select>
 
 
+    <select id="selectOpeningMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
+        SELECT
+        <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql"/>
+        WHERE movie.movie_id IN
+        (SELECT distinct
+        movie_box_office.movie_id
+        FROM movie_box_office
+        LEFT JOIN movie_intl_release ON movie_intl_release.movie_id = movie_box_office.movie_id
+        LEFT JOIN rating_summary ON rating_summary.movie_id = movie_intl_release.movie_id
+        WHERE movie_intl_release.release_date BETWEEN '2016-02-07' AND '2016-02-15'
+        AND movie_intl_release.country = 'us'
+        ORDER BY movie_intl_release.limited_ind DESC, rating_summary.num_wts DESC)
+    </select>
+
 </mapper>
