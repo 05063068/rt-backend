@@ -16,9 +16,12 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import static java.time.temporal.TemporalAdjusters.*;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +58,21 @@ public class MovieListRepository implements ResourceRepository<MovieList, String
             case "in-theaters":
             case "upcoming":
                 movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectBoxOfficeMovies", selectParams);
-                list.setId(listId); // TODO - return same data for any list for now
+                list.setId(listId);
                 list.setMovies(movies);
                 return list;
 
+
             case "opening":
+                LocalDate timePoint = LocalDate.now();
+                LocalDate start = timePoint.with(previousOrSame(DayOfWeek.MONDAY));
+                LocalDate end = timePoint.with(nextOrSame(DayOfWeek.SUNDAY));
+
+                selectParams.put("startDate", start);
+                selectParams.put("endDate", end);
+
                 movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMovies", selectParams);
-                list.setId(listId); // TODO - return same data for any list for now
+                list.setId(listId);
                 list.setMovies(movies);
                 return list;
 
