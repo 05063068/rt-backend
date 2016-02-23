@@ -68,10 +68,15 @@ public class MovieListRepository implements ResourceRepository<MovieList, String
             case "box-office":
                 timePoint = LocalDate.now();
                 start = timePoint.with(previousOrSame(DayOfWeek.FRIDAY));
-
                 selectParams.put("startDate", start);
 
                 movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
+
+                // If top box office is empty then return estimates based on theater showtimes.
+                if(movies.isEmpty()) {
+                    movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectEstimatedTopBoxOfficeMovies", selectParams);
+                }
+
                 list.setId(listId);
                 list.setMovies(movies);
                 return list;

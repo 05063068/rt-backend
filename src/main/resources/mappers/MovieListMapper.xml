@@ -11,6 +11,9 @@
             <when test="limit != null">
                 LIMIT #{limit}
             </when>
+            <otherwise>
+                LIMIT 10
+            </otherwise>
         </choose>
     </sql>
 
@@ -34,6 +37,19 @@
         AND mbo.gross > 0
         AND mbo.estimate_ind = 0
         ORDER BY mbo.gross DESC
+        <include refid="offsetLimitSql"/>
+    </select>
+
+    <select id="selectEstimatedTopBoxOfficeMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
+        SELECT
+        <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql"/>
+        INNER JOIN movie_source ms ON ms.movie_id = movie.movie_id
+        INNER JOIN showtimes sh ON sh.source_id = ms.id
+        INNER JOIN theater t ON t.id = sh.theater_id
+        WHERE sh.deleted_ind=0
+        AND sh.show_date=#{startDate}
+        AND t.country= #{country}
+        GROUP BY ms.movie_id ORDER BY SUM(LENGTH(sh.times)) DESC
         <include refid="offsetLimitSql"/>
     </select>
 
