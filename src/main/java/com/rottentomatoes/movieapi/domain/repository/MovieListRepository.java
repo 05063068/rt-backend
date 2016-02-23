@@ -53,20 +53,40 @@ public class MovieListRepository implements ResourceRepository<MovieList, String
         MovieList list = new MovieList();
         Map<String, Object> selectParams = new HashMap<>();
         List<Movie> movies;
+
+        LocalDate timePoint;
+        LocalDate start;
+        LocalDate end;
+
+        Integer limit = requestParams.getFilters() != null && requestParams.getFilters().get("limit") != null ? (Integer) requestParams.getFilters().get("limit") : null;
+        Integer offset = requestParams.getFilters() != null && requestParams.getFilters().get("offset") != null ? (Integer) requestParams.getFilters().get("offset") : null;
+        selectParams.put("limit", limit);
+        selectParams.put("offset", offset);
+        selectParams.put("country", "us");
+
         switch (listId) {
             case "box-office":
-            case "in-theaters":
-            case "upcoming":
-                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectBoxOfficeMovies", selectParams);
+                timePoint = LocalDate.now();
+                start = timePoint.with(previousOrSame(DayOfWeek.FRIDAY));
+
+                selectParams.put("startDate", start);
+
+                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
                 list.setId(listId);
                 list.setMovies(movies);
                 return list;
 
+            case "in-theaters":
+            case "upcoming":
+                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
+                list.setId(listId);
+                list.setMovies(movies);
+                return list;
 
             case "opening":
-                LocalDate timePoint = LocalDate.now();
-                LocalDate start = timePoint.with(previousOrSame(DayOfWeek.MONDAY));
-                LocalDate end = timePoint.with(nextOrSame(DayOfWeek.SUNDAY));
+                timePoint = LocalDate.now();
+                start = timePoint.with(previousOrSame(DayOfWeek.MONDAY));
+                end = timePoint.with(nextOrSame(DayOfWeek.SUNDAY));
 
                 selectParams.put("startDate", start);
                 selectParams.put("endDate", end);
