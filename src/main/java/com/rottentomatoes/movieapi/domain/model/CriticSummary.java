@@ -12,7 +12,11 @@ public class CriticSummary extends AbstractModel {
     protected Integer reviewCount;
     protected Integer averageScore;
     protected String consensus;
-    protected Integer certifiedFresh;
-    protected Integer pendingCertifiedFresh;
+    protected Integer isCertifiedFresh;
+    protected Integer isPendingCertifiedFresh;
+    protected Integer freshCount;
+    protected Integer rottenCount;
+    protected Integer topCriticsCount;
+    protected Integer allCriticsCount;
 
 }

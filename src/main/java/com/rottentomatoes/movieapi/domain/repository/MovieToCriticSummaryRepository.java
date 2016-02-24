@@ -40,6 +40,7 @@ public class MovieToCriticSummaryRepository implements RelationshipRepository<Mo
     public CriticSummary findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
+        selectParams.put("country", "us");
         CriticSummary criticSummary = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticSummaryMapper.selectCriticSummaryForMovie", selectParams);
         return criticSummary;
     }

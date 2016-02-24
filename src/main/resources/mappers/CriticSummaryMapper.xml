@@ -4,7 +4,50 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper">
 
     <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
-        SELECT * FROM tomatometer_info WHERE movie_id = #{movie_id}
+        SELECT ti.*,
+
+        (SELECT COUNT(DISTINCT r.id) AS count FROM review r
+            LEFT OUTER JOIN critic c ON r.critic_id=c.id
+            LEFT OUTER JOIN publication p ON r.publication_id=p.id
+            WHERE r.movie_id=#{movie_id}
+            AND r.status= 'A'
+            AND r.category IN ('MOV', 'QCK', 'FUL')
+            AND r.score = 'F')
+        AS fresh_count,
+
+        (SELECT COUNT(DISTINCT r.id) AS count FROM review r
+            LEFT OUTER JOIN critic c ON r.critic_id=c.id
+            LEFT OUTER JOIN publication p ON r.publication_id=p.id
+            WHERE r.movie_id=#{movie_id}
+            AND r.status= 'A'
+            AND r.category IN ('MOV', 'QCK', 'FUL')
+            AND r.score = 'R')
+        AS rotten_count,
+
+        (SELECT count(*) FROM review
+            LEFT OUTER JOIN critic_top
+            ON critic_top.critic_id = review.critic_id AND critic_top.country = #{country}
+            LEFT OUTER JOIN publication_top
+            ON publication_top.publication_id = review.publication_id AND publication_top.country = #{country}
+            WHERE review.movie_id = #{movie_id}
+            AND review.status = 'A'
+            AND review.category IN ('MOV', 'QCK', 'FUL')
+            AND review.score IN ('F','R','Z')
+            AND (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL))
+        AS top_critics,
+
+        (SELECT COUNT(DISTINCT r.id) AS count FROM review r
+            LEFT OUTER JOIN critic c ON r.critic_id=c.id
+            LEFT OUTER JOIN publication p ON r.publication_id=p.id
+            WHERE r.movie_id=#{movie_id}
+            AND r.status='A'
+            AND r.category IN ('MOV', 'QCK', 'FUL')
+            AND r.score IN ('F','R','Z')
+            AND (p.approved_ind=1 OR c.approved_ind=1))
+        AS all_critics
+
+        FROM tomatometer_info ti
+        WHERE movie_id = #{movie_id}
     </select>
 
     <resultMap id="criticSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticSummary">
@@ -12,7 +55,11 @@
         <result property="reviewCount" column="num_reviews"/>
         <result property="averageScore" column="avg_score"/>
         <result property="consensus" column="consensus"/>
-        <result property="certifiedFresh" column="certified_fresh"/>
-        <result property="pendingCertifiedFresh" column="pending_certified"/>
+        <result property="isCertifiedFresh" column="certified_fresh"/>
+        <result property="isPendingCertifiedFresh" column="pending_certified"/>
+        <result property="freshCount" column="fresh_count"/>
+        <result property="rottenCount" column="rotten_count"/>
+        <result property="topCriticsCount" column="top_critics"/>
+        <result property="allCriticsCount" column="all_critics"/>
     </resultMap>
 </mapper>

@@ -53,4 +53,13 @@
         <include refid="offsetLimitSql"/>
     </select>
 
+    <select id="selectUpcomingMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
+        SELECT
+        <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql"/>
+        INNER JOIN rating_summary s ON s.movie_id = movie.movie_id
+        WHERE movie.theater_release_date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY s.num_wts DESC
+        <include refid="offsetLimitSql"/>
+    </select>
+
 </mapper>
