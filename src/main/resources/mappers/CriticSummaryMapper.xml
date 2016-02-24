@@ -24,6 +24,15 @@
             AND r.score = 'R')
         AS rotten_count,
 
+        (SELECT COUNT(DISTINCT r.id) FROM review r
+            LEFT OUTER JOIN critic c ON r.critic_id=c.id
+            LEFT OUTER JOIN publication p ON r.publication_id=p.id
+            WHERE r.movie_id=#{movie_id}
+            AND r.status= 'A'
+            AND r.category IN ('DVD')
+            AND r.score IN ('F','R','Z'))
+        AS dvd_count,
+
         (SELECT count(*) FROM review
             LEFT OUTER JOIN critic_top
             ON critic_top.critic_id = review.critic_id AND critic_top.country = #{country}
@@ -61,5 +70,6 @@
         <result property="rottenCount" column="rotten_count"/>
         <result property="topCriticsCount" column="top_critics"/>
         <result property="allCriticsCount" column="all_critics"/>
+        <result property="dvdCount" column="dvd_count"/>
     </resultMap>
 </mapper>

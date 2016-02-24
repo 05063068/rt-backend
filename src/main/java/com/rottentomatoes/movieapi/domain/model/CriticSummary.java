@@ -18,5 +18,5 @@ public class CriticSummary extends AbstractModel {
     protected Integer rottenCount;
     protected Integer topCriticsCount;
     protected Integer allCriticsCount;
-
+    protected Integer dvdCount;
 }
