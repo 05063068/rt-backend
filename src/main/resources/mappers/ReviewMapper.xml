@@ -25,8 +25,8 @@
         LEFT JOIN publication ON review.publication_id=publication.id
         WHERE review.id = #{id}
     </select>
-    
-    <select id="selectReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
+
+    <select id="selectAllReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
         SELECT <include refid="selectColumns" />
         FROM review 
         LEFT JOIN critic ON review.critic_id=critic.id 
@@ -34,7 +34,7 @@
         LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US') 
         WHERE review.movie_id = #{movie_id}
         AND review.status = 'A'
-        ORDER BY is_top_critic DESC, creation_date DESC
+        ORDER BY is_top_critic DESC, review.creation_date DESC
 
         <choose>
             <when test="limit != null and offset != null">
@@ -44,9 +44,27 @@
                 LIMIT #{limit}
             </when>
         </choose>
-
     </select>
 
+    <select id="selectTopCriticReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
+        SELECT <include refid="selectColumns" />
+        FROM review
+        LEFT JOIN critic ON review.critic_id=critic.id
+        LEFT JOIN publication ON review.publication_id=publication.id
+        INNER JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US')
+        WHERE review.movie_id = #{movie_id}
+        AND review.status = 'A'
+        ORDER BY review.creation_date DESC
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
     
     <resultMap id="reviewResultMap" type="com.rottentomatoes.movieapi.domain.model.Review">
         <id property="id" column="id" />

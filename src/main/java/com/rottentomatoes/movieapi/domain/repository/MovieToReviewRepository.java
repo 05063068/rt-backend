@@ -38,6 +38,9 @@ import io.katharsis.repository.RelationshipRepository;
 
 @Component
 public class MovieToReviewRepository implements RelationshipRepository<Movie, String, Review, String>, MetaRepository {
+    private static final String REVIEW_TYPE = "reviewsType";
+    private static final String TOP_CRITICS = "topCritics";
+
     @Autowired
     private SqlSession sqlSession;
 
@@ -66,11 +69,18 @@ public class MovieToReviewRepository implements RelationshipRepository<Movie, St
 	@Override
 	public MetaDataEnabledList<Review> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
+        MetaDataEnabledList<Review> reviewList = null;
+
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        MetaDataEnabledList<Review> reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsForMovie", selectParams));
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey(REVIEW_TYPE) && ((String) requestParams.getFilters().get(REVIEW_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
+            reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectTopCriticReviewsForMovie", selectParams));
+        } else {
+            reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviewsForMovie", selectParams));
+        }
+
         return reviewList;
 	}
 
