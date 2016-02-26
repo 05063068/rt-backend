@@ -4,6 +4,8 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @JsonApiResource(type = "amazonInfo")
 @Getter
 @Setter

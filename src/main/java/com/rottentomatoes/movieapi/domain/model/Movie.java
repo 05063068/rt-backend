@@ -34,7 +34,7 @@ import lombok.Setter;
 @JsonApiResource(type = "movie")
 @Getter 
 @Setter
-public class Movie extends AbstractModel  {
+public class Movie extends AbstractModel {
 
     protected String title;
     protected Integer year;
