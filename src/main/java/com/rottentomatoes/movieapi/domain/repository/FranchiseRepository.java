@@ -12,10 +12,8 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class FranchiseRepository implements ResourceRepository<Franchise, String> {
-    @Autowired
-    private SqlSession sqlSession;
-
+public class FranchiseRepository  extends AbstractRepository implements ResourceRepository<Franchise, String> {
+    
     @Override
     public <S extends Franchise> S save(S entity) {
         return null;

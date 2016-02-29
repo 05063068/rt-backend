@@ -33,9 +33,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class MovieRepository implements ResourceRepository<Movie, String>, MetaRepository {
-    @Autowired
-    private SqlSession sqlSession;
+public class MovieRepository extends AbstractRepository implements ResourceRepository<Movie, String>, MetaRepository {
+    
+    
 
     @Override
     public <S extends Movie> S save(S entity) {

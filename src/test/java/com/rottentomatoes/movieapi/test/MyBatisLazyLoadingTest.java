@@ -23,47 +23,39 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
-import com.rottentomatoes.movieapi.test.log4j.TestAppender;
+import com.rottentomatoes.movieapi.test.logback.LogbackCapturingAppender;
 
-import static org.hamcrest.CoreMatchers.is;
+import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.LoggerFactory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(locations={ "classpath:application.properties" })
-@ContextConfiguration(locations = { "classpath:applicationContext.xml" })
-@Ignore
+@Slf4j
 public class MyBatisLazyLoadingTest {
-    @Autowired
-    private SqlSession sqlSession;
+	@Autowired
+	private SqlSession sqlSession;
+	
+    @Before
+    public void setUp(){
+	
+    }
     
+    @After
+    public void tearDown(){
+    	LogbackCapturingAppender.Factory.cleanUp();	
+    }
+        
     @Test
     public void test() {
-        final TestAppender appender = new TestAppender();
-        final Logger logger = Logger.getRootLogger();
-        logger.addAppender(appender);
-        try {
-            Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", 9);
-            
-            Movie movie1 = new Movie();
-            logger.info(movie1.getClass().getName());
-            
-            logger.info(movie.getClass().getName());
-            logger.info("superclass:"+movie.getClass().getSuperclass().getName());
-            
-            Iterable<MovieCast> cast = movie.getMovieCast();
-            
-            logger.info(movie.getClass().getName());
-            
-            
-        }
-        finally {
-            logger.removeAppender(appender);
-        }
-
-        final List<LoggingEvent> log = appender.getLog();
+    	
+    	// Given
+        LogbackCapturingAppender capturing = LogbackCapturingAppender.Factory.weaveInto(LoggerFactory.getLogger("org.mybatis"));
         
-        for(LoggingEvent e : log){
-            System.out.println(e.getMessage());        
-        }
+        Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", 9);
+                      
+        // then
+        log.info("Captured message:" + capturing.getCapturedLogMessage());
         
     }
 

@@ -31,9 +31,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 import io.katharsis.resource.exception.ResourceNotFoundException;
 @Component
-public class VanityTokenRepository implements ResourceRepository<VanityToken, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class VanityTokenRepository extends AbstractRepository implements ResourceRepository<VanityToken, String> {
+    
+    
     
     @Override
     public <S extends VanityToken> S save(S entity) {

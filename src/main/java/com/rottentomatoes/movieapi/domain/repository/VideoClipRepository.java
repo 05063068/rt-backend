@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class VideoClipRepository implements ResourceRepository<VideoClip, String> {
+public class VideoClipRepository extends AbstractRepository implements ResourceRepository<VideoClip, String> {
 
-    @Autowired
-    private SqlSession sqlSession;
+    
+    
 
     @Override
     public void delete(String s) {}

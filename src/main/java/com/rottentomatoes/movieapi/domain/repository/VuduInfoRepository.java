@@ -12,9 +12,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class VuduInfoRepository implements ResourceRepository<VuduInfo, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class VuduInfoRepository extends AbstractRepository implements ResourceRepository<VuduInfo, String> {
+    
+    
 
     @Override
     public <S extends VuduInfo> S save(S entity) {

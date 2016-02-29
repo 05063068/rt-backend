@@ -37,12 +37,10 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
-public class MovieToReviewRepository implements RelationshipRepository<Movie, String, Review, String>, MetaRepository {
+
+public class MovieToReviewRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Review, String>, MetaRepository {
     private static final String REVIEW_TYPE = "reviewsType";
     private static final String TOP_CRITICS = "topCritics";
-
-    @Autowired
-    private SqlSession sqlSession;
 
     @Override
     public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {

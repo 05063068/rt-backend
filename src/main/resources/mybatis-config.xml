@@ -8,7 +8,8 @@
 
   <setting name="aggressiveLazyLoading" value="false" />
   <setting name="lazyLoadingEnabled" value="true" />
-  <setting name="lazyLoadTriggerMethods" value="" />
+  <setting name="lazyLoadTriggerMethods" value="" /> <!--  Do NOT trigger on equals,clone,hashCode,toString -->
+  <setting name="logImpl" value="SLF4J" />
  <!--  
  
  <setting name="cacheEnabled" value="true" />

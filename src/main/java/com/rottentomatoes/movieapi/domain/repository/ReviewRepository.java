@@ -26,9 +26,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class ReviewRepository implements ResourceRepository<Review, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class ReviewRepository extends AbstractRepository implements ResourceRepository<Review, String> {
+    
+    
     
     @Override
     public <S extends Review> S save(S entity) {

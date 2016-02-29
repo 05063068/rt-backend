@@ -14,8 +14,5 @@
         <id property="id" column="url" />
         <result property="movieId" column="movie_id" />
         <result property="platform" column="platform" />
-         <!-- 
-        <result property="url" column="id" typeHandler="com.rottentomatoes.movieapi.mappers.ImageUrlTypeHandler"/>
-         -->
     </resultMap>
 </mapper>

@@ -31,9 +31,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
 @Component
-public class MovieToGenreRepository implements RelationshipRepository<Movie, String, Genre, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class MovieToGenreRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Genre, String> {
+    
+    
     
     @Override
     public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {

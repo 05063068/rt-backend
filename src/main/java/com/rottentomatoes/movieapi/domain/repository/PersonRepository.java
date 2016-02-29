@@ -26,9 +26,9 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.Person;
 
 @Component
-public class PersonRepository implements ResourceRepository<Person, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class PersonRepository extends AbstractRepository implements ResourceRepository<Person, String> {
+    
+    
 
     @Override
     public void delete(String aString) {

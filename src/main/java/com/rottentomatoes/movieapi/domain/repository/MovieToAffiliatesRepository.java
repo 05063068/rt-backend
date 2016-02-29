@@ -17,11 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class MovieToAffiliatesRepository  implements RelationshipRepository<Movie, String, Affiliates, String> {
+public class MovieToAffiliatesRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Affiliates, String> {
 
-    @Autowired
-    private SqlSession sqlSession;
-
+    
     @Override
     public void setRelation(Movie source, String targetId, String fieldName) {
 

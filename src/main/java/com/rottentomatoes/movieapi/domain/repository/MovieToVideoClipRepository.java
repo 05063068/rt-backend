@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class MovieToVideoClipRepository implements RelationshipRepository<Movie, String, VideoClip, String>, MetaRepository {
-    @Autowired
-    private SqlSession sqlSession;
+public class MovieToVideoClipRepository extends AbstractRepository implements RelationshipRepository<Movie, String, VideoClip, String>, MetaRepository {
+    
+    
 
     @Override
     public void setRelation(Movie movie, String s, String s2) {

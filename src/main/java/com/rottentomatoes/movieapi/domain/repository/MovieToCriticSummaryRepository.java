@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class MovieToCriticSummaryRepository implements RelationshipRepository<Movie, String , CriticSummary, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class MovieToCriticSummaryRepository extends AbstractRepository implements RelationshipRepository<Movie, String , CriticSummary, String> {
+    
+    
 
     @Override
     public void setRelation(Movie movie, String s, String s2) {

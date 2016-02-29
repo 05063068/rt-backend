@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.rottentomatoes.movieapi.domain.model.AmazonInfo;
 import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +13,7 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class AmazonInfoRepository implements ResourceRepository<AmazonInfo, String> {
-    @Autowired
-    private SqlSession sqlSession;
-
+public class AmazonInfoRepository extends AbstractRepository implements ResourceRepository<AmazonInfo, String> {
     @Override
     public <S extends AmazonInfo> S save(S entity) {
         return null;

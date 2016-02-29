@@ -13,9 +13,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class GenreRepository implements ResourceRepository<Genre, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class GenreRepository extends AbstractRepository  implements ResourceRepository<Genre, String> {
+    
+    
     
     @Override
     public <S extends Genre> S save(S entity) {

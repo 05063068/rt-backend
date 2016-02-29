@@ -35,11 +35,9 @@ import io.katharsis.repository.ResourceRepository;
 import io.katharsis.resource.exception.ResourceNotFoundException;
 
 @Component
-public class MovieListRepository implements ResourceRepository<MovieList, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class MovieListRepository extends AbstractRepository implements ResourceRepository<MovieList, String> {
 
-    @Override
+	@Override
     public <S extends MovieList> S save(S entity) {
         return null;
     }

@@ -16,9 +16,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class ImageRepository implements ResourceRepository<Image, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class ImageRepository extends AbstractRepository implements ResourceRepository<Image, String> {
+    
+    
     
     private static Set<String> VALID_IMG_TYPES = new HashSet<String>(Arrays.asList(new String[]{"movie_img"}));    
     @Override

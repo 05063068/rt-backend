@@ -29,9 +29,9 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
 
 @Component
-public class MovieCastRepository implements ResourceRepository<MovieCast, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class MovieCastRepository extends AbstractRepository implements ResourceRepository<MovieCast, String> {
+    
+    
     
     @Override
     public void delete(String aString) {

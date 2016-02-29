@@ -12,9 +12,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class ItunesInfoRepository implements ResourceRepository<ItunesInfo, String> {
-    @Autowired
-    private SqlSession sqlSession;
+public class ItunesInfoRepository extends AbstractRepository implements ResourceRepository<ItunesInfo, String> {
+    
+    
 
     @Override
     public <S extends ItunesInfo> S save(S entity) {
