@@ -4,8 +4,6 @@ import com.rottentomatoes.movieapi.domain.model.CriticSummary;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -13,8 +11,6 @@ import java.util.Map;
 
 @Component
 public class MovieToCriticSummaryRepository extends AbstractRepository implements RelationshipRepository<Movie, String , CriticSummary, String> {
-    
-    
 
     @Override
     public void setRelation(Movie movie, String s, String s2) {

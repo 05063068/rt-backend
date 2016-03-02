@@ -1,26 +1,24 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.stereotype.Component;
+
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
-import com.rottentomatoes.movieapi.domain.model.AbstractModel;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.VideoClip;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
+@SuppressWarnings("rawtypes")
 @Component
 public class MovieToVideoClipRepository extends AbstractRepository implements RelationshipRepository<Movie, String, VideoClip, String>, MetaRepository {
-    
-    
 
     @Override
     public void setRelation(Movie movie, String s, String s2) {

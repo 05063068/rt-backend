@@ -15,8 +15,6 @@ import io.katharsis.repository.ResourceRepository;
 @Component
 public class GenreRepository extends AbstractRepository  implements ResourceRepository<Genre, String> {
     
-    
-    
     @Override
     public <S extends Genre> S save(S entity) {
         return null;

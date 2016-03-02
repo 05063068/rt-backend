@@ -8,8 +8,6 @@ import com.rottentomatoes.movieapi.domain.model.SonicInfo;
 import com.rottentomatoes.movieapi.domain.model.VuduInfo;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -18,7 +16,6 @@ import java.util.Map;
 
 @Component
 public class MovieToAffiliatesRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Affiliates, String> {
-
     
     @Override
     public void setRelation(Movie source, String targetId, String fieldName) {

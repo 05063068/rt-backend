@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Image;
@@ -17,8 +15,6 @@ import io.katharsis.repository.ResourceRepository;
 
 @Component
 public class ImageRepository extends AbstractRepository implements ResourceRepository<Image, String> {
-    
-    
     
     private static Set<String> VALID_IMG_TYPES = new HashSet<String>(Arrays.asList(new String[]{"movie_img"}));    
     @Override

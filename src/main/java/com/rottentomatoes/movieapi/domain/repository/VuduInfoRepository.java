@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.rottentomatoes.movieapi.domain.model.VuduInfo;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.katharsis.queryParams.RequestParams;
@@ -13,8 +11,6 @@ import io.katharsis.repository.ResourceRepository;
 
 @Component
 public class VuduInfoRepository extends AbstractRepository implements ResourceRepository<VuduInfo, String> {
-    
-    
 
     @Override
     public <S extends VuduInfo> S save(S entity) {

@@ -23,8 +23,6 @@ import java.util.Map;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.response.MetaInformation;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Movie;
@@ -32,11 +30,10 @@ import com.rottentomatoes.movieapi.domain.model.Movie;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
+@SuppressWarnings("rawtypes")
 @Component
 public class MovieRepository extends AbstractRepository implements ResourceRepository<Movie, String>, MetaRepository {
     
-    
-
     @Override
     public <S extends Movie> S save(S entity) {
         return null;

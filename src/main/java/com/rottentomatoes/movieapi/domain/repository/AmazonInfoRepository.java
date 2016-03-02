@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.rottentomatoes.movieapi.domain.model.AmazonInfo;
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.support.SqlSessionDaoSupport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.katharsis.queryParams.RequestParams;
