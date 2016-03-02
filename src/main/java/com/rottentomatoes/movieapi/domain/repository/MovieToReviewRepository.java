@@ -23,6 +23,7 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
     private static final String CRITIC_TYPE = "criticType";
     private static final String TOP_CRITICS = "top";
 
+
     @Override
     public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
