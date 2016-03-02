@@ -7,19 +7,10 @@ import io.katharsis.servlet.SampleKatharsisFilter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-/**
- * Simple Spring Boot enabled example KatharsisFilter implementation.
- * <P>
- * This filter simply extends {@link SampleKatharsisFilter} and overrides {@link #createKatharsisInvokerBuilder()}
- * in order to register a custom {@link JsonServiceLocator} component.
- * </P>
- * <P>
- * The custom {@link JsonServiceLocator} component created here simply retrieve a bean component
- * by the repository class type from the underlying {@link BeanFactory}.
- * </P>
- */
+@Component
 public class CatalogApiKatharsisFilter extends SampleKatharsisFilter implements BeanFactoryAware {
 
     private static final String DEFAULT_RESOURCE_SEARCH_PACKAGE = "com.rottentomatoes.movieapi.domain";

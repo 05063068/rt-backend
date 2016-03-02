@@ -2,6 +2,7 @@ package com.rottentomatoes.movieapi;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -16,7 +17,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 @SpringBootApplication
 public class CatalogApiApplication extends SpringBootServletInitializer {
 	
-	/* I can't make this work in ApplicationConfiguration.java. If you can figure out how to move it there by all means -p */
+	/* I can't make ApplicationConfiguration.java work. 
+	 * If you can figure out how to make properties inject, by all means move the beans there -p */
 	@Bean
 	@ConfigurationProperties(prefix="datasource.primary")
 	public DataSource dataSource() {
@@ -35,8 +37,8 @@ public class CatalogApiApplication extends SpringBootServletInitializer {
 		return sqlSessionFactoryBean.getObject();
 	}
 	
-	@Bean(name="sqlSession")
-	public SqlSessionTemplate sqlSession() throws Exception{
+	@Bean
+	public SqlSession sqlSession() throws Exception{
 		SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory());
 		return sqlSession;
 	}
