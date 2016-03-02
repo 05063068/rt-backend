@@ -41,6 +41,7 @@ public class MovieToMovieCastRepository extends AbstractRepository implements Re
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public MetaDataEnabledList<MovieCast> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
 		Map<String, Object> selectParams = new HashMap<>();

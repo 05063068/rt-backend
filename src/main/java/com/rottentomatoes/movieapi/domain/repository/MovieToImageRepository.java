@@ -41,6 +41,7 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public MetaDataEnabledList<Image> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();

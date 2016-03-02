@@ -1,6 +1,5 @@
 package com.rottentomatoes.movieapi.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToOne;
 import lombok.Getter;
