@@ -22,6 +22,15 @@ Host jump
 ``` 
 After setting this up, establish your tunnel by connecting to the jump server `ssh jump`
 
+
+### Configuring your profile
+The project will run with the 'prod' profile by default. To run locally, the 'dev' profile can be activated
+by configuring the following JVM param
+``` 
+   -Dspring.profiles.active=dev  
+```
+If configuring via Eclipse interface, omit the -D.
+
 ### How to run with Maven
 ``` 
     $ mvn clean compile
