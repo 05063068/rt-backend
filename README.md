@@ -22,6 +22,19 @@ Host jump
 ``` 
 After setting this up, establish your tunnel by connecting to the jump server `ssh jump`
 
+
+### Configuring your profile
+
+Spring supports convention-driven profiles. When the `spring.profiles.active` environment variable is set, the corresponding application.properties file (application-prod.properties in the case of `spring.profiles.active=prod`) will be read. 
+This is the mechanism used to customize environment-based properties e.g. DB hostname.
+
+The project will run with the 'prod' profile by default. To run locally, the 'dev' profile can be activated
+by configuring the following JVM param
+``` 
+   -Dspring.profiles.active=dev  
+```
+If configuring via Eclipse interface, omit the -D.
+
 ### How to run with Maven
 ``` 
     $ mvn clean compile
@@ -55,9 +68,6 @@ The project can be deployed to AWS simply by executing the following command:
 ```
 mvn beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
 ```
-
-#### About Spring profiles
-Spring supports convention-driven profiles. When the `spring.profiles.active` environment variable is set, the corresponding application.properties file (application-prod.properties in the case of `spring.profiles.active=prod`) will be read. This is the mechanism used to customize environment-based properties e.g. DB hostname.
 
 # Example Requests
 
