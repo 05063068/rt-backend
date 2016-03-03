@@ -115,6 +115,18 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>.ebextensions</directory>
+                            <targetPath>.ebextensions</targetPath>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
             <!-- This block assumes JAVA_1_8_HOME is set in your ~/.m2/settings.xml.
                 If this is not the case and you want to use the default JRE (or if you're
                 building via Eclipse and setting the JRE there), comment out this block <plugin>
