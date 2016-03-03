@@ -63,7 +63,8 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
-        RootMetaDataInformation metaData = new RootMetaDataInformation(requestParams);
+        RootMetaDataInformation metaData = new RootMetaDataInformation();
+        metaData.setRequestParams(requestParams);
         return metaData;
     }
 }

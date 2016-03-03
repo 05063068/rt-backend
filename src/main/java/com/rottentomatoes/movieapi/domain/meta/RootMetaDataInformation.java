@@ -10,8 +10,5 @@ import lombok.Setter;
 public class RootMetaDataInformation implements MetaInformation {
 
     RequestParams requestParams;
-
-    public RootMetaDataInformation(RequestParams requestParams) {
-        this.requestParams = requestParams;
-    }
+    public int totalCount;
 }

@@ -77,7 +77,6 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
             metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviewCountForMovie", selectParams);
         }
 
-
         if(root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }
