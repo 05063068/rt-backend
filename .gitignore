@@ -8,8 +8,6 @@
 .idea/
 *.iml
 *~
-application.properties
-application-prod.properties
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
