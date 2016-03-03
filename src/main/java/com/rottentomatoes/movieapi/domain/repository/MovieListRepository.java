@@ -86,6 +86,21 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
                 list.setMovies(movies);
                 return list;
 
+            case "top-rentals":
+                now = LocalDate.now();
+
+                end = now.with(next(DayOfWeek.SUNDAY));
+                //Start is 10 weeks in the past.
+                start = now.minusWeeks(10);
+
+                selectParams.put("startDate", start);
+                selectParams.put("endDate", end);
+
+                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", selectParams);
+                list.setId(listId);
+                list.setMovies(movies);
+                return list;
+
             default:
                 throw new ResourceNotFoundException("Invalid list type");
         }
