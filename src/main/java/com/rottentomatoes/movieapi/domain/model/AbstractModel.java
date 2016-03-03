@@ -4,9 +4,11 @@ import io.katharsis.resource.annotations.JsonApiId;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter 
 @Setter
-public class AbstractModel {
+public class AbstractModel implements Serializable {
     @JsonApiId
     protected String id;
     

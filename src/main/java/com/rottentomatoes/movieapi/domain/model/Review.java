@@ -8,7 +8,7 @@ import lombok.Setter;
 @JsonApiResource(type = "review")
 @Getter 
 @Setter
-public class Review extends AbstractModel{
+public class Review extends AbstractModel {
 
     protected Long movieId;
     protected String scoreOri;

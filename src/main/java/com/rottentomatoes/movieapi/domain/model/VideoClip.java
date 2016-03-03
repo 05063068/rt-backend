@@ -7,7 +7,7 @@ import lombok.Setter;
 @JsonApiResource(type = "videoClip")
 @Getter 
 @Setter
-public class VideoClip extends AbstractModel{
+public class VideoClip extends AbstractModel {
 
     protected Integer duration;
     protected String title;

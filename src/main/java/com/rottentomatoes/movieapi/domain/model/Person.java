@@ -8,7 +8,7 @@ import lombok.Setter;
 @JsonApiResource(type = "person")
 @Getter
 @Setter
-public class Person extends AbstractModel{
+public class Person extends AbstractModel {
 
     protected String name;
     

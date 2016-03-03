@@ -6,6 +6,8 @@ import io.katharsis.resource.annotations.JsonApiToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @JsonApiResource(type = "affiliates")
 @Getter
 @Setter

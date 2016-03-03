@@ -2,13 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper">
-
     <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
         SELECT ti.*,
 
         (SELECT COUNT(DISTINCT r.id) AS count FROM review r
             LEFT OUTER JOIN critic c ON r.critic_id=c.id
             LEFT OUTER JOIN publication p ON r.publication_id=p.id
+        <if test="criticType != null and criticType == 'top'">
+          INNER JOIN critic_top ON critic_top.critic_id = c.id
+        </if>
             WHERE r.movie_id=#{movie_id}
             AND r.status= 'A'
             AND r.category IN ('MOV', 'QCK', 'FUL')
@@ -18,6 +20,9 @@
         (SELECT COUNT(DISTINCT r.id) AS count FROM review r
             LEFT OUTER JOIN critic c ON r.critic_id=c.id
             LEFT OUTER JOIN publication p ON r.publication_id=p.id
+        <if test="criticType != null and criticType == 'top'">
+            INNER JOIN critic_top ON critic_top.critic_id = c.id
+        </if>
             WHERE r.movie_id=#{movie_id}
             AND r.status= 'A'
             AND r.category IN ('MOV', 'QCK', 'FUL')
@@ -27,6 +32,9 @@
         (SELECT COUNT(DISTINCT r.id) FROM review r
             LEFT OUTER JOIN critic c ON r.critic_id=c.id
             LEFT OUTER JOIN publication p ON r.publication_id=p.id
+        <if test="criticType != null and criticType == 'top'">
+            INNER JOIN critic_top ON critic_top.critic_id = c.id
+        </if>
             WHERE r.movie_id=#{movie_id}
             AND r.status= 'A'
             AND r.category IN ('DVD')
@@ -48,6 +56,9 @@
         (SELECT COUNT(DISTINCT r.id) AS count FROM review r
             LEFT OUTER JOIN critic c ON r.critic_id=c.id
             LEFT OUTER JOIN publication p ON r.publication_id=p.id
+        <if test="criticType != null and criticType == 'top'">
+            INNER JOIN critic_top ON critic_top.critic_id = c.id
+        </if>
             WHERE r.movie_id=#{movie_id}
             AND r.status='A'
             AND r.category IN ('MOV', 'QCK', 'FUL')
