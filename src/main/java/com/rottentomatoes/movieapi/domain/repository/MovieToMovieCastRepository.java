@@ -36,22 +36,44 @@ public class MovieToMovieCastRepository extends AbstractRepository implements Re
     public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
 
-	@Override
-	public MovieCast findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
-		return null;
-	}
+    @Override
+    public MovieCast findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
+        return null;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public MetaDataEnabledList<MovieCast> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
-		Map<String, Object> selectParams = new HashMap<>();
-		selectParams.put("movie_id", movieId);
+    @SuppressWarnings("unchecked")
+    @Override
+    public MetaDataEnabledList<MovieCast> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+
+        String roleFilter = requestParams.getFilters() != null && requestParams.getFilters().get("role") != null ? (String) requestParams.getFilters().get("role") : null;
+        Map<String, Object> selectParams = new HashMap<>();
+
+
+        switch(roleFilter.toLowerCase()) {
+            case "actors":
+                selectParams.put("role", "ACT");
+                break;
+            case "directors":
+                selectParams.put("role", "DIR");
+                break;
+            case "producers":
+                selectParams.put("role", "PRO");
+                break;
+            case "screenwriters":
+                selectParams.put("role", "SCR");
+                break;
+            case "executive_producers":
+                selectParams.put("role", "EPR");
+                break;
+        }
+
+        selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
         MetaDataEnabledList<MovieCast> personList = new MetaDataEnabledList(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie", selectParams));
         return personList;
-	}
+    }
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
@@ -59,7 +81,7 @@ public class MovieToMovieCastRepository extends AbstractRepository implements Re
         selectParams.put("movie_id", castedResourceId);
 
         RelatedMetaDataInformation metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastCountForMovie", selectParams);
-        if(root instanceof RelationshipRepository) {
+        if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }
 

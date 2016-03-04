@@ -50,6 +50,9 @@
         LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id
         WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
         AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
+        <if test="role">
+            AND role = #{role}
+        </if>
         ORDER BY movie_cast.role, movie_cast.sortkey
 
         <choose>
@@ -67,13 +70,10 @@
         <id property="id" column="id"/>
         <result property="role" column="role"/>
 
-
         <association property="person" javaType="com.rottentomatoes.movieapi.domain.model.Person">
             <id property="id" column="movie_person_id"/>
             <result property="name" column="movie_person_name"/>
-
-            <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap"
-                         notNullColumn="img_id"/>
+            <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
         </association>
 
         <collection property="characters" javaType="list" ofType="java.lang.String">

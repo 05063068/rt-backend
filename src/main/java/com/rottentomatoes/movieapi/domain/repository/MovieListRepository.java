@@ -42,8 +42,8 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
         LocalDate start;
         LocalDate end;
 
-        Integer limit = requestParams.getFilters() != null && requestParams.getFilters().get("limit") != null ? (Integer) requestParams.getFilters().get("limit") : null;
-        Integer offset = requestParams.getFilters() != null && requestParams.getFilters().get("offset") != null ? (Integer) requestParams.getFilters().get("offset") : null;
+        Integer limit = requestParams.getPagination() != null && requestParams.getPagination().get("limit") != null ? (Integer) requestParams.getPagination().get("limit") : null;
+        Integer offset = requestParams.getPagination() != null && requestParams.getPagination().get("offset") != null ? (Integer) requestParams.getPagination().get("offset") : null;
         selectParams.put("limit", limit);
         selectParams.put("offset", offset);
         selectParams.put("country", "us");
