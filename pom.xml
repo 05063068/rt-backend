@@ -140,7 +140,7 @@
                 <version>1.4.0</version>
                 <configuration>
                     <applicationName>movie-api</applicationName>
-                    <environmentRef>staging</environmentRef>
+                    <environmentRef>${beanstalker.env.ref}</environmentRef>
                     <s3Bucket>flx-movie-api</s3Bucket>
                     <s3Key>${project.artifactId}/${project.build.finalName}-${maven.build.timestamp}.war</s3Key>
                     <!-- will save as s3://[bucket name]/[artifactId]/artifactId-version-TIMESTAMP.war -->
