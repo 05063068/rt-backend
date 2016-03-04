@@ -225,3 +225,25 @@ This response is self contained and captures all its relationship data internall
 }
 ```
 
+Modify the pom.xml to parameterize the beanstalker <environmentRef>
+
+<plugin>
+    <groupId>br.com.ingenieux</groupId>
+    <artifactId>beanstalk-maven-plugin</artifactId>
+    <version>1.4.0</version>
+    <configuration>
+        <applicationName>movie-api</applicationName>
+        <environmentRef>${beanstalker.env.ref}</environmentRef>
+        <s3Bucket>flx-movie-api</s3Bucket>
+        <s3Key>${project.artifactId}/${project.build.finalName}-${maven.build.timestamp}.war</s3Key>
+        <!-- will save as s3://[bucket name]/[artifactId]/artifactId-version-TIMESTAMP.war -->
+    </configuration>
+</plugin>
+
+Command:
+mvn package -Dbeanstalker.env.ref=staging -DskipTests
+(environmentName --> Staging and Tests Skipped)
+```
+
+
+
