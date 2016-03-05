@@ -9,6 +9,7 @@ import java.util.Map;
 import static java.time.temporal.TemporalAdjusters.*;
 
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
+import io.katharsis.queryParams.PaginationKeys;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.response.MetaInformation;
 import org.springframework.stereotype.Component;
@@ -42,10 +43,8 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
         LocalDate start;
         LocalDate end;
 
-        Integer limit = requestParams.getPagination() != null && requestParams.getPagination().get("limit") != null ? (Integer) requestParams.getPagination().get("limit") : null;
-        Integer offset = requestParams.getPagination() != null && requestParams.getPagination().get("offset") != null ? (Integer) requestParams.getPagination().get("offset") : null;
-        selectParams.put("limit", limit);
-        selectParams.put("offset", offset);
+        selectParams.put("limit", getLimit("", requestParams));
+        selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", "us");
 
         switch (listId) {
