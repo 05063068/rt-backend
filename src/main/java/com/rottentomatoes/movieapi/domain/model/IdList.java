@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 public class IdList extends AbstractModel {
 
-    @JsonApiToMany
-    protected Iterable<String> idsInList;
+    protected Iterable<String> ids;
 
 }

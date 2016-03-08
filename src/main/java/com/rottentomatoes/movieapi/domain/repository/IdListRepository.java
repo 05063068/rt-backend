@@ -35,13 +35,17 @@ public class IdListRepository extends AbstractRepository implements ResourceRepo
 
         switch (listId) {
             case "sitemap-movie-ids":
-                IdList retval = new IdList();
-                retval.setId(listId);
-                
+
                 Map<String, Object> selectParams = new HashMap<>();
-                List<String> ids = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.IdListMapper.selectSitemapMovieIds", selectParams);
-                retval.setIdsInList(ids);
-                return retval; 
+            	
+                /* TODO: Pending move of getLimit and getOffset into AbstractRepository
+                 *  
+                String fieldName = "ids"; // Pass in idsLimit, idsOffset
+                selectParams.put("limit", getLimit(fieldName, requestParams));
+                selectParams.put("offset", getOffset(fieldName, requestParams));
+            	*/
+            	IdList retval = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.IdListMapper.selectSitemapMovieIds", selectParams);
+                return retval;
                 
             default:
                 throw new ResourceNotFoundException("Invalid list type");

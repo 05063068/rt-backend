@@ -4,12 +4,15 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.IdListMapper">
 
     <select id="selectSitemapMovieIds" resultMap="idListMap" parameterType="map">
-        SELECT movie_id AS item_id FROM movie LIMIT 10; 
+        SELECT 'sitemap-movie-ids' AS list_id, movie_id AS item_id FROM movie LIMIT 10; 
     </select>
     
-    <resultMap id="idListMap" type="string">
-        <result column="item_id" />
-    </resultMap>
+    <resultMap id="idListMap" type="com.rottentomatoes.movieapi.domain.model.IdList">
+    	<id property="id" column="list_id" />
     
+        <collection property="ids" javaType="list" ofType="java.lang.String">
+            <result column="item_id"/>
+        </collection>
+    </resultMap>
 
 </mapper>
