@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.IdListMapper">
+
+    <select id="selectSitemapMovieIds" resultMap="idListMap" parameterType="map">
+        SELECT 'sitemap-movie-ids' AS list_id, m.movie_id AS item_id FROM movie m 
+        join review r on r.movie_id = m.movie_id join rating_summary s on s.movie_id=m.movie_id 
+        where m.status = 1 group by m.movie_id having count(r.id) > #{minReviews} or sum(num_wts + num_ni) > #{minRatins} 
+        LIMIT #{offset}, #{limit}; 
+    </select>
+    
+    <resultMap id="idListMap" type="com.rottentomatoes.movieapi.domain.model.IdList">
+    	<id property="id" column="list_id" />
+    
+        <collection property="ids" javaType="list" ofType="java.lang.String">
+            <result column="item_id"/>
+        </collection>
+    </resultMap>
+
+</mapper>
