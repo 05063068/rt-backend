@@ -37,13 +37,25 @@ public class IdListRepository extends AbstractRepository implements ResourceRepo
             case "sitemap-movie-ids":
 
                 Map<String, Object> selectParams = new HashMap<>();
+                Map<String, Object> filters = requestParams.getFilters();
+                Integer minReviews = null;
+                Integer minRatings = null;
+                if (filters != null) {
+                    minReviews = (Integer) filters.get("minReviews");
+                    minRatings = (Integer) filters.get("minRatings");
+                }
+                if (minReviews == null) {
+                    minReviews = 5;
+                }
+                if (minRatings == null) {
+                    minRatings = 300;
+                }
             	
-                /* TODO: Pending move of getLimit and getOffset into AbstractRepository
-                 *  
                 String fieldName = "ids"; // Pass in idsLimit, idsOffset
                 selectParams.put("limit", getLimit(fieldName, requestParams));
                 selectParams.put("offset", getOffset(fieldName, requestParams));
-            	*/
+                selectParams.put("minReviews", minReviews);
+                selectParams.put("minRatings", minRatings);
             	IdList retval = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.IdListMapper.selectSitemapMovieIds", selectParams);
                 return retval;
                 
