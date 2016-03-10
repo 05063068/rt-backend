@@ -224,25 +224,12 @@ This response is self contained and captures all its relationship data internall
   ]
 }
 ```
+# Deploying to the Beanstalk Environment
 
-Modify the pom.xml to parameterize the beanstalker <environmentRef>
-
-<plugin>
-    <groupId>br.com.ingenieux</groupId>
-    <artifactId>beanstalk-maven-plugin</artifactId>
-    <version>1.4.0</version>
-    <configuration>
-        <applicationName>movie-api</applicationName>
-        <environmentRef>${beanstalker.env.ref}</environmentRef>
-        <s3Bucket>flx-movie-api</s3Bucket>
-        <s3Key>${project.artifactId}/${project.build.finalName}-${maven.build.timestamp}.war</s3Key>
-        <!-- will save as s3://[bucket name]/[artifactId]/artifactId-version-TIMESTAMP.war -->
-    </configuration>
-</plugin>
-
+By using the below mvn command you can deploy to the EC2 instance by substituting <env_name_here> with the EC2 instance name. 
 Command:
-mvn package -Dbeanstalker.env.ref=staging -DskipTests
-(environmentName --> Staging and Tests Skipped)
+mvn -Dbeanstalker.env.ref=<env_name_here> beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
+
 ```
 
 
