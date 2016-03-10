@@ -54,8 +54,7 @@ public class Movie extends AbstractModel {
 
     protected Map<String, Object> tomatometer;
     protected Map<String, Object> releaseDates;
-    
-    
+
     @JsonApiToOne
     protected Image mainImage;
 
