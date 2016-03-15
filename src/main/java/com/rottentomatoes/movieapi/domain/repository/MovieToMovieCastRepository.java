@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.rottentomatoes.movieapi.enums.MovieCastRole;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
@@ -48,25 +49,9 @@ public class MovieToMovieCastRepository extends AbstractRepository implements Re
         String roleFilter = requestParams.getFilters() != null && requestParams.getFilters().get("role") != null ? (String) requestParams.getFilters().get("role") : null;
         Map<String, Object> selectParams = new HashMap<>();
 
-
-        switch(roleFilter.toLowerCase()) {
-            case "actors":
-                selectParams.put("role", "ACT");
-                break;
-            case "directors":
-                selectParams.put("role", "DIR");
-                break;
-            case "producers":
-                selectParams.put("role", "PRO");
-                break;
-            case "screenwriters":
-                selectParams.put("role", "SCR");
-                break;
-            case "executive_producers":
-                selectParams.put("role", "EPR");
-                break;
+        if(roleFilter != null) {
+            selectParams.put("role", MovieCastRole.getCodeByName(roleFilter));
         }
-
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
