@@ -3,71 +3,12 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper">
     <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
-        SELECT ti.*,
-
-        (SELECT COUNT(DISTINCT r.id) AS count FROM review r
-            LEFT OUTER JOIN critic c ON r.critic_id=c.id
-            LEFT OUTER JOIN publication p ON r.publication_id=p.id
-        <if test="criticType != null and criticType == 'top'">
-          INNER JOIN critic_top ON critic_top.critic_id = c.id
-        </if>
-            WHERE r.movie_id=#{movie_id}
-            AND r.status= 'A'
-            AND r.category IN ('MOV', 'QCK', 'FUL')
-            AND r.score = 'F')
-        AS fresh_count,
-
-        (SELECT COUNT(DISTINCT r.id) AS count FROM review r
-            LEFT OUTER JOIN critic c ON r.critic_id=c.id
-            LEFT OUTER JOIN publication p ON r.publication_id=p.id
-        <if test="criticType != null and criticType == 'top'">
-            INNER JOIN critic_top ON critic_top.critic_id = c.id
-        </if>
-            WHERE r.movie_id=#{movie_id}
-            AND r.status= 'A'
-            AND r.category IN ('MOV', 'QCK', 'FUL')
-            AND r.score = 'R')
-        AS rotten_count,
-
-        (SELECT COUNT(DISTINCT r.id) FROM review r
-            LEFT OUTER JOIN critic c ON r.critic_id=c.id
-            LEFT OUTER JOIN publication p ON r.publication_id=p.id
-        <if test="criticType != null and criticType == 'top'">
-            INNER JOIN critic_top ON critic_top.critic_id = c.id
-        </if>
-            WHERE r.movie_id=#{movie_id}
-            AND r.status= 'A'
-            AND r.category IN ('DVD')
-            AND r.score IN ('F','R','Z'))
-        AS dvd_count,
-
-        (SELECT count(*) FROM review
-            LEFT OUTER JOIN critic_top
-            ON critic_top.critic_id = review.critic_id AND critic_top.country = #{country}
-            LEFT OUTER JOIN publication_top
-            ON publication_top.publication_id = review.publication_id AND publication_top.country = #{country}
-            WHERE review.movie_id = #{movie_id}
-            AND review.status = 'A'
-            AND review.category IN ('MOV', 'QCK', 'FUL')
-            AND review.score IN ('F','R','Z')
-            AND (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL))
-        AS top_critics,
-
-        (SELECT COUNT(DISTINCT r.id) AS count FROM review r
-            LEFT OUTER JOIN critic c ON r.critic_id=c.id
-            LEFT OUTER JOIN publication p ON r.publication_id=p.id
-        <if test="criticType != null and criticType == 'top'">
-            INNER JOIN critic_top ON critic_top.critic_id = c.id
-        </if>
-            WHERE r.movie_id=#{movie_id}
-            AND r.status='A'
-            AND r.category IN ('MOV', 'QCK', 'FUL')
-            AND r.score IN ('F','R','Z')
-            AND (p.approved_ind=1 OR c.approved_ind=1))
-        AS all_critics
-
-        FROM tomatometer_info ti
-        WHERE movie_id = #{movie_id}
+        SELECT t.*, IFNULL(tc.top_critics,0) AS top_critics, 
+        IFNULL(tc.top_fresh_count,0) AS top_country_fresh_count,
+        IFNULL(tc.top_rotten_count,0) AS top_country_rotten_count, 
+        IFNULL(tc.top_dvd_count,0) AS top_country_dvd_count
+        FROM tomatometer_info t LEFT OUTER JOIN tmeter_country_info tc on t.movie_id=tc.movie_id and tc.country= #{country} 
+        WHERE t.movie_id= #{movie_id}
     </select>
 
     <resultMap id="criticSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticSummary">
@@ -81,6 +22,12 @@
         <result property="rottenCount" column="rotten_count"/>
         <result property="topCriticsCount" column="top_critics"/>
         <result property="allCriticsCount" column="all_critics"/>
+        <result property="topFreshCount" column="top_fresh_count"/>
+        <result property="topRottenCount" column="top_rotten_count"/>
+        <result property="topDvdCount" column="top_dvd_count"/>
+        <result property="topCountryFreshCount" column="top_country_fresh_count"/>
+        <result property="topCountryRottenCount" column="top_country_rotten_count"/>
+        <result property="topCountryDvdCount" column="top_country_dvd_count"/>
         <result property="dvdCount" column="dvd_count"/>
     </resultMap>
 </mapper>
