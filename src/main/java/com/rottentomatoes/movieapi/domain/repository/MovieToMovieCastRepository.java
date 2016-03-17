@@ -49,7 +49,7 @@ public class MovieToMovieCastRepository extends AbstractRepository implements Re
         String roleFilter = requestParams.getFilters() != null && requestParams.getFilters().get("role") != null ? (String) requestParams.getFilters().get("role") : null;
         Map<String, Object> selectParams = new HashMap<>();
 
-        if(roleFilter != null) {
+        if (roleFilter != null) {
             selectParams.put("role", MovieCastRole.getCodeByName(roleFilter));
         }
         selectParams.put("movie_id", movieId);

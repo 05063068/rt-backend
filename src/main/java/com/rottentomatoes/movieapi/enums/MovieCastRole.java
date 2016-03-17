@@ -1,5 +1,8 @@
 package com.rottentomatoes.movieapi.enums;
 
+/**
+ * This enum is used for the movie cast role filter.
+ */
 public enum MovieCastRole {
 
     ACTORS("actors", "ACT"),
@@ -26,7 +29,7 @@ public enum MovieCastRole {
 
     public static String getCodeByName(String name) {
         for (MovieCastRole movieCastRole : MovieCastRole.values()) {
-            if(movieCastRole.getName().equalsIgnoreCase(name)) {
+            if (movieCastRole.getName().equalsIgnoreCase(name)) {
                 return movieCastRole.getCode();
             }
         }
