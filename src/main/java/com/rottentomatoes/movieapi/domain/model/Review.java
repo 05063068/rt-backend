@@ -5,6 +5,8 @@ import io.katharsis.resource.annotations.JsonApiToOne;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
+
 @JsonApiResource(type = "review")
 @Getter 
 @Setter
@@ -14,7 +16,7 @@ public class Review extends AbstractModel {
     protected String scoreOri;
     protected String quote;
     protected String url;
-    protected String creationDate;
+    protected ZonedDateTime creationDate;
     protected String topCritic;
     protected String score;
 
