@@ -8,8 +8,8 @@
           sku.id,
           sku.purchase_type AS purchaseType,
           sku.price,
-          sku.start_date AS startDate,
-          sku.end_date AS endDate,
+          sku.start_date,
+          sku.end_date,
           sku.sku_ready_ind AS skuReadyInd
         FROM sonic_movie_sku sku
         WHERE sku.id=#{id}
@@ -22,8 +22,8 @@
           sku.id,
           sku.purchase_type AS purchaseType,
           sku.price,
-          sku.start_date AS startDate,
-          sku.end_date AS endDate,
+          sku.start_date,
+          sku.end_date,
           sku.sku_ready_ind AS skuReadyInd
         FROM sonic_movie_sku sku, sonic_movie sm
         WHERE sm.id=sku.sonic_movie_id
@@ -34,5 +34,7 @@
 
     <resultMap id="sonicInfoResultMap" type="com.rottentomatoes.movieapi.domain.model.SonicInfo">
         <id property="id" column="id" />
+        <result property="startDate" column="start_date" javaType="java.time.LocalDate"/>
+        <result property="endDate" column="end_date" javaType="java.time.LocalDate"/>
     </resultMap>
 </mapper>

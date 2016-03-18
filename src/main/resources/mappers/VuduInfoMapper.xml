@@ -31,5 +31,7 @@
 
     <resultMap id="vuduInfoResultMap" type="com.rottentomatoes.movieapi.domain.model.VuduInfo">
         <id property="id" column="id" />
+        <result property="startDate" column="start_date" javaType="java.time.LocalDate"/>
+        <result property="endDate" column="end_date" javaType="java.time.LocalDate"/>
     </resultMap>
 </mapper>

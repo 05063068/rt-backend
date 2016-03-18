@@ -72,8 +72,8 @@
         <result property="boxOffice" column="box_office"/>
         <result property="mpaaRating" column="mpaa_rating" javaType="com.rottentomatoes.movieapi.enums.MpaaRating"
                 typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
-        <result property="creationDate" column="creation_date" javaType="java.sql.Timestamp"/>
-        <result property="lastModifiedDate" column="last_modified_date" javaType="java.sql.Timestamp"/>
+        <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
+        <result property="lastModifiedDate" column="last_modified_date" javaType="java.time.ZonedDateTime"/>
         <result property="status" column="status"/>
         <result property="advisory" column="advisory"/>
         <result property="vanityToken" column="vanity_token"/>
@@ -83,8 +83,8 @@
         <result property="mainTrailer" column="main_trailer"/>
         <result property="studioName" column="studioName"/>
         <association property="releaseDates" javaType="map">
-            <result property="theater" column="theater_release_date" javaType="java.sql.Date"/>
-            <result property="dvd" column="dvd_release_date" javaType="java.sql.Date"/>
+            <result property="theater" column="theater_release_date" javaType="java.time.LocalDate"/>
+            <result property="dvd" column="dvd_release_date" javaType="java.time.LocalDate"/>
         </association>
         <association property="tomatometer" javaType="map">
             <result property="value" column="value"/>
