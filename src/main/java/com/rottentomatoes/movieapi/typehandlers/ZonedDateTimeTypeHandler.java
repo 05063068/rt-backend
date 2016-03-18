@@ -20,7 +20,6 @@ import org.apache.ibatis.type.MappedTypes;
  */
 @MappedTypes(ZonedDateTime.class)
 public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
-    private static DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
     private static ZoneId PST_ZONE_ID = ZoneId.of("America/Los_Angeles");
 
     @Override
