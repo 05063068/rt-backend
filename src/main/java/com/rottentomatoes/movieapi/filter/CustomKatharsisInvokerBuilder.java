@@ -20,7 +20,7 @@ import java.util.Date;
  * KatharsisInvoker builder.
  */
 public class CustomKatharsisInvokerBuilder extends KatharsisInvokerBuilder {
-    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     @Override
     protected ObjectMapper createObjectMapper(ResourceRegistry resourceRegistry) {
@@ -28,7 +28,7 @@ public class CustomKatharsisInvokerBuilder extends KatharsisInvokerBuilder {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.registerModule(createDataBindingModule(resourceRegistry));
         mapper.registerModule(new JavaTimeModule());
-        mapper.setDateFormat(formatter);
+        mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         return mapper;
     }

@@ -20,8 +20,8 @@ import org.apache.ibatis.type.MappedTypes;
 public class LocalDateTypeHandler extends BaseTypeHandler<LocalDate> {
 
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, LocalDate parameter, JdbcType jdbcType) throws SQLException {
-        ps.setDate(i, Date.valueOf(parameter));
+    public void setNonNullParameter(PreparedStatement ps, int index, LocalDate parameter, JdbcType jdbcType) throws SQLException {
+        ps.setDate(index, Date.valueOf(parameter));
     }
 
     @Override

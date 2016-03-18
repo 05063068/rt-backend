@@ -24,9 +24,9 @@ public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
     private static ZoneId PST_ZONE_ID = ZoneId.of("America/Los_Angeles");
 
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, ZonedDateTime parameter, JdbcType jdbcType) throws SQLException {
+    public void setNonNullParameter(PreparedStatement ps, int index, ZonedDateTime parameter, JdbcType jdbcType) throws SQLException {
         ps.setTimestamp(
-                i,
+                index,
                 Timestamp.from(parameter.toInstant()),
                 GregorianCalendar.from(parameter)
         );
@@ -37,7 +37,6 @@ public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
         Timestamp ts = rs.getTimestamp(columnName, Calendar.getInstance());
         if (ts != null) {
             return ZonedDateTime.ofInstant(ts.toInstant(), PST_ZONE_ID);
-//            return localDateTime.format(formatter);
         }
         return null;
     }
@@ -47,7 +46,6 @@ public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
         Timestamp ts = rs.getTimestamp(columnIndex, Calendar.getInstance());
         if (ts != null) {
             return ZonedDateTime.ofInstant(ts.toInstant(), PST_ZONE_ID);
-//            return localDateTime.format(formatter);
         }
         return null;
     }
@@ -57,7 +55,6 @@ public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
         Timestamp ts = cs.getTimestamp(columnIndex, Calendar.getInstance());
         if (ts != null) {
             return ZonedDateTime.ofInstant(ts.toInstant(), PST_ZONE_ID);
-//            return localDateTime.format(formatter);
         }
         return null;
     }
