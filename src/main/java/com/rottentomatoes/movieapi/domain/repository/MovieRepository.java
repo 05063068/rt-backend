@@ -17,9 +17,15 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.flixster.image.Environment;
+import com.flixster.image.IdGenerator;
+import com.flixster.image.ImageFormat;
+import com.flixster.image.ImageType;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.response.MetaInformation;
@@ -48,6 +54,35 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("id", movieId);
         Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", selectParams);
+
+        if (movie.getPosterImage() != null) {
+            Long id = Long.parseLong(movie.getPosterImage().getId());
+            ImageType type = ImageType.MOVIE;
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.DATE, 45);
+            Date expiry = c.getTime();
+            Environment environment = Environment.PROD;
+            ImageFormat format = getImageFormat(movie.getPosterImage().getFormat());
+            int width = movie.getPosterImage().getOriginalWidth();
+            int height = movie.getPosterImage().getOriginalHeight();
+
+           movie.getPosterImage().setThumborId(getThumborId(id, type, expiry, environment, format, width, height));
+        }
+
+        if (movie.getHeroImage() != null) {
+            Long id = Long.parseLong(movie.getHeroImage().getId());
+            ImageType type = ImageType.MOVIE;
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.DATE, 45);
+            Date expiry = c.getTime();
+            Environment environment = Environment.PROD;
+            ImageFormat format = getImageFormat(movie.getHeroImage().getFormat());
+            int width = movie.getHeroImage().getOriginalWidth();
+            int height = movie.getHeroImage().getOriginalHeight();
+
+            movie.getHeroImage().setThumborId(getThumborId(id, type, expiry, environment, format, width, height));
+        }
+
         return movie;
     }
 

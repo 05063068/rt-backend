@@ -7,22 +7,25 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ImageMapper">
     <select id="selectImageByIdAndType" resultMap="imageResultMap">
-        SELECT CONCAT('${type}-' , id) AS img_id, 
+        SELECT CONCAT('${type}-' , id) AS img_id,
         '${type}' AS img_type,
-        img_width, img_height 
+        img_width, img_height,
+        format
         FROM ${type}        
         WHERE id=#{id}
     </select>
 
     <select id="selectImagesForMovie" resultMap="imageResultMap" parameterType="map">
-        SELECT CONCAT('movie_img-' , id) AS img_id,
-        id AS databaseId,
-        'movie_img' AS imageType,
-        img_width AS originalWidth,
-        img_height AS originalHeight
-        FROM movie_img
-        WHERE movie_id=#{movie_id}
-
+        SELECT
+            multiuse_img_reference.media_type AS mediaType,
+            multiuse_img.id AS id,
+            multiuse_img.format AS format,
+            multiuse_img.img_width AS originalWidth,
+            multiuse_img.img_height AS originalHeight,
+            multiuse_img.aspect_ratio AS aspectRatio
+        FROM multiuse_img_reference
+        LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
+        WHERE multiuse_img_reference.media_id=#{movie_id}
         <choose>
             <when test="limit != null and offset != null">
                 LIMIT #{offset},#{limit}
@@ -34,14 +37,14 @@
     </select>
 
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
-        <id property="id" column="img_id"/>
+        <id property="id" column="id"/>
     </resultMap>
 
     <select id="selectImageCountForMovie" resultMap="imageMataDataResultMap" parameterType="map">
         SELECT
           count(*) AS totalCount
-        FROM movie_img
-        WHERE movie_id=#{movie_id}
+        FROM multiuse_img_reference
+        WHERE multiuse_img_reference.media_id=#{movie_id}
     </select>
 
     <resultMap id="imageMataDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation"/>

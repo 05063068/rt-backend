@@ -33,7 +33,16 @@
         movie.studio_id,
         movie.auto_update_ind,
         movie.trailer_update_ind,
-
+        movie_img.id AS movie_img_id,
+        movie_img.format AS movie_img_format,
+        movie_img.img_width AS movie_img_width,
+        movie_img.img_height AS movie_img_height,
+        multiuse_img_reference.media_type hero_img_media_type,
+        multiuse_img.id AS hero_img_id,
+        multiuse_img.format hero_img_format,
+        multiuse_img.img_width hero_img_width,
+        multiuse_img.img_height hero_img_height,
+        multiuse_img.aspect_ratio hero_img_aspect_ratio,
         movie_studio.name AS studioName,
         tomatometer AS value,
         CASE
@@ -48,6 +57,8 @@
         WHERE movie_id = movie.movie_id
         AND primary_ind = 1
         AND platform = 'RTO'
+        AND multiuse_img_reference.hero_img_ind = 1
+        AND multiuse_img_reference.status = 1
         ORDER BY url ASC LIMIT 1
         ) AS vanity_token, 
         movie_meta_data.running_time,
@@ -58,6 +69,9 @@
         LEFT JOIN movie_meta_data ON movie_meta_data.movie_id = movie.movie_id
         LEFT JOIN tomatometer_info ON tomatometer_info.movie_id = movie.movie_id
         LEFT JOIN movie_synopsis ON movie_synopsis.id = movie_meta_data.synopsis_id
+        LEFT JOIN movie_img ON movie_img.movie_id = movie.movie_id
+        LEFT JOIN multiuse_img_reference ON multiuse_img_reference.media_id = movie.movie_id
+        LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
         <!--  TODO: Check status=active -->
     </sql>
 
@@ -92,8 +106,19 @@
             <result property="value" column="value"/>
             <result property="state" column="state"/>
         </association>
-        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap"
-                     notNullColumn="img_id"/>
+        <association property="posterImage" javaType="com.rottentomatoes.movieapi.domain.model.Image">
+            <id property="id" column="movie_img_id"/>
+            <result property="format" column="movie_img_format"/>
+            <result property="originalWidth" column="movie_img_width"/>
+            <result property="originalHeight" column="movie_img_height"/>
+        </association>
+        <association property="heroImage" javaType="com.rottentomatoes.movieapi.domain.model.Image">
+            <id property="id" column="hero_img_id"/>
+            <result property="format" column="hero_img_format"/>
+            <result property="originalWidth" column="hero_img_width"/>
+            <result property="originalHeight" column="hero_img_height"/>
+            <result property="mediaType" column="hero_img_media_type"/>
+        </association>
     </resultMap>
 
 </mapper>

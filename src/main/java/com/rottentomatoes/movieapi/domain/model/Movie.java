@@ -52,12 +52,10 @@ public class Movie extends AbstractModel {
     protected Integer runningTime;
     protected Integer mainTrailer;
     protected String officialUrl;
-
     protected Map<String, Object> tomatometer;
     protected Map<String, Object> releaseDates;
-
-    @JsonApiToOne
-    protected Image mainImage;
+    protected Image posterImage;
+    protected Image heroImage;
 
     @JsonApiToOne
     @JsonApiLazy
