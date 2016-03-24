@@ -64,9 +64,10 @@ Find your .m2 directory (usually in ~/.m2 e.g. C:\Users\Peter\.m2) and add/edit 
 </settings>
 ``` 
 
-The project can be deployed to AWS simply by executing the following command:
+### Deploying to the Elastic Beanstalk Environment
+The project can be deployed to Elastic Beanstalk Environment simply by executing the following command:
 ```
-mvn beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
+mvn -Dbeanstalker.env.ref=<env_name_here> beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
 ```
 
 # Example Requests
@@ -224,13 +225,5 @@ This response is self contained and captures all its relationship data internall
   ]
 }
 ```
-# Deploying to the Beanstalk Environment
-
-By using the below mvn command you can deploy to the EC2 instance by substituting <env_name_here> with the EC2 instance name. 
-Command:
-mvn -Dbeanstalker.env.ref=<env_name_here> beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
-
-```
-
 
 
