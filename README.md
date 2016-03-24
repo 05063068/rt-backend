@@ -64,9 +64,10 @@ Find your .m2 directory (usually in ~/.m2 e.g. C:\Users\Peter\.m2) and add/edit 
 </settings>
 ``` 
 
-The project can be deployed to AWS simply by executing the following command:
+### Deploying to the Elastic Beanstalk Environment
+The project can be deployed to Elastic Beanstalk Environment simply by executing the following command:
 ```
-mvn beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
+mvn -Dbeanstalker.env.ref=<env_name_here> beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment
 ```
 
 # Example Requests
@@ -224,26 +225,5 @@ This response is self contained and captures all its relationship data internall
   ]
 }
 ```
-
-Modify the pom.xml to parameterize the beanstalker <environmentRef>
-
-<plugin>
-    <groupId>br.com.ingenieux</groupId>
-    <artifactId>beanstalk-maven-plugin</artifactId>
-    <version>1.4.0</version>
-    <configuration>
-        <applicationName>movie-api</applicationName>
-        <environmentRef>${beanstalker.env.ref}</environmentRef>
-        <s3Bucket>flx-movie-api</s3Bucket>
-        <s3Key>${project.artifactId}/${project.build.finalName}-${maven.build.timestamp}.war</s3Key>
-        <!-- will save as s3://[bucket name]/[artifactId]/artifactId-version-TIMESTAMP.war -->
-    </configuration>
-</plugin>
-
-Command:
-mvn package -Dbeanstalker.env.ref=staging -DskipTests
-(environmentName --> Staging and Tests Skipped)
-```
-
 
 
