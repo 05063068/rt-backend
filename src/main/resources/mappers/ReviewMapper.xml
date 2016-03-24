@@ -73,7 +73,7 @@
         <result property="scoreOri" column="score_ori"/>
         <result property="score" column="score"/>
         <result property="url" column="url"/>
-        <result property="creationDate" column="creation_date"/>
+        <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
         <result property="topCritic" column="is_top_critic"/>
 
         <association property="critic" javaType="com.rottentomatoes.movieapi.domain.model.Critic">
