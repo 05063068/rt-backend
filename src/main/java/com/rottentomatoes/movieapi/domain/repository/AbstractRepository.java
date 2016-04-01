@@ -23,39 +23,6 @@ public class AbstractRepository implements Serializable {
     Integer DEFAULT_LIMIT = 10;
     Integer DEFAULT_OFFSET = 0;
 
-    protected String getThumborId(Long id, ImageType type, Date expiry, Environment environment, ImageFormat format, int width, int height) {
-        final int MAX_WIDTH = 1200;
-        return IdGenerator.builder()
-                .id(id)
-                .type(type)
-                .expiry(expiry)
-                .environment(environment)
-                .maxWidth(MAX_WIDTH)
-                .format(format)
-                .originalSize(new Dimension(width, height))
-                .build().getEncodedId();
-    }
-
-    protected ImageType getImageType(String imageString) {
-        if (imageString.equalsIgnoreCase("mv")) {
-            return ImageType.MOVIE;
-        }
-        return null;
-    }
-
-    protected ImageFormat getImageFormat(String imageFormatString) {
-        if (imageFormatString.equalsIgnoreCase("jpg")) {
-            return ImageFormat.JPG;
-        }
-        if (imageFormatString.equalsIgnoreCase("png")) {
-            return ImageFormat.PNG;
-        }
-        if (imageFormatString.equalsIgnoreCase("gif")) {
-            return ImageFormat.GIF;
-        }
-        return null;
-    }
-
     protected Integer getLimit(String fieldName, RequestParams requestParams) {
         if (requestParams != null) {
             if (requestParams.getPagination() != null && requestParams.getPagination().containsKey(PaginationKeys.limit)) {

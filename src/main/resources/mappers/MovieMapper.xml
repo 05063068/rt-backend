@@ -107,17 +107,21 @@
             <result property="state" column="state"/>
         </association>
         <association property="posterImage" javaType="com.rottentomatoes.movieapi.domain.model.Image">
-            <id property="id" column="movie_img_id"/>
-            <result property="format" column="movie_img_format"/>
-            <result property="originalWidth" column="movie_img_width"/>
-            <result property="originalHeight" column="movie_img_height"/>
+            <constructor>
+                <idArg column="movie_img_id" javaType="string"/>
+                <arg column="movie_img_height" javaType="int"/>
+                <arg column="movie_img_width" javaType="int"/>
+                <arg column="movie_img_format" javaType="string"/>
+            </constructor>
         </association>
         <association property="heroImage" javaType="com.rottentomatoes.movieapi.domain.model.Image">
-            <id property="id" column="hero_img_id"/>
-            <result property="format" column="hero_img_format"/>
-            <result property="originalWidth" column="hero_img_width"/>
-            <result property="originalHeight" column="hero_img_height"/>
-            <result property="mediaType" column="hero_img_media_type"/>
+            <constructor>
+                <idArg column="hero_img_id" javaType="string"/>
+                <arg column="hero_img_height" javaType="int"/>
+                <arg column="hero_img_width" javaType="int"/>
+                <arg column="hero_img_format" javaType="string"/>
+                <arg column="hero_img_media_type" javaType="string"/>
+            </constructor>
         </association>
     </resultMap>
 

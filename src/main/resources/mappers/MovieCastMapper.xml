@@ -49,6 +49,7 @@
         LEFT JOIN movie_cast ON movie_cast.id = cast_ids.id
         LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
         LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id
+        LEFT JOIN rtactor_img ON movie_person.main_rtactor_image_id = rtactor_img.id
         WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
         AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
         <if test="role">
@@ -66,16 +67,20 @@
         </choose>
     </select>
 
-
     <resultMap id="movieCastResultMap" type="com.rottentomatoes.movieapi.domain.model.MovieCast">
         <id property="id" column="id"/>
         <result property="role" column="role"/>
 
         <association property="person" javaType="com.rottentomatoes.movieapi.domain.model.Person">
+            <constructor>
+                <idArg column="actor_img_id" javaType="string"/>
+                <arg column="actor_img_height" javaType="int"/>
+                <arg column="actor_img_width" javaType="int"/>
+                <arg column="actor_img_format" javaType="string"/>
+            </constructor>
             <id property="id" column="movie_person_id"/>
             <result property="name" column="movie_person_name"/>
             <result property="vanity" column="movie_person_vanity" />
-            <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
         </association>
 
         <collection property="characters" javaType="list" ofType="java.lang.String">
@@ -104,7 +109,6 @@
         AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
     </select>
 
-    <resultMap id="movieCastMetaDataResultMap"
-               type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation"/>
+    <resultMap id="movieCastMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation"/>
 
 </mapper>

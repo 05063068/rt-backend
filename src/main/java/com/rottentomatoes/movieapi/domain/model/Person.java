@@ -9,10 +9,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Person extends AbstractModel {
-    protected String name;
-    
     protected String vanity;
-
-    @JsonApiToOne
+    protected String name;
     protected Image mainImage;
+
+    public Person(String id, Integer originalHeight, Integer originalWidth, String format) {
+        if (id != null) {
+            this.mainImage = new Image(id, originalHeight, originalWidth, format, "AC");
+        }
+
+    }
+
 }

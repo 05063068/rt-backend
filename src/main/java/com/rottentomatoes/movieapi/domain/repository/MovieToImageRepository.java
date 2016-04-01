@@ -59,25 +59,7 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
-
         MetaDataEnabledList<Image> imageList = new MetaDataEnabledList(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", selectParams));
-        for(Image image : imageList) {
-            String encodedId = null;
-
-            if (image.getMediaType() != null) {
-                Long id = Long.parseLong(image.getId());
-                ImageType type = ImageType.MOVIE;
-                Calendar c = Calendar.getInstance();
-                c.add(Calendar.DATE, 45);
-                Date expiry = c.getTime();
-                Environment environment = Environment.PROD;
-                ImageFormat format = getImageFormat(image.getFormat());
-                int width = image.getOriginalWidth();
-                int height = image.getOriginalHeight();
-
-                image.setThumborId(getThumborId(id, type, expiry, environment, format, width, height));
-                }
-        }
         return imageList;
     }
 

@@ -37,6 +37,12 @@
     </select>
 
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
+        <constructor>
+            <idArg column="id" javaType="string"/>
+            <arg column="originalHeight" javaType="int"/>
+            <arg column="originalWidth" javaType="int"/>
+            <arg column="format" javaType="string"/>
+        </constructor>
         <id property="id" column="id"/>
     </resultMap>
 

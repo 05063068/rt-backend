@@ -2,12 +2,19 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+
 <mapper namespace="com.rottentomatoes.movieapi.mappers.PersonMapper">
 	<sql id="moviePersonImageColumns">
+<<<<<<< f2cdda2f9ff7d08b02fe018c84d431321710b84e
         IF(movie_person.preferred_img_type IS NULL, CONCAT('rtactor_img-', movie_person.main_rtactor_image_id),  CONCAT(movie_person.preferred_img_type ,'-', movie_person.preferred_img_id)) AS img_id,
         IF(movie_person.preferred_img_type IS NULL, 'rtactor_img' , movie_person.preferred_img_type) AS img_type,
         'tmp_person_vanity_string' AS vanity
+=======
+        rtactor_img.id AS actor_img_id,
+        rtactor_img.format AS actor_img_format,
+        rtactor_img.img_width AS actor_img_width,
+        rtactor_img.img_height AS actor_img_height
+>>>>>>> Updated image to only contain thumborId
 	</sql>
 	<!--  Note: looks like preferred_img_type and preferred_img_id is currently not used at all in the DB. -->
 
@@ -33,7 +40,7 @@
         <id property="id" column="id" />
         <result property="name" column="name"/>
         <result property="vanity" column="vanity" />
-    	<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>    	
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
     </resultMap>
 
 </mapper>
