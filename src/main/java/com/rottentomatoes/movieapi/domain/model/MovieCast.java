@@ -30,9 +30,9 @@ import lombok.Setter;
 public class MovieCast extends AbstractModel {
 
     protected String role;
-    
+
     protected List<String> characters;
-    
+
     @JsonApiToOne
     private Person person;
 

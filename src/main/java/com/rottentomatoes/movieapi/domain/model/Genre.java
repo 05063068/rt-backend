@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "genre")
-@Getter 
+@Getter
 @Setter
 public class Genre extends AbstractModel {
-    protected String name;    
+    protected String name;
     protected String tag;
 }

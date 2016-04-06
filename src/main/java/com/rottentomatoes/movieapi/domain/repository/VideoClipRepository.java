@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 public class VideoClipRepository extends AbstractRepository implements ResourceRepository<VideoClip, String> {
 
     @Override
-    public void delete(String s) {}
+    public void delete(String s) {
+    }
 
     @Override
     public <S extends VideoClip> S save(S arg0) {
@@ -27,9 +28,9 @@ public class VideoClipRepository extends AbstractRepository implements ResourceR
         return null;
     }
 
-	@Override
-	public Iterable<VideoClip> findAll(Iterable<String> ids, RequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Iterable<VideoClip> findAll(Iterable<String> ids, RequestParams requestParams) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

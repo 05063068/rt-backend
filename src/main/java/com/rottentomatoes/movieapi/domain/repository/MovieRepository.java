@@ -33,7 +33,7 @@ import io.katharsis.repository.ResourceRepository;
 @SuppressWarnings("rawtypes")
 @Component
 public class MovieRepository extends AbstractRepository implements ResourceRepository<Movie, String>, MetaRepository {
-    
+
     @Override
     public <S extends Movie> S save(S entity) {
         return null;

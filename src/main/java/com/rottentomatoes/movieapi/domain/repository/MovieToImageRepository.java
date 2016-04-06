@@ -19,7 +19,7 @@ import io.katharsis.response.MetaInformation;
 @SuppressWarnings("rawtypes")
 @Component
 public class MovieToImageRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Image, String>, MetaRepository {
-    
+
     @Override
     public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
@@ -31,19 +31,19 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
     @Override
     public void setRelation(Movie arg0, String arg1, String arg2) {
     }
-    
+
     @Override
     public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
 
-	@Override
-	public Image findOneTarget(String id, String fieldName, RequestParams requestParams) {
-		return null;
-	}
+    @Override
+    public Image findOneTarget(String id, String fieldName, RequestParams requestParams) {
+        return null;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public MetaDataEnabledList<Image> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public MetaDataEnabledList<Image> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
@@ -51,7 +51,7 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
 
         MetaDataEnabledList<Image> imageList = new MetaDataEnabledList(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", selectParams));
         return imageList;
-	}
+    }
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
@@ -59,7 +59,7 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
         selectParams.put("movie_id", castedResourceId);
 
         RelatedMetaDataInformation metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImageCountForMovie", selectParams);
-        if(root instanceof RelationshipRepository) {
+        if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }
         return metaData;

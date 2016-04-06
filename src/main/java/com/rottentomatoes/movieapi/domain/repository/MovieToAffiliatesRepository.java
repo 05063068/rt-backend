@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Component
 public class MovieToAffiliatesRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Affiliates, String> {
-    
+
     @Override
     public void setRelation(Movie source, String targetId, String fieldName) {
 

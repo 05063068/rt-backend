@@ -26,8 +26,6 @@ import com.rottentomatoes.movieapi.domain.model.Movie;
 @Getter
 @Setter
 public class MovieList extends AbstractModel {
-
     @JsonApiToMany
     protected Iterable<Movie> movies;
-
 }

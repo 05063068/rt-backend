@@ -51,16 +51,16 @@ public class CatalogApiKatharsisFilter extends SampleKatharsisFilter implements 
         KatharsisInvokerBuilder builder = new CustomKatharsisInvokerBuilder();
 
         builder.resourceSearchPackage(getResourceSearchPackage())
-            .resourceDefaultDomain(getResourceDefaultDomain())
-            .jsonServiceLocator(new JsonServiceLocator() {
+                .resourceDefaultDomain(getResourceDefaultDomain())
+                .jsonServiceLocator(new JsonServiceLocator() {
 
-                @Override
-                public <T> T getInstance(Class<T> clazz) {
-                    // Simply retrieve a bean by the repository class type.
-                    return beanFactory.getBean(clazz);
-                }
+                    @Override
+                    public <T> T getInstance(Class<T> clazz) {
+                        // Simply retrieve a bean by the repository class type.
+                        return beanFactory.getBean(clazz);
+                    }
 
-            });
+                });
 
         return builder;
     }

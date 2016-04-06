@@ -8,11 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ItunesInfo extends AbstractModel {
-
     protected String mediaProfile;
     protected String type;
     protected String currency;
     protected Double price;
     protected String country;
-
 }

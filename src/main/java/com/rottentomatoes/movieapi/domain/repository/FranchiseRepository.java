@@ -10,8 +10,8 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class FranchiseRepository  extends AbstractRepository implements ResourceRepository<Franchise, String> {
-    
+public class FranchiseRepository extends AbstractRepository implements ResourceRepository<Franchise, String> {
+
     @Override
     public <S extends Franchise> S save(S entity) {
         return null;

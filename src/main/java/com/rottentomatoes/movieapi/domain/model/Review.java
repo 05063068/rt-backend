@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.time.ZonedDateTime;
 
 @JsonApiResource(type = "review")
-@Getter 
+@Getter
 @Setter
 public class Review extends AbstractModel {
 
@@ -22,7 +22,7 @@ public class Review extends AbstractModel {
 
     @JsonApiToOne
     protected Critic critic;
-    
+
     @JsonApiToOne
     protected Publication publication;
 

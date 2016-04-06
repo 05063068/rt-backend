@@ -6,12 +6,12 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Getter 
+@Getter
 @Setter
 public class AbstractModel implements Serializable {
     @JsonApiId
     protected String id;
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

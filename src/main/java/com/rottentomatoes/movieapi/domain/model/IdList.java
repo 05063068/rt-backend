@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "id-list")
-@Getter 
+@Getter
 @Setter
 public class IdList extends AbstractModel {
-
     protected Iterable<String> ids;
-
 }

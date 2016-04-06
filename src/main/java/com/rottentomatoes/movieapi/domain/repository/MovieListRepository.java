@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static java.time.temporal.TemporalAdjusters.*;
 
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
@@ -24,7 +25,7 @@ import io.katharsis.resource.exception.ResourceNotFoundException;
 @Component
 public class MovieListRepository extends AbstractRepository implements ResourceRepository<MovieList, String>, MetaRepository {
 
-	@Override
+    @Override
     public <S extends MovieList> S save(S entity) {
         return null;
     }
@@ -124,7 +125,9 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
     }
 
     @Override
-    public Iterable<MovieList> findAll(Iterable<String> ids, RequestParams requestParams) { return null; }
+    public Iterable<MovieList> findAll(Iterable<String> ids, RequestParams requestParams) {
+        return null;
+    }
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
@@ -136,7 +139,7 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("country", "us");
 
-        switch ((String)castedResourceId) {
+        switch ((String) castedResourceId) {
             case "top-box-office-estimated":
                 now = LocalDate.now();
                 start = now.with(previousOrSame(DayOfWeek.FRIDAY));

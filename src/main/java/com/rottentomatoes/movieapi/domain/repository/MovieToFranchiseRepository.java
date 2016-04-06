@@ -40,5 +40,7 @@ public class MovieToFranchiseRepository extends AbstractRepository implements Re
     }
 
     @Override
-    public Iterable<Franchise> findManyTargets(String movieId, String fieldName, RequestParams requestParams) { return null;}
+    public Iterable<Franchise> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+        return null;
+    }
 }

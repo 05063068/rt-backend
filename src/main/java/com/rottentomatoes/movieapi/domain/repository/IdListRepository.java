@@ -21,7 +21,7 @@ import io.katharsis.resource.exception.ResourceNotFoundException;
 @Component
 public class IdListRepository extends AbstractRepository implements ResourceRepository<IdList, String> {
 
-	@Override
+    @Override
     public <S extends IdList> S save(S entity) {
         return null;
     }
@@ -50,15 +50,15 @@ public class IdListRepository extends AbstractRepository implements ResourceRepo
                 if (minRatings == null) {
                     minRatings = 300;
                 }
-            	
+
                 String fieldName = "ids"; // Pass in idsLimit, idsOffset
                 selectParams.put("limit", getLimit(fieldName, requestParams));
                 selectParams.put("offset", getOffset(fieldName, requestParams));
                 selectParams.put("minReviews", minReviews);
                 selectParams.put("minRatings", minRatings);
-            	IdList retval = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.IdListMapper.selectSitemapMovieIds", selectParams);
+                IdList retval = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.IdListMapper.selectSitemapMovieIds", selectParams);
                 return retval;
-                
+
             default:
                 throw new ResourceNotFoundException("Invalid list type");
         }

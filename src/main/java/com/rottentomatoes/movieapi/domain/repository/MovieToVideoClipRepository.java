@@ -65,7 +65,7 @@ public class MovieToVideoClipRepository extends AbstractRepository implements Re
         selectParams.put("movie_id", castedResourceId);
 
         RelatedMetaDataInformation metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipCountForMovie", selectParams);
-        if(root instanceof RelationshipRepository) {
+        if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }
 

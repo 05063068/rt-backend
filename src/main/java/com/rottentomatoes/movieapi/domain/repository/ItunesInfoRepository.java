@@ -11,7 +11,7 @@ import io.katharsis.repository.ResourceRepository;
 
 @Component
 public class ItunesInfoRepository extends AbstractRepository implements ResourceRepository<ItunesInfo, String> {
-    
+
     @Override
     public <S extends ItunesInfo> S save(S entity) {
         return null;

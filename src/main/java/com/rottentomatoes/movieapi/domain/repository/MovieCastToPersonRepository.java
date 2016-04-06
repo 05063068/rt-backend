@@ -10,10 +10,10 @@ import io.katharsis.repository.RelationshipRepository;
 
 @Component
 public class MovieCastToPersonRepository extends AbstractRepository implements RelationshipRepository<MovieCast, String, Person, String> {
-    
+
     @Override
     public void addRelations(MovieCast arg0, Iterable<String> arg1, String arg2) {
-        
+
     }
 
     @Override
@@ -28,15 +28,15 @@ public class MovieCastToPersonRepository extends AbstractRepository implements R
     public void setRelations(MovieCast arg0, Iterable<String> arg1, String arg2) {
     }
 
-	@Override
-	public Person findOneTarget(String movieCastId, String fieldName, RequestParams requestParams) {
+    @Override
+    public Person findOneTarget(String movieCastId, String fieldName, RequestParams requestParams) {
         Person person = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PersonMapper.selectPersonForMovieCast", movieCastId);
         return person;
-	}
+    }
 
-	@Override
-	public Iterable<Person> findManyTargets(String sourceId, String fieldName, RequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Iterable<Person> findManyTargets(String sourceId, String fieldName, RequestParams requestParams) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

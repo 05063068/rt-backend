@@ -35,19 +35,19 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
     @Override
     public void setRelation(Movie arg0, String arg1, String arg2) {
     }
-    
+
     @Override
     public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
 
-	@Override
-	public Review findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Review findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public MetaDataEnabledList<Review> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+    @Override
+    public MetaDataEnabledList<Review> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         MetaDataEnabledList<Review> reviewList = null;
 
@@ -55,14 +55,14 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
+        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
             reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectTopCriticReviewsForMovie", selectParams));
         } else {
             reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviewsForMovie", selectParams));
         }
 
         return reviewList;
-	}
+    }
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
@@ -71,13 +71,13 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
 
         selectParams.put("movie_id", castedResourceId);
 
-        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
+        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
             metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectTopCriticReviewCountForMovie", selectParams);
         } else {
             metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviewCountForMovie", selectParams);
         }
 
-        if(root instanceof RelationshipRepository) {
+        if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }
 

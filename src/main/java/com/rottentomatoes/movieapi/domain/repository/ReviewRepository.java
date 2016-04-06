@@ -9,7 +9,7 @@ import io.katharsis.repository.ResourceRepository;
 
 @Component
 public class ReviewRepository extends AbstractRepository implements ResourceRepository<Review, String> {
-    
+
     @Override
     public <S extends Review> S save(S entity) {
         return null;
@@ -20,21 +20,21 @@ public class ReviewRepository extends AbstractRepository implements ResourceRepo
 
     }
 
-	@Override
-	public Review findOne(String reviewId, RequestParams requestParams) {
+    @Override
+    public Review findOne(String reviewId, RequestParams requestParams) {
         Review review = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewById", reviewId);
         return review;
-	}
+    }
 
-	@Override
-	public Iterable<Review> findAll(RequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Iterable<Review> findAll(RequestParams requestParams) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public Iterable<Review> findAll(Iterable<String> ids, RequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Iterable<Review> findAll(Iterable<String> ids, RequestParams requestParams) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

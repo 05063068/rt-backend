@@ -6,11 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "vanity-token")
-@Getter 
+@Getter
 @Setter
 public class VanityToken extends AbstractModel {
-
-	protected String movieId;
-	protected String platform;
-
+    protected String movieId;
+    protected String platform;
 }

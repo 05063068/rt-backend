@@ -28,7 +28,7 @@ public class LocalDateTypeHandler extends BaseTypeHandler<LocalDate> {
     public LocalDate getNullableResult(ResultSet rs, String columnName) throws SQLException {
         Date date = rs.getDate(columnName);
         if (date != null) {
-           return date.toLocalDate();
+            return date.toLocalDate();
         }
         return null;
     }
@@ -46,7 +46,7 @@ public class LocalDateTypeHandler extends BaseTypeHandler<LocalDate> {
     public LocalDate getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         Date date = cs.getDate(columnIndex);
         if (date != null) {
-           return date.toLocalDate();
+            return date.toLocalDate();
         }
         return null;
     }

@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "videoClip")
-@Getter 
+@Getter
 @Setter
 public class VideoClip extends AbstractModel {
-
     protected Integer duration;
     protected String title;
     protected String thumbUrl;
@@ -18,5 +17,4 @@ public class VideoClip extends AbstractModel {
     protected String language;
     protected String status;
     protected Integer favoriteCount;
-
 }

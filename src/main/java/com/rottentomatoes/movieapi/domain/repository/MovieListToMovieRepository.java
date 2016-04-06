@@ -14,7 +14,7 @@ import io.katharsis.repository.RelationshipRepository;
 
 @Component
 public class MovieListToMovieRepository extends AbstractRepository implements RelationshipRepository<MovieList, String, Movie, String> {
-    
+
     @Override
     public void addRelations(MovieList arg0, Iterable<String> arg1, String arg2) {
     }
@@ -26,22 +26,22 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     @Override
     public void setRelation(MovieList arg0, String arg1, String arg2) {
     }
-    
+
     @Override
     public void setRelations(MovieList arg0, Iterable<String> arg1, String arg2) {
     }
 
-	@Override
-	public Movie findOneTarget(String id, String fieldName, RequestParams requestParams) {
-		return null;
-	}
+    @Override
+    public Movie findOneTarget(String id, String fieldName, RequestParams requestParams) {
+        return null;
+    }
 
-	@Override
-	public Iterable<Movie> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
+    @Override
+    public Iterable<Movie> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
-        
+
         List<Movie> movieList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectBoxOfficeMovies", selectParams);
         return movieList;
-	}
+    }
 }

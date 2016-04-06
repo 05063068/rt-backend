@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "critic")
-@Getter 
+@Getter
 @Setter
 public class Critic extends AbstractModel {
     protected String name;

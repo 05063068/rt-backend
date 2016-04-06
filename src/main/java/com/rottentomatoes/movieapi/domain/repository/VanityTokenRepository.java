@@ -12,7 +12,7 @@ import io.katharsis.repository.ResourceRepository;
 
 @Component
 public class VanityTokenRepository extends AbstractRepository implements ResourceRepository<VanityToken, String> {
-    
+
     @Override
     public <S extends VanityToken> S save(S entity) {
         return null;
@@ -22,23 +22,23 @@ public class VanityTokenRepository extends AbstractRepository implements Resourc
     public void delete(String aLong) {
     }
 
-	@Override
-	public VanityToken findOne(String vanityToken, RequestParams requestParams) {
-		Map<String, Object> selectParams = new HashMap<>();      
-		selectParams.put("vanityToken", vanityToken);
+    @Override
+    public VanityToken findOne(String vanityToken, RequestParams requestParams) {
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("vanityToken", vanityToken);
         VanityToken token = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VanityTokenMapper.selectVanityToken", selectParams);
         return token;
-	}
+    }
 
-	@Override
-	
-	public Iterable<VanityToken> findAll(RequestParams requestParams) {
-		return null;
-	}
+    @Override
 
-	@Override
-	public Iterable<VanityToken> findAll(Iterable<String> ids, RequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Iterable<VanityToken> findAll(RequestParams requestParams) {
+        return null;
+    }
+
+    @Override
+    public Iterable<VanityToken> findAll(Iterable<String> ids, RequestParams requestParams) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

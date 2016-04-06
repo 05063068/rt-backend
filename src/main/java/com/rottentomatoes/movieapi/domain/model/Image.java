@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "image")
-@Getter 
+@Getter
 @Setter
 public class Image extends AbstractModel {
     protected Integer originalHeight;

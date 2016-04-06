@@ -9,9 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Person extends AbstractModel {
-
     protected String name;
-    
+
     @JsonApiToOne
     protected Image mainImage;
 }
