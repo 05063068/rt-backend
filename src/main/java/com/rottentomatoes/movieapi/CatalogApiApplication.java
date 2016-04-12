@@ -22,7 +22,7 @@ public class CatalogApiApplication extends SpringBootServletInitializer {
     @Bean
     @ConfigurationProperties(prefix = "datasource.primary")
     public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
+        return DataSourceBuilder.create().type(org.apache.commons.dbcp2.BasicDataSource.class).build();
     }
 
     @Bean
