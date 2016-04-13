@@ -46,13 +46,7 @@
             Use a child resultMap because myBatis doesn't allow nested associations (for the tmeter object)
         -->
         <association property="topCritics" resultMap="topCriticsResultMap" columnPrefix="top_country_" />
-        <!-- 
-        <result property="isPendingCertifiedFresh" column="pending_certified"/>        
-        <result property="reviewCount" column="num_reviews"/>        
-        <result property="topFreshCount" column="top_fresh_count"/>
-        <result property="topRottenCount" column="top_rotten_count"/>
-        <result property="topDvdCount" column="top_dvd_count"/>
-         -->        
+       
     </resultMap>
 
     <resultMap id="topCriticsResultMap"  type="java.util.LinkedHashMap">
