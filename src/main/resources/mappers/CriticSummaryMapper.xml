@@ -16,7 +16,7 @@
         IFNULL(tc.top_fresh_count,0) AS top_country_fresh_count,
         IFNULL(tc.top_rotten_count,0) AS top_country_rotten_count, 
         IFNULL(tc.top_dvd_count,0) AS top_country_dvd_count,
-        0 AS top_country_avg_score  /* TODO: need avgrating for top */)
+        0 AS top_country_avg_score  /* TODO: need avgrating for top */
         
         FROM tomatometer_info t 
         LEFT OUTER JOIN tmeter_country_info tc on t.movie_id=tc.movie_id and tc.country= #{country}
