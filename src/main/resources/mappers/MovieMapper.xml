@@ -36,9 +36,11 @@
 
         movie_studio.name AS studioName,
         tomatometer AS value,
-        CASE WHEN tomatometer IS NULL THEN null
-        WHEN (tomatometer >= 60 AND NOT certified_fresh) THEN 'fresh'
-        WHEN (tomatometer >= 60 AND certified_fresh) THEN 'certified_fresh'
+        CASE
+        WHEN certified_fresh THEN 'certified_fresh'
+        WHEN tomatometer_info.all_critics &lt; 5 THEN 'NA'
+        WHEN tomatometer IS NULL THEN 'NA'
+        WHEN (tomatometer >= 60) THEN 'fresh'
         ELSE 'rotten'
         END AS state,
         (SELECT url

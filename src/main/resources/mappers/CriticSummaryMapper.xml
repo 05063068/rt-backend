@@ -5,11 +5,13 @@
     <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
         SELECT 
         t.*,
-        
+
         CONVERT(tc.top_fresh_count/tc.top_critics*100, UNSIGNED) AS top_country_tomatometer_value, /* TODO: Precalculate */
-        CASE WHEN (SELECT top_country_tomatometer_value) IS NULL THEN null
+        CASE
         WHEN t.certified_fresh = 1 THEN 'certified_fresh' /* Inherits CF status */
-        WHEN (SELECT top_country_tomatometer_value) >= 60 THEN 'fresh'        
+        WHEN tc.top_critics &lt; 5 THEN 'NA'
+        WHEN (SELECT top_country_tomatometer_value) IS NULL THEN 'NA'
+        WHEN (SELECT top_country_tomatometer_value) >= 60 THEN 'fresh'
         ELSE 'rotten'
         END AS top_country_tomatometer_state,
         IFNULL(tc.top_critics,0) AS top_country_critics_count, 
@@ -17,8 +19,7 @@
         IFNULL(tc.top_rotten_count,0) AS top_country_rotten_count, 
         IFNULL(tc.top_dvd_count,0) AS top_country_dvd_count,
         0 AS top_country_avg_score  /* TODO: need avgrating for top */
-        
-        FROM tomatometer_info t 
+        FROM tomatometer_info t
         LEFT OUTER JOIN tmeter_country_info tc on t.movie_id=tc.movie_id and tc.country= #{country}
         WHERE t.movie_id= #{movie_id}
     </select>
