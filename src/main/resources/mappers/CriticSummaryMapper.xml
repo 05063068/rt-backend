@@ -3,38 +3,66 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper">
     <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
-        SELECT t.*, IFNULL(tc.top_critics,0) AS top_country_critics_count, 
+        SELECT 
+        t.*,
+        
+        CONVERT(tc.top_fresh_count/tc.top_critics*100, UNSIGNED) AS top_country_tomatometer_value, /* TODO: Precalculate */
+        CASE WHEN (SELECT top_country_tomatometer_value) IS NULL THEN null
+        WHEN t.certified_fresh = 1 THEN 'certified_fresh' /* Inherits CF status */
+        WHEN (SELECT top_country_tomatometer_value) >= 60 THEN 'fresh'        
+        ELSE 'rotten'
+        END AS top_country_tomatometer_state,
+        IFNULL(tc.top_critics,0) AS top_country_critics_count, 
         IFNULL(tc.top_fresh_count,0) AS top_country_fresh_count,
         IFNULL(tc.top_rotten_count,0) AS top_country_rotten_count, 
-        IFNULL(tc.top_dvd_count,0) AS top_country_dvd_count
-        FROM tomatometer_info t LEFT OUTER JOIN tmeter_country_info tc on t.movie_id=tc.movie_id and tc.country= #{country} 
+        IFNULL(tc.top_dvd_count,0) AS top_country_dvd_count,
+        0 AS top_country_average_score 
+        
+        FROM tomatometer_info t 
+        LEFT OUTER JOIN tmeter_country_info tc on t.movie_id=tc.movie_id and tc.country= #{country}
         WHERE t.movie_id= #{movie_id}
     </select>
 
     <resultMap id="criticSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticSummary">
         <id property="id" column="id" />
-        <result property="averageScore" column="avg_score"/>
-        <result property="consensus" column="consensus"/>
-        <result property="isCertifiedFresh" column="certified_fresh"/>
-        <result property="isPendingCertifiedFresh" column="pending_certified"/>
+
+        <result property="consensus" column="consensus" />
+
+        <!-- All Critic values are NOT country specific -->
+        <association property="allCritics" javaType="java.util.LinkedHashMap">
+            <!-- The All Critic tomatometer is the OFFICIAL, authoritative tomatometer. 
+                 It's value and state are reported in the /movie endpoint for convenience 
+                 We could repeat it here for consistency but then we risk discrepencies due to caching etc.
+            -->        
+            
+            <result property="totalCount" column="all_critics"/>
+            <result property="freshCount" column="fresh_count"/>
+            <result property="rottenCount" column="rotten_count"/>
+            <result property="dvdCount" column="dvd_count"/>
+            <result property="averageScore" column="avg_score"/>
+        </association>
         
-        <!-- All Critic values are static. Not country specific -->
-        <result property="allCriticsCount" column="all_critics"/>
-        <result property="allFreshCount" column="fresh_count"/>
-        <result property="allRottenCount" column="rotten_count"/>
-        <result property="allDvdCount" column="dvd_count"/>
-
-        <!-- Top Critic values are always country specific (Default = US)-->
-        <result property="topCriticsCount" column="top_country_critics_count"/>
-        <result property="topFreshCount" column="top_country_fresh_count"/>
-        <result property="topRottenCount" column="top_country_rotten_count"/>
-        <result property="topDvdCount" column="top_country_dvd_count"/>
-
-        <!-- 
-        <result property="reviewCount" column="num_reviews"/>
-        <result property="topFreshCount" column="top_fresh_count"/>
-        <result property="topRottenCount" column="top_rotten_count"/>
-        <result property="topDvdCount" column="top_dvd_count"/>
-         -->        
+        <!-- Top Critic values are ALWAYS country specific (Default = US)
+            Use a child resultMap because myBatis doesn't allow nested associations (for the tmeter object)
+        -->
+        <association property="topCritics" resultMap="topCriticsResultMap" columnPrefix="top_country_" />
+       
     </resultMap>
+
+    <resultMap id="topCriticsResultMap"  type="java.util.LinkedHashMap">
+        <result property="totalCount" column="critics_count"/>
+        <result property="freshCount" column="fresh_count"/>
+        <result property="rottenCount" column="rotten_count"/>
+        <result property="dvdCount" column="dvd_count"/>
+        <result property="averageScore" column="average_score"/>
+
+        <!-- Explicitly name this the 'topCriticsTomatometer' just to minimize risk of confusion with the 
+             all-critic 'official' tomatometer.
+         -->
+        <association property="topCriticsTomatometer" javaType="java.util.LinkedHashMap">
+            <result property="value" column="tomatometer_value" />
+            <result property="state" column="tomatometer_state" />
+        </association>
+    </resultMap>
+    
 </mapper>
