@@ -8,7 +8,8 @@
         
         CONVERT(tc.top_fresh_count/tc.top_critics*100, UNSIGNED) AS top_country_tomatometer_value, /* TODO: Precalculate */
         CASE WHEN (SELECT top_country_tomatometer_value) IS NULL THEN null
-        WHEN (SELECT top_country_tomatometer_value) >= 60 THEN 'fresh' /* TODO: top tomatometer is CF when all tomatoer is CF???*/
+        WHEN t.certified_fresh = 1 THEN 'certified_fresh' /* Inherits CF status */
+        WHEN (SELECT top_country_tomatometer_value) >= 60 THEN 'fresh'        
         ELSE 'rotten'
         END AS top_country_tomatometer_state,
         IFNULL(tc.top_critics,0) AS top_country_critics_count, 
@@ -34,7 +35,7 @@
                  We could repeat it here for consistency but then we risk discrepencies due to caching etc.
             -->        
             
-            <result property="criticsCount" column="all_critics"/>
+            <result property="totalCount" column="all_critics"/>
             <result property="freshCount" column="fresh_count"/>
             <result property="rottenCount" column="rotten_count"/>
             <result property="dvdCount" column="dvd_count"/>
@@ -55,12 +56,15 @@
     </resultMap>
 
     <resultMap id="topCriticsResultMap"  type="java.util.LinkedHashMap">
-        <result property="criticsCount" column="critics_count"/>
+        <result property="totalCount" column="critics_count"/>
         <result property="freshCount" column="fresh_count"/>
         <result property="rottenCount" column="rotten_count"/>
         <result property="dvdCount" column="dvd_count"/>
         <result property="averageScore" column="average_score"/>
 
+        <!-- Explicitly name this the 'topCriticsTomatometer' just to minimize risk of confusion with the 
+             all-critic 'official' tomatometer.
+         -->
         <association property="topCriticsTomatometer" javaType="java.util.LinkedHashMap">
             <result property="value" column="tomatometer_value" />
             <result property="state" column="tomatometer_state" />
