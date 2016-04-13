@@ -3,7 +3,7 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper">
     <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
-        SELECT t.*, IFNULL(tc.top_critics,0) AS top_critics, 
+        SELECT t.*, IFNULL(tc.top_critics,0) AS top_country_critics_count, 
         IFNULL(tc.top_fresh_count,0) AS top_country_fresh_count,
         IFNULL(tc.top_rotten_count,0) AS top_country_rotten_count, 
         IFNULL(tc.top_dvd_count,0) AS top_country_dvd_count
@@ -13,21 +13,28 @@
 
     <resultMap id="criticSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticSummary">
         <id property="id" column="id" />
-        <result property="reviewCount" column="num_reviews"/>
         <result property="averageScore" column="avg_score"/>
         <result property="consensus" column="consensus"/>
         <result property="isCertifiedFresh" column="certified_fresh"/>
         <result property="isPendingCertifiedFresh" column="pending_certified"/>
-        <result property="freshCount" column="fresh_count"/>
-        <result property="rottenCount" column="rotten_count"/>
-        <result property="topCriticsCount" column="top_critics"/>
+        
+        <!-- All Critic values are static. Not country specific -->
         <result property="allCriticsCount" column="all_critics"/>
+        <result property="allFreshCount" column="fresh_count"/>
+        <result property="allRottenCount" column="rotten_count"/>
+        <result property="allDvdCount" column="dvd_count"/>
+
+        <!-- Top Critic values are always country specific (Default = US)-->
+        <result property="topCriticsCount" column="top_country_critics_count"/>
+        <result property="topFreshCount" column="top_country_fresh_count"/>
+        <result property="topRottenCount" column="top_country_rotten_count"/>
+        <result property="topDvdCount" column="top_country_dvd_count"/>
+
+        <!-- 
+        <result property="reviewCount" column="num_reviews"/>
         <result property="topFreshCount" column="top_fresh_count"/>
         <result property="topRottenCount" column="top_rotten_count"/>
         <result property="topDvdCount" column="top_dvd_count"/>
-        <result property="topCountryFreshCount" column="top_country_fresh_count"/>
-        <result property="topCountryRottenCount" column="top_country_rotten_count"/>
-        <result property="topCountryDvdCount" column="top_country_dvd_count"/>
-        <result property="dvdCount" column="dvd_count"/>
+         -->        
     </resultMap>
 </mapper>

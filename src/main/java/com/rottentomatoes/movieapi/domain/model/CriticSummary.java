@@ -9,20 +9,18 @@ import lombok.Setter;
 @Setter
 public class CriticSummary extends AbstractModel {
 
-    protected Integer reviewCount;
     protected Integer averageScore;
     protected String consensus;
     protected Integer isCertifiedFresh;
     protected Integer isPendingCertifiedFresh;
-    protected Integer freshCount;
-    protected Integer rottenCount;
-    protected Integer topCriticsCount;
+    
     protected Integer allCriticsCount;
-    protected Integer dvdCount;
+    protected Integer allFreshCount;
+    protected Integer allRottenCount;
+    protected Integer allDvdCount;
+    
+    protected Integer topCriticsCount;
     protected Integer topFreshCount;
     protected Integer topRottenCount;
-    protected Integer topDvdCount;
-    protected Integer topCountryFreshCount;
-    protected Integer topCountryRottenCount;
-    protected Integer topCountryDvdCount;
+    protected Integer topDvdCount;    
 }
