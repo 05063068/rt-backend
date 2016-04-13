@@ -16,7 +16,7 @@
         IFNULL(tc.top_fresh_count,0) AS top_country_fresh_count,
         IFNULL(tc.top_rotten_count,0) AS top_country_rotten_count, 
         IFNULL(tc.top_dvd_count,0) AS top_country_dvd_count,
-        0 AS top_country_average_score 
+        0 AS top_country_avg_score  /* TODO: need avgrating for top */)
         
         FROM tomatometer_info t 
         LEFT OUTER JOIN tmeter_country_info tc on t.movie_id=tc.movie_id and tc.country= #{country}
@@ -39,7 +39,7 @@
             <result property="freshCount" column="fresh_count"/>
             <result property="rottenCount" column="rotten_count"/>
             <result property="dvdCount" column="dvd_count"/>
-            <result property="averageScore" column="avg_score"/>
+            <result property="averageRating" column="avg_score"/>
         </association>
         
         <!-- Top Critic values are ALWAYS country specific (Default = US)
@@ -54,7 +54,7 @@
         <result property="freshCount" column="fresh_count"/>
         <result property="rottenCount" column="rotten_count"/>
         <result property="dvdCount" column="dvd_count"/>
-        <result property="averageScore" column="average_score"/>
+        <result property="averageRating" column="avg_score"/>
 
         <!-- Explicitly name this the 'topCriticsTomatometer' just to minimize risk of confusion with the 
              all-critic 'official' tomatometer.
