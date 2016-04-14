@@ -5,11 +5,13 @@
     <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
         SELECT 
         t.*,
-        
+
         CONVERT(tc.top_fresh_count/tc.top_critics*100, UNSIGNED) AS top_country_tomatometer_value, /* TODO: Precalculate */
-        CASE WHEN (SELECT top_country_tomatometer_value) IS NULL THEN null
+        CASE
         WHEN t.certified_fresh = 1 THEN 'certified_fresh' /* Inherits CF status */
-        WHEN (SELECT top_country_tomatometer_value) >= 60 THEN 'fresh'        
+        WHEN tc.top_critics &lt; 5 THEN 'NA'
+        WHEN (SELECT top_country_tomatometer_value) IS NULL THEN 'NA'
+        WHEN (SELECT top_country_tomatometer_value) >= 60 THEN 'fresh'
         ELSE 'rotten'
         END AS top_country_tomatometer_state,
         IFNULL(tc.top_critics,0) AS top_country_critics_count, 
@@ -17,39 +19,38 @@
         IFNULL(tc.top_rotten_count,0) AS top_country_rotten_count, 
         IFNULL(tc.top_dvd_count,0) AS top_country_dvd_count,
         0 AS top_country_avg_score  /* TODO: need avgrating for top */
-        
-        FROM tomatometer_info t 
+        FROM tomatometer_info t
         LEFT OUTER JOIN tmeter_country_info tc on t.movie_id=tc.movie_id and tc.country= #{country}
         WHERE t.movie_id= #{movie_id}
     </select>
 
     <resultMap id="criticSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticSummary">
-        <id property="id" column="id" />
+        <id property="id" column="id"/>
 
-        <result property="consensus" column="consensus" />
+        <result property="consensus" column="consensus"/>
 
         <!-- All Critic values are NOT country specific -->
         <association property="allCritics" javaType="java.util.LinkedHashMap">
             <!-- The All Critic tomatometer is the OFFICIAL, authoritative tomatometer. 
                  It's value and state are reported in the /movie endpoint for convenience 
                  We could repeat it here for consistency but then we risk discrepencies due to caching etc.
-            -->        
-            
+            -->
+
             <result property="totalCount" column="all_critics"/>
             <result property="freshCount" column="fresh_count"/>
             <result property="rottenCount" column="rotten_count"/>
             <result property="dvdCount" column="dvd_count"/>
             <result property="averageRating" column="avg_score"/>
         </association>
-        
+
         <!-- Top Critic values are ALWAYS country specific (Default = US)
             Use a child resultMap because myBatis doesn't allow nested associations (for the tmeter object)
         -->
-        <association property="topCritics" resultMap="topCriticsResultMap" columnPrefix="top_country_" />
-       
+        <association property="topCritics" resultMap="topCriticsResultMap" columnPrefix="top_country_"/>
+
     </resultMap>
 
-    <resultMap id="topCriticsResultMap"  type="java.util.LinkedHashMap">
+    <resultMap id="topCriticsResultMap" type="java.util.LinkedHashMap">
         <result property="totalCount" column="critics_count"/>
         <result property="freshCount" column="fresh_count"/>
         <result property="rottenCount" column="rotten_count"/>
@@ -60,9 +61,9 @@
              all-critic 'official' tomatometer.
          -->
         <association property="topCriticsTomatometer" javaType="java.util.LinkedHashMap">
-            <result property="value" column="tomatometer_value" />
-            <result property="state" column="tomatometer_state" />
+            <result property="value" column="tomatometer_value"/>
+            <result property="state" column="tomatometer_state"/>
         </association>
     </resultMap>
-    
+
 </mapper>
