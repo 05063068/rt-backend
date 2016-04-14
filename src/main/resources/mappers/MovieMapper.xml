@@ -88,7 +88,7 @@
             <result property="theater" column="theater_release_date" javaType="java.time.LocalDate"/>
             <result property="dvd" column="dvd_release_date" javaType="java.time.LocalDate"/>
         </association>
-        <association property="allCriticsTomatometer" javaType="map">
+        <association property="tomatometer" javaType="map">
             <result property="value" column="value"/>
             <result property="state" column="state"/>
         </association>
