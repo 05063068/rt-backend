@@ -53,7 +53,7 @@ public class Movie extends AbstractModel {
     protected Integer mainTrailer;
     protected String officialUrl;
 
-    protected Map<String, Object> tomatometer;
+    protected Map<String, Object> allCriticsTomatometer;
     protected Map<String, Object> releaseDates;
 
     @JsonApiToOne
