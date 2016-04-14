@@ -3,8 +3,8 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieMapper">
     <cache
-        flushInterval="600000"
-        size="2048"
+            flushInterval="600000"
+            size="2048"
     />
 
     <sql id="movieSelectSql">

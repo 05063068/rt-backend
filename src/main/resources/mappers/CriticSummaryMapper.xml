@@ -25,32 +25,32 @@
     </select>
 
     <resultMap id="criticSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticSummary">
-        <id property="id" column="id" />
+        <id property="id" column="id"/>
 
-        <result property="consensus" column="consensus" />
+        <result property="consensus" column="consensus"/>
 
         <!-- All Critic values are NOT country specific -->
         <association property="allCritics" javaType="java.util.LinkedHashMap">
             <!-- The All Critic tomatometer is the OFFICIAL, authoritative tomatometer. 
                  It's value and state are reported in the /movie endpoint for convenience 
                  We could repeat it here for consistency but then we risk discrepencies due to caching etc.
-            -->        
-            
+            -->
+
             <result property="totalCount" column="all_critics"/>
             <result property="freshCount" column="fresh_count"/>
             <result property="rottenCount" column="rotten_count"/>
             <result property="dvdCount" column="dvd_count"/>
             <result property="averageRating" column="avg_score"/>
         </association>
-        
+
         <!-- Top Critic values are ALWAYS country specific (Default = US)
             Use a child resultMap because myBatis doesn't allow nested associations (for the tmeter object)
         -->
-        <association property="topCritics" resultMap="topCriticsResultMap" columnPrefix="top_country_" />
-       
+        <association property="topCritics" resultMap="topCriticsResultMap" columnPrefix="top_country_"/>
+
     </resultMap>
 
-    <resultMap id="topCriticsResultMap"  type="java.util.LinkedHashMap">
+    <resultMap id="topCriticsResultMap" type="java.util.LinkedHashMap">
         <result property="totalCount" column="critics_count"/>
         <result property="freshCount" column="fresh_count"/>
         <result property="rottenCount" column="rotten_count"/>
@@ -61,9 +61,9 @@
              all-critic 'official' tomatometer.
          -->
         <association property="topCriticsTomatometer" javaType="java.util.LinkedHashMap">
-            <result property="value" column="tomatometer_value" />
-            <result property="state" column="tomatometer_state" />
+            <result property="value" column="tomatometer_value"/>
+            <result property="state" column="tomatometer_state"/>
         </association>
     </resultMap>
-    
+
 </mapper>
