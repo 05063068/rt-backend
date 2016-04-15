@@ -13,6 +13,7 @@
         movie_cast.*,
         movie_person.name movie_person_name,
         movie_person.id movie_person_id,
+        'tmp_person_vanity_string' AS movie_person_vanity,
         movie_character.name character_name,
         <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonImageColumns"/>
     </sql>
@@ -73,6 +74,7 @@
         <association property="person" javaType="com.rottentomatoes.movieapi.domain.model.Person">
             <id property="id" column="movie_person_id"/>
             <result property="name" column="movie_person_name"/>
+            <result property="vanity" column="movie_person_vanity" />
             <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
         </association>
 

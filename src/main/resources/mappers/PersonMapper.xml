@@ -6,7 +6,8 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.PersonMapper">
 	<sql id="moviePersonImageColumns">
         IF(movie_person.preferred_img_type IS NULL, CONCAT('rtactor_img-', movie_person.main_rtactor_image_id),  CONCAT(movie_person.preferred_img_type ,'-', movie_person.preferred_img_id)) AS img_id,
-        IF(movie_person.preferred_img_type IS NULL, 'rtactor_img' , movie_person.preferred_img_type) AS img_type
+        IF(movie_person.preferred_img_type IS NULL, 'rtactor_img' , movie_person.preferred_img_type) AS img_type,
+        'tmp_person_vanity_string' AS vanity
 	</sql>
 	<!--  Note: looks like preferred_img_type and preferred_img_id is currently not used at all in the DB. -->
 
@@ -31,7 +32,7 @@
     <resultMap id="personMap" type="com.rottentomatoes.movieapi.domain.model.Person">
         <id property="id" column="id" />
         <result property="name" column="name"/>
-        
+        <result property="vanity" column="vanity" />
     	<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>    	
     </resultMap>
 
