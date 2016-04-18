@@ -8,6 +8,7 @@ import com.flixster.image.ImageType;
 import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.awt.*;
 import java.util.Calendar;
@@ -17,64 +18,62 @@ import java.util.Date;
 @Getter
 @Setter
 public class Image extends AbstractModel {
+    final static int MAX_WIDTH = 1200;
+    final static int EXPIRE_DAYS = 45;
 
-    private String getThumborId(Long id, ImageType type, Date expiry, Environment environment, ImageFormat format, int width, int height) {
-        final int MAX_WIDTH = 1200;
-        return IdGenerator.builder()
-                .id(id)
-                .type(type)
-                .expiry(expiry)
-                .environment(environment)
-                .maxWidth(MAX_WIDTH)
-                .format(format)
-                .originalSize(new Dimension(width, height))
-                .build().getEncodedId();
-    }
+    protected String thumborId;
 
     private ImageType getImageType(String imageString) {
-        if (imageString.equalsIgnoreCase("mv")) {
-            return ImageType.MOVIE;
+        switch (imageString.toLowerCase()) {
+            case "mv":
+                return ImageType.MOVIE;
+            case "cr":
+                return ImageType.CRITIC;
+            case "ac":
+                return ImageType.ACTOR;
+            case "fr":
+            case "nn":
+                return ImageType.MULTIUSE;
+            default:
+                return null;
         }
-        if (imageString.equalsIgnoreCase("cr")) {
-            return ImageType.CRITIC;
-        }
-        if (imageString.equalsIgnoreCase("ac")) {
-            return ImageType.ACTOR;
-        }
-        if (imageString.equalsIgnoreCase("fr") || imageString.equalsIgnoreCase("nn")) {
-            return ImageType.MULTIUSE;
-        }
-        return null;
     }
 
     private ImageFormat getImageFormat(String imageFormatString) {
-        if (imageFormatString.equalsIgnoreCase("jpg")) {
-            return ImageFormat.JPG;
+        switch (imageFormatString.toLowerCase()) {
+            case "jpg":
+                return ImageFormat.JPG;
+            case "png":
+                return ImageFormat.PNG;
+            case "gif":
+                return ImageFormat.GIF;
+            default:
+                return null;
         }
-        if (imageFormatString.equalsIgnoreCase("png")) {
-            return ImageFormat.PNG;
-        }
-        if (imageFormatString.equalsIgnoreCase("gif")) {
-            return ImageFormat.GIF;
-        }
-        return null;
     }
 
-    public Image (String id, Integer originalHeight, Integer originalWidth, String format) {
+    public Image(String id, Integer originalHeight, Integer originalWidth, String format) {
         this(id, originalHeight, originalWidth, format, "MV");
     }
 
-    public Image (String id, Integer originalHeight, Integer originalWidth, String format, String mediaType) {
+    public Image(String id, Integer originalHeight, Integer originalWidth, String format, String mediaType) {
         ImageType type = getImageType(mediaType);
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 45);
-        Date expiry = c.getTime();
+        Date expiry = DateUtils.addDays(new Date(), EXPIRE_DAYS);
         Environment environment = Environment.PROD;
         ImageFormat imageFormat = getImageFormat(format);
         int width = originalWidth;
         int height = originalHeight;
-        this.setThumborId(getThumborId(Long.parseLong(id), type, expiry, environment, imageFormat, width, height));
-    }
 
-    protected String thumborId;
+        String thumborId = IdGenerator.builder()
+                .id(Long.valueOf(id))
+                .type(type)
+                .expiry(expiry)
+                .environment(environment)
+                .maxWidth(MAX_WIDTH)
+                .format(imageFormat)
+                .originalSize(new Dimension(width, height))
+                .build().getEncodedId();
+
+        this.setThumborId(thumborId);
+    }
 }

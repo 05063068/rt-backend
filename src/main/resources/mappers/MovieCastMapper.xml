@@ -71,17 +71,7 @@
         <id property="id" column="id"/>
         <result property="role" column="role"/>
 
-        <association property="person" javaType="com.rottentomatoes.movieapi.domain.model.Person">
-            <constructor>
-                <idArg column="actor_img_id" javaType="string"/>
-                <arg column="actor_img_height" javaType="int"/>
-                <arg column="actor_img_width" javaType="int"/>
-                <arg column="actor_img_format" javaType="string"/>
-            </constructor>
-            <id property="id" column="movie_person_id"/>
-            <result property="name" column="movie_person_name"/>
-            <result property="vanity" column="movie_person_vanity" />
-        </association>
+        <association property="person" resultMap="com.rottentomatoes.movieapi.mappers.PersonMapper.personMap"/>
 
         <collection property="characters" javaType="list" ofType="java.lang.String">
             <result column="character_name"/>

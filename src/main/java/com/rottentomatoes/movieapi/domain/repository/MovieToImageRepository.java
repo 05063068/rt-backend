@@ -53,8 +53,6 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
     @SuppressWarnings("unchecked")
     @Override
     public MetaDataEnabledList<Image> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
-        ZonedDateTime now = ZonedDateTime.now( ZoneId.of("America/Los_Angeles"));
-
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));

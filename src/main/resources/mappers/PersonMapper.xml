@@ -5,7 +5,6 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.PersonMapper">
     <sql id="moviePersonImageColumns">
-        'tmp_person_vanity_string' AS vanity
         rtactor_img.id AS actor_img_id,
         rtactor_img.format AS actor_img_format,
         rtactor_img.img_width AS actor_img_width,
@@ -32,11 +31,15 @@
     </select>
 
     <resultMap id="personMap" type="com.rottentomatoes.movieapi.domain.model.Person">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="vanity" column="vanity"/>
-        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap"
-                     notNullColumn="img_id"/>
+        <constructor>
+            <idArg column="actor_img_id" javaType="string"/>
+            <arg column="actor_img_height" javaType="int"/>
+            <arg column="actor_img_width" javaType="int"/>
+            <arg column="actor_img_format" javaType="string"/>
+        </constructor>
+        <id property="id" column="movie_person_id"/>
+        <result property="name" column="movie_person_name"/>
+        <result property="vanity" column="movie_person_vanity" />
     </resultMap>
 
 </mapper>
