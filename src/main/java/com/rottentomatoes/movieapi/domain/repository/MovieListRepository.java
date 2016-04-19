@@ -10,6 +10,7 @@ import java.util.Map;
 import static java.time.temporal.TemporalAdjusters.*;
 
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
+
 import io.katharsis.queryParams.PaginationKeys;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.response.MetaInformation;
@@ -165,7 +166,7 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
 
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectEstimatedTopBoxOfficeMoviesCount", selectParams);
                 metaData.setRequestParams(requestParams);
-                return metaData;
+                break;
 
             case "top-box-office":
                 now = LocalDate.now();
@@ -175,7 +176,7 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
 
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesCount", selectParams);
                 metaData.setRequestParams(requestParams);
-                return metaData;
+                break;
 
             case "upcoming":
                 now = LocalDate.now();
@@ -186,7 +187,7 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
 
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMoviesCount", selectParams);
                 metaData.setRequestParams(requestParams);
-                return metaData;
+                break;
 
             case "opening":
                 now = LocalDate.now();
@@ -198,7 +199,7 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
 
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMoviesCount", selectParams);
                 metaData.setRequestParams(requestParams);
-                return metaData;
+                break;
 
             case "top-rentals":
                 now = LocalDate.now();
@@ -211,9 +212,14 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
 
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMoviesCount", selectParams);
                 metaData.setRequestParams(requestParams);
-                return metaData;
+                break;                
+                
+            case "new-on-dvd":
+            	metaData = new RootMetaDataInformation();
+            	
+            	metaData.setRequestParams(requestParams);                
+
         }
-        metaData.setRequestParams(requestParams);
-        return metaData;
+		return metaData;
     }
 }
