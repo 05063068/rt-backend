@@ -97,6 +97,11 @@ public class Movie extends AbstractModel {
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
+    protected MetaDataEnabledList<AudienceReview> audienceReviews;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
     protected MetaDataEnabledList<VideoClip> videoClips;
 
     @JsonApiToMany
