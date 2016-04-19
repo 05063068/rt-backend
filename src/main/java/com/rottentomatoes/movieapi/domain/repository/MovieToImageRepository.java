@@ -1,9 +1,18 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.awt.*;
 import java.io.Serializable;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.flixster.image.Environment;
+import com.flixster.image.IdGenerator;
+import com.flixster.image.ImageFormat;
+import com.flixster.image.ImageType;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
@@ -48,7 +57,6 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
-
         MetaDataEnabledList<Image> imageList = new MetaDataEnabledList(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImagesForMovie", selectParams));
         return imageList;
     }
