@@ -11,16 +11,12 @@ import lombok.Setter;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.awt.*;
-import java.util.Calendar;
 import java.util.Date;
 
 @JsonApiResource(type = "image")
 @Getter
 @Setter
 public class Image extends AbstractModel {
-    final static int MAX_WIDTH = 1200;
-    final static int EXPIRE_DAYS = 45;
-
     protected String thumborId;
 
     private ImageType getImageType(String imageString) {
@@ -57,6 +53,8 @@ public class Image extends AbstractModel {
     }
 
     public Image(String id, Integer originalHeight, Integer originalWidth, String format, String mediaType) {
+        final int EXPIRE_DAYS = 45;
+        final int MAX_WIDTH = 1200;
         ImageType type = getImageType(mediaType);
         Date expiry = DateUtils.addDays(new Date(), EXPIRE_DAYS);
         Environment environment = Environment.PROD;
