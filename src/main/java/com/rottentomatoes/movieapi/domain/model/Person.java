@@ -14,7 +14,7 @@ public class Person extends AbstractModel {
     protected Image mainImage;
 
     public Person(String imageId, Integer originalHeight, Integer originalWidth, String format) {
-        if (id != null) {
+        if (imageId != null) {
             this.mainImage = new Image(imageId, originalHeight, originalWidth, format, "AC");
         }
     }
