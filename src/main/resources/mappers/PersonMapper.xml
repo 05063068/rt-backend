@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.rottentomatoes.movieapi.mappers.PersonMapper">
-	<sql id="moviePersonImageColumns">
-        IF(movie_person.preferred_img_type IS NULL, CONCAT('rtactor_img-', movie_person.main_rtactor_image_id),  CONCAT(movie_person.preferred_img_type ,'-', movie_person.preferred_img_id)) AS img_id,
-        IF(movie_person.preferred_img_type IS NULL, 'rtactor_img' , movie_person.preferred_img_type) AS img_type,
-        'tmp_person_vanity_string' AS vanity
-	</sql>
-	<!--  Note: looks like preferred_img_type and preferred_img_id is currently not used at all in the DB. -->
+    <sql id="moviePersonImageColumns">
+        rtactor_img.id AS actor_img_id,
+        rtactor_img.format AS actor_img_format,
+        rtactor_img.img_width AS actor_img_width,
+        rtactor_img.img_height AS actor_img_height
+    </sql>
+    <!--  Note: looks like preferred_img_type and preferred_img_id is currently not used at all in the DB. -->
 
     <select id="selectPersonById" resultMap="personMap">
-        SELECT movie_person.*, 
-        	<include refid="moviePersonImageColumns" />
-        FROM movie_person 
+        SELECT movie_person.*,
+        <include refid="moviePersonImageColumns"/>
+        FROM movie_person
         WHERE id = #{id}
         AND deleted_ind = 0 AND public_ind = 1
     </select>
 
     <select id="selectPersonForMovieCast" resultMap="personMap">
         SELECT movie_person.*,
-        	<include refid="moviePersonImageColumns" />
-        FROM movie_person, movie_cast 
+        <include refid="moviePersonImageColumns"/>
+        FROM movie_person, movie_cast
         WHERE movie_cast.id = #{id}
         AND movie_person.id = movie_cast.person_id;
         AND movie_person.deleted_ind = 0 AND movie_person.public_ind = 1
@@ -30,10 +31,15 @@
     </select>
 
     <resultMap id="personMap" type="com.rottentomatoes.movieapi.domain.model.Person">
-        <id property="id" column="id" />
-        <result property="name" column="name"/>
-        <result property="vanity" column="vanity" />
-    	<association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>    	
+        <constructor>
+            <idArg column="actor_img_id" javaType="string"/>
+            <arg column="actor_img_height" javaType="int"/>
+            <arg column="actor_img_width" javaType="int"/>
+            <arg column="actor_img_format" javaType="string"/>
+        </constructor>
+        <id property="id" column="movie_person_id"/>
+        <result property="name" column="movie_person_name"/>
+        <result property="vanity" column="movie_person_vanity" />
     </resultMap>
 
 </mapper>

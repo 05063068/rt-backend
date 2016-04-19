@@ -1,12 +1,18 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.flixster.image.Environment;
+import com.flixster.image.IdGenerator;
+import com.flixster.image.ImageFormat;
+import com.flixster.image.ImageType;
 import io.katharsis.queryParams.PaginationKeys;
 import io.katharsis.queryParams.RequestParams;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Component
 public class AbstractRepository implements Serializable {

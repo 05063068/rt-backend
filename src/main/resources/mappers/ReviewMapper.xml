@@ -11,10 +11,13 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
 	<sql id="selectColumns">
        	review.*, 
-       	critic.name critic_name,
-       	critic.image_id critic_image_id,
-       	critic.vanity_url critic_vanity_url,
-       	publication.name publication_name,
+       	critic.name AS critic_name,
+       	critic.image_id AS critic_image_id,
+       	critic.vanity_url AS critic_vanity_url,
+       	critic_img.img_width AS critic_img_width,
+       	critic_img.img_height AS critic_img_height,
+       	critic_img.format AS critic_img_format,
+       	publication.name AS publication_name,
        	IF(critic_top.critic_id,1,0) is_top_critic
 	</sql>
 
@@ -23,6 +26,7 @@
         FROM review
         LEFT JOIN critic ON review.critic_id=critic.id 
         LEFT JOIN publication ON review.publication_id=publication.id
+        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         WHERE review.id = #{id}
     </select>
 
@@ -31,6 +35,7 @@
         FROM review 
         LEFT JOIN critic ON review.critic_id=critic.id 
         LEFT JOIN publication ON review.publication_id=publication.id
+        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US') 
         WHERE review.movie_id = #{movie_id}
         AND review.status = 'A'
@@ -77,9 +82,14 @@
         <result property="topCritic" column="is_top_critic"/>
 
         <association property="critic" javaType="com.rottentomatoes.movieapi.domain.model.Critic">
+            <constructor>
+                <idArg column="critic_image_id" javaType="string"/>
+                <arg column="critic_img_height" javaType="int"/>
+                <arg column="critic_img_width" javaType="int"/>
+                <arg column="critic_img_format" javaType="string"/>
+            </constructor>
             <id property="id" column="critic_id"/>
             <result property="name" column="critic_name"/>
-            <result property="imageId" column="critic_image_id"/>
             <result property="vanityUrl" column="critic_vanity_url"/>
         </association>
 

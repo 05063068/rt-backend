@@ -17,9 +17,15 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.flixster.image.Environment;
+import com.flixster.image.IdGenerator;
+import com.flixster.image.ImageFormat;
+import com.flixster.image.ImageType;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.response.MetaInformation;
