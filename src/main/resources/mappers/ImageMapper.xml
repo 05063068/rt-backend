@@ -39,11 +39,11 @@
 
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
         <constructor>
-            <idArg column="img_id" javaType="string"/>
-            <arg column="img_height" javaType="int"/>
-            <arg column="img_width" javaType="int"/>
-            <arg column="img_format" javaType="string"/>
-            <arg column="img_type" javaType="string"/>
+            <idArg column="img_id" javaType="string" /> <!-- required -->
+            <arg column="img_height" javaType="int" /> <!-- nullable -->
+            <arg column="img_width" javaType="int" /> <!-- nullable -->
+            <arg column="img_format" javaType="string" />  <!-- nullable -->
+            <arg column="img_type" javaType="string" /> <!-- required -->
         </constructor>
     </resultMap>
 

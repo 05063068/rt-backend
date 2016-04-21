@@ -38,7 +38,7 @@
         FROM movie_cast
         LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
         LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id
-        LEFT JOIN rtactor_img ON movie_person.main_rtactor_image_id = rtactor_img.id
+        
         WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
         AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)        
         AND (movie_cast.deleted_ind IS NULL OR movie_cast.deleted_ind != 1)

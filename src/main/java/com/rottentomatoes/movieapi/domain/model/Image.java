@@ -24,13 +24,15 @@ public class Image extends AbstractModel {
     	if(imageString == null){
     		return null;
     	}
-        switch (imageString.toLowerCase()) {
+        switch (imageString.toLowerCase()) {        	
             case "mv":
                 return ImageType.MOVIE;
             case "cr":
                 return ImageType.CRITIC;
             case "ac":
                 return ImageType.ACTOR;
+            case "pi":
+            	return ImageType.PHOTO;
             case "fr":
             case "nn":
                 return ImageType.MULTIUSE;

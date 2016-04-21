@@ -4,12 +4,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.PersonMapper">
+    <!--  TODO: preferred_img columsn do not convey height, width , or format. Should add these columsn to movie_person schema,
+                or better yet, create separate movie_person_preferred_img table-->
     <sql id="moviePersonImageColumns">
-        rtactor_img.id AS img_id,
-        rtactor_img.format AS img_format,
-        rtactor_img.img_width AS img_width,
-        rtactor_img.img_height AS img_height,
-        'ac' AS img_type
+        preferred_img_id AS img_id,
+        CASE preferred_img_type
+            WHEN 'RTA' THEN 'ac'
+            WHEN 'MUI' THEN 'nn'
+            WHEN 'PHI' THEN 'pi'
+            ELSE null
+        END AS img_type,
+        null AS img_height,
+        null AS img_width,
+        null AS img_format
     </sql>
     <!--  Note: looks like preferred_img_type and preferred_img_id is currently not used at all in the DB. -->
 
