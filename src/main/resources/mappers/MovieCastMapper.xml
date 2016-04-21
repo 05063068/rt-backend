@@ -35,25 +35,16 @@
     <select id="selectMovieCastForMovie" resultMap="movieCastResultMap" parameterType="map">
         SELECT
         <include refid="selectColumns"/>
-        FROM (
-        (SELECT id FROM movie_cast
-        WHERE movie_id = #{movie_id}
-        AND role = 'ACT'
-        AND deleted_ind != 1)
-        UNION
-        (SELECT id FROM movie_cast
-        WHERE movie_id = #{movie_id}
-        AND role != 'ACT'
-        AND deleted_ind != 1
-        )) cast_ids
-        LEFT JOIN movie_cast ON movie_cast.id = cast_ids.id
+        FROM movie_cast
         LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
         LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id
         LEFT JOIN rtactor_img ON movie_person.main_rtactor_image_id = rtactor_img.id
         WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
-        AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)
+        AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)        
+        AND (movie_cast.deleted_ind IS NULL OR movie_cast.deleted_ind != 1)
+        AND movie_cast.movie_id = #{movie_id}
         <if test="role">
-            AND role = #{role}
+            AND movie_cast.role = #{role}
         </if>
         ORDER BY movie_cast.role, movie_cast.sortkey
 

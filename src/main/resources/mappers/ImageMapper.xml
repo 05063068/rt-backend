@@ -9,8 +9,9 @@
     <select id="selectImageByIdAndType" resultMap="imageResultMap">
         SELECT CONCAT('${type}-' , id) AS img_id,
         '${type}' AS img_type,
-        img_width, img_height,
-        format
+        img_width, 
+        img_height,
+        format AS img_format
         FROM ${type}        
         WHERE id=#{id}
     </select>
@@ -18,11 +19,11 @@
     <select id="selectImagesForMovie" resultMap="imageResultMap" parameterType="map">
         SELECT
             multiuse_img_reference.media_type AS mediaType,
-            multiuse_img.id AS id,
-            multiuse_img.format AS format,
-            multiuse_img.img_width AS originalWidth,
-            multiuse_img.img_height AS originalHeight,
-            multiuse_img.aspect_ratio AS aspectRatio
+            multiuse_img.id AS img_id,
+            multiuse_img.format AS img_format,
+            multiuse_img.img_width AS img_width,
+            multiuse_img.img_height AS img_height,
+            'nn' AS img_type
         FROM multiuse_img_reference
         LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
         WHERE multiuse_img_reference.media_id=#{movie_id}
@@ -38,12 +39,12 @@
 
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
         <constructor>
-            <idArg column="id" javaType="string"/>
-            <arg column="originalHeight" javaType="int"/>
-            <arg column="originalWidth" javaType="int"/>
-            <arg column="format" javaType="string"/>
+            <idArg column="img_id" javaType="string"/>
+            <arg column="img_height" javaType="int"/>
+            <arg column="img_width" javaType="int"/>
+            <arg column="img_format" javaType="string"/>
+            <arg column="img_type" javaType="string"/>
         </constructor>
-        <id property="id" column="id"/>
     </resultMap>
 
     <select id="selectImageCountForMovie" resultMap="imageMataDataResultMap" parameterType="map">

@@ -9,11 +9,8 @@ import lombok.Setter;
 @Setter
 public class Critic extends AbstractModel {
 
-    public Critic(String id, Integer originalHeight, Integer originalWidth, String format) {
-        this.image = new Image(id, originalHeight, originalWidth, format, "CR");
-    }
 
     protected String name;
-    protected Image image;
+    protected Image mainImage;
     protected String vanityUrl;
 }

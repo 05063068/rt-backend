@@ -11,14 +11,17 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
 	<sql id="selectColumns">
        	review.*, 
-       	critic.name AS critic_name,
-       	critic.image_id AS critic_image_id,
+       	critic.name AS critic_name,       	
        	critic.vanity_url AS critic_vanity_url,
-       	critic_img.img_width AS critic_img_width,
-       	critic_img.img_height AS critic_img_height,
-       	critic_img.format AS critic_img_format,
-       	publication.name AS publication_name,
-       	IF(critic_top.critic_id,1,0) is_top_critic
+        publication.name AS publication_name,
+        
+        critic.image_id AS critic_img_id,
+        critic_img.img_width AS critic_img_width,
+        critic_img.img_height AS critic_img_height,
+        critic_img.format AS critic_img_format,
+        'cr' AS critic_img_type,
+        
+        IF(critic_top.critic_id,1,0) is_top_critic
 	</sql>
 
     <select id="selectReviewById" resultMap="reviewResultMap">
@@ -81,23 +84,22 @@
         <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
         <result property="topCritic" column="is_top_critic"/>
 
-        <association property="critic" javaType="com.rottentomatoes.movieapi.domain.model.Critic">
-            <constructor>
-                <idArg column="critic_image_id" javaType="string"/>
-                <arg column="critic_img_height" javaType="int"/>
-                <arg column="critic_img_width" javaType="int"/>
-                <arg column="critic_img_format" javaType="string"/>
-            </constructor>
-            <id property="id" column="critic_id"/>
-            <result property="name" column="critic_name"/>
-            <result property="vanityUrl" column="critic_vanity_url"/>
-        </association>
+        <association property="critic" resultMap="criticResultMap" />
 
         <association property="publication" javaType="com.rottentomatoes.movieapi.domain.model.Publication">
             <id property="id" column="publication_id"/>
             <result property="name" column="publication_name"/>
         </association>
     </resultMap>
+    
+
+    <!--  TODO: Move into own CriticMapper.xml -->
+    <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">   
+        <id property="id" column="critic_id"/>
+        <result property="name" column="critic_name"/>
+        <result property="vanityUrl" column="critic_vanity_url"/>
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="critic_" notNullColumn="img_id"/>
+    </resultMap>    
 
     <select id="selectAllReviewCountForMovie" resultMap="reviewMetaDataResultMap" parameterType="map">
         SELECT

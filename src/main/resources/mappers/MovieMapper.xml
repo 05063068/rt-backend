@@ -26,23 +26,24 @@
         movie.creation_date,
         movie.last_modified_date,
         movie.version,
-        CONCAT('movie_img-' , movie.main_image) AS img_id,
-        'movie_img' AS img_type,
         movie.main_trailer,
         movie.advisory,
         movie.studio_id,
         movie.auto_update_ind,
         movie.trailer_update_ind,
+        
         movie_img.id AS movie_img_id,
         movie_img.format AS movie_img_format,
         movie_img.img_width AS movie_img_width,
         movie_img.img_height AS movie_img_height,
-        multiuse_img_reference.media_type hero_img_media_type,
+        'mv' AS movie_img_type,
+        
+        multiuse_img_reference.media_type AS hero_img_type,
         multiuse_img.id AS hero_img_id,
         multiuse_img.format hero_img_format,
         multiuse_img.img_width hero_img_width,
         multiuse_img.img_height hero_img_height,
-        multiuse_img.aspect_ratio hero_img_aspect_ratio,
+        
         movie_studio.name AS studioName,
         tomatometer AS value,
         CASE
@@ -106,23 +107,12 @@
             <result property="value" column="value"/>
             <result property="state" column="state"/>
         </association>
-        <association property="posterImage" javaType="com.rottentomatoes.movieapi.domain.model.Image">
-            <constructor>
-                <idArg column="movie_img_id" javaType="string"/>
-                <arg column="movie_img_height" javaType="int"/>
-                <arg column="movie_img_width" javaType="int"/>
-                <arg column="movie_img_format" javaType="string"/>
-            </constructor>
-        </association>
-        <association property="heroImage" javaType="com.rottentomatoes.movieapi.domain.model.Image">
-            <constructor>
-                <idArg column="hero_img_id" javaType="string"/>
-                <arg column="hero_img_height" javaType="int"/>
-                <arg column="hero_img_width" javaType="int"/>
-                <arg column="hero_img_format" javaType="string"/>
-                <arg column="hero_img_media_type" javaType="string"/>
-            </constructor>
-        </association>
+
+
+        <association property="posterImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="movie_" notNullColumn="img_id"/>
+        
+        <association property="heroImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="hero_" notNullColumn="img_id"/>
+
     </resultMap>
 
 </mapper>

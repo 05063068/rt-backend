@@ -5,10 +5,11 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.PersonMapper">
     <sql id="moviePersonImageColumns">
-        rtactor_img.id AS actor_img_id,
-        rtactor_img.format AS actor_img_format,
-        rtactor_img.img_width AS actor_img_width,
-        rtactor_img.img_height AS actor_img_height
+        rtactor_img.id AS img_id,
+        rtactor_img.format AS img_format,
+        rtactor_img.img_width AS img_width,
+        rtactor_img.img_height AS img_height,
+        'ac' AS img_type
     </sql>
     <!--  Note: looks like preferred_img_type and preferred_img_id is currently not used at all in the DB. -->
 
@@ -31,15 +32,12 @@
     </select>
 
     <resultMap id="personMap" type="com.rottentomatoes.movieapi.domain.model.Person">
-        <constructor>
-            <idArg column="actor_img_id" javaType="string"/>
-            <arg column="actor_img_height" javaType="int"/>
-            <arg column="actor_img_width" javaType="int"/>
-            <arg column="actor_img_format" javaType="string"/>
-        </constructor>
         <id property="id" column="movie_person_id"/>
         <result property="name" column="movie_person_name"/>
-        <result property="vanity" column="movie_person_vanity" />
+        <result property="vanity" column="movie_person_vanity" />        
+      
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
+      
     </resultMap>
 
 </mapper>
