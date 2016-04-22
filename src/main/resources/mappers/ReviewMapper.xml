@@ -97,7 +97,7 @@
     <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">   
         <id property="id" column="critic_id"/>
         <result property="name" column="critic_name"/>
-        <result property="vanityUrl" column="critic_vanity_url"/>
+        <result property="vanity" column="critic_vanity_url"/>
         <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="critic_" notNullColumn="img_id"/>
     </resultMap>    
 

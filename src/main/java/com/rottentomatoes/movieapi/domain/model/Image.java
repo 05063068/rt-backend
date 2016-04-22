@@ -89,7 +89,7 @@ public class Image extends AbstractModel {
             
         String thumborId = builder.build().getEncodedId();
         
-        this.setId(id);
+        this.setId(type.getCode()+"-"+id);
         this.setThumborId(thumborId);
     }
 }

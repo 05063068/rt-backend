@@ -11,7 +11,6 @@
         #{actorLimit} actorLimit, /* Dummy columns used for passing subselect params */
         #{reviewLimit} reviewLimit,
         #{videoLimit} videoLimit,
-        'movie_img' main_image_type,
         movie.movie_id,
         movie.title,
         movie.year,
@@ -47,20 +46,18 @@
         movie_studio.name AS studioName,
         tomatometer AS value,
         CASE
-        WHEN certified_fresh THEN 'certified_fresh'
-        WHEN tomatometer_info.all_critics &lt; 5 THEN 'NA'
-        WHEN tomatometer IS NULL THEN 'NA'
-        WHEN (tomatometer >= 60) THEN 'fresh'
-        ELSE 'rotten'
+            WHEN certified_fresh THEN 'certified_fresh'
+            WHEN tomatometer_info.all_critics &lt; 5 THEN 'NA'
+            WHEN tomatometer IS NULL THEN 'NA'
+            WHEN (tomatometer >= 60) THEN 'fresh'
+            ELSE 'rotten'
         END AS state,
         (SELECT url
-        FROM vanity_movie_url
-        WHERE movie_id = movie.movie_id
-        AND primary_ind = 1
-        AND platform = 'RTO'
-        AND multiuse_img_reference.hero_img_ind = 1
-        AND multiuse_img_reference.status = 1
-        ORDER BY url ASC LIMIT 1
+            FROM vanity_movie_url
+            WHERE movie_id = movie.movie_id
+            AND primary_ind = 1
+            AND platform = 'RTO'
+            ORDER BY url ASC LIMIT 1
         ) AS vanity_token, 
         movie_meta_data.running_time,
         movie_meta_data.official_url,
@@ -72,7 +69,12 @@
         LEFT JOIN movie_synopsis ON movie_synopsis.id = movie_meta_data.synopsis_id
         LEFT JOIN movie_img ON movie_img.movie_id = movie.movie_id
         LEFT JOIN multiuse_img_reference ON multiuse_img_reference.media_id = movie.movie_id
-        LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
+        LEFT JOIN multiuse_img ON (
+            multiuse_img.id = multiuse_img_reference.multiuse_image_id
+            AND multiuse_img_reference.hero_img_ind = 1
+            AND multiuse_img_reference.status = 1
+        )
+        
         <!--  TODO: Check status=active -->
     </sql>
 
