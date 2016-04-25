@@ -19,6 +19,11 @@ import java.util.Date;
 @Setter
 public class Image extends AbstractModel {
     protected String thumborId;
+    
+    protected Integer height;
+    protected Integer width;
+    protected String format;
+    protected String type;
 
     private ImageType getImageType(String imageString) {
     	if(imageString == null){
@@ -91,5 +96,9 @@ public class Image extends AbstractModel {
         
         this.setId(type.getCode()+"-"+id);
         this.setThumborId(thumborId);
+        this.setHeight(originalHeight);
+        this.setWidth(originalWidth);
+        this.setFormat(format);
+        this.setType(mediaType);
     }
 }
