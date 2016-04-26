@@ -35,7 +35,7 @@ public class Image extends AbstractModel {
             case "cr":
                 return ImageType.CRITIC;
             case "ac":
-                return ImageType.ACTOR;
+                return ImageType.RTACTOR;
             case "pi":
             	return ImageType.PHOTO;
             case "fr":
