@@ -9,49 +9,36 @@
  	How to handle public_ind?
  -->
 <mapper namespace="com.rottentomatoes.movieapi.mappers.MovieCastMapper">
-    <sql id="selectColumns">
-        movie_cast.*,
-        movie_person.name movie_person_name,
-        movie_person.id movie_person_id,
-        'tmp_person_vanity_string' AS movie_person_vanity,
-        movie_character.name character_name,
-        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonImageColumns"/>
-    </sql>
-
-    <select id="selectMovieCastById" resultMap="movieCastResultMap" parameterType="map">
+    <sql id="selectMovieCastWithPerson">
         SELECT
-        <include refid="selectColumns"/>
+        movie_cast.*,
+        movie_character.name character_name,
+        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonColumns"/>
+        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonImageColumns"/>
         FROM movie_cast
         LEFT OUTER JOIN movie_person ON 
-            movie_cast.person_id = movie_person.id AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)            
-        LEFT OUTER JOIN movie_character ON 
-            movie_cast.id = movie_character.cast_id AND (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
-        WHERE movie_cast.id = #{movieCastId}
-        AND (movie_cast.deleted_ind IS NULL OR movie_cast.deleted_ind != 1)
+            movie_cast.person_id = movie_person.id AND movie_person.deleted_ind != 1   
+        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.imageVanityJoins" />
         
+        LEFT OUTER JOIN movie_character ON 
+            movie_cast.id = movie_character.cast_id AND movie_character.deleted_ind != 1 
+        
+        WHERE movie_cast.deleted_ind != 1
+    </sql>
+
+
+    <select id="selectMovieCastById" resultMap="movieCastResultMap" parameterType="map">
+        <include refid="selectMovieCastWithPerson" />
+        AND movie_cast.id = #{movieCastId}
     </select>
 
     <select id="selectMovieCastForMovie" resultMap="movieCastResultMap" parameterType="map">
-        SELECT
-        <include refid="selectColumns"/>
-        FROM movie_cast
-        LEFT OUTER JOIN movie_person ON 
-            movie_cast.person_id = movie_person.id AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)   
-        LEFT OUTER JOIN movie_character ON 
-            movie_cast.id = movie_character.cast_id AND (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1) 
-        
-        LEFT OUTER JOIN rtactor_img ON preferred_img_type='RTA' AND preferred_img_id=rtactor_img.id
-        LEFT OUTER JOIN multiuse_img ON preferred_img_type='MUI' AND preferred_img_id=multiuse_img.id
-        LEFT OUTER JOIN photo_img ON preferred_img_type='PHI' AND preferred_img_id=photo_img.id
-        
-        WHERE (movie_cast.deleted_ind IS NULL OR movie_cast.deleted_ind != 1)
+        <include refid="selectMovieCastWithPerson" />
             AND movie_cast.movie_id = #{movie_id}
         <if test="role">
             AND movie_cast.role = #{role}
         </if>
-        ORDER BY 
-            FIELD(movie_cast.role, 'DIR','PRO','SCR','EPR','ACT'), /* Return actors last */
-            movie_cast.sortkey
+        ORDER BY FIELD(movie_cast.role, 'DIR','PRO','SCR','EPR','ACT'), movie_cast.sortkey
 
         <choose>
             <when test="limit != null and offset != null">
@@ -77,7 +64,8 @@
     <select id="selectMovieCastCountForMovie" resultMap="movieCastMetaDataResultMap" parameterType="map">
         SELECT count(*) as totalCount
         FROM movie_cast
-        WHERE (movie_cast.deleted_ind IS NULL OR movie_cast.deleted_ind != 1)
+        WHERE movie_cast.movie_id = #{movie_id} 
+        AND movie_cast.deleted_ind != 1
     </select>
 
     <resultMap id="movieCastMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation"/>

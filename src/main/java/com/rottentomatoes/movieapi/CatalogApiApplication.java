@@ -17,8 +17,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 @SpringBootApplication
 public class CatalogApiApplication extends SpringBootServletInitializer {
 
-    /* I can't make ApplicationConfiguration.java work.
-     * If you can figure out how to make properties inject, by all means move the beans there -p */
     @Bean
     @ConfigurationProperties(prefix = "datasource.primary")
     public DataSource dataSource() {

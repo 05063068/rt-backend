@@ -25,7 +25,6 @@ public class Image extends AbstractModel {
     protected Integer height;
     protected Integer width;
     protected String format;
-    protected String type;
 
     private static Map<String,ImageType> imageTypeEnumMap = null;
     
@@ -92,6 +91,5 @@ public class Image extends AbstractModel {
         this.setHeight(originalHeight);
         this.setWidth(originalWidth);
         this.setFormat(format);
-        this.setType(mediaType);
     }
 }

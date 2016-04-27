@@ -4,8 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.PersonMapper">
-    <!--  TODO: preferred_img columsn do not convey height, width , or format. Should add these columsn to movie_person schema,
-                or better yet, create separate movie_person_preferred_img table-->
+    <sql id="moviePersonColumns">
+        movie_person.name AS movie_person_name,
+        movie_person.id AS movie_person_id,
+        vanity_actor_url.url AS movie_person_vanity,
+    </sql>
     <sql id="moviePersonImageColumns">
         preferred_img_id AS img_id,
         CASE preferred_img_type
@@ -18,30 +21,42 @@
         COALESCE(rtactor_img.img_height, multiuse_img.img_height, photo_img.img_height) AS img_height,
         COALESCE(rtactor_img.format, multiuse_img.format, photo_img.format) AS img_format
     </sql>
-    <!--  Note: looks like preferred_img_type and preferred_img_id is currently not used at all in the DB. -->
 
-    <select id="selectPersonById" resultMap="personMap">
-        SELECT movie_person.*,
-        <include refid="moviePersonImageColumns"/>
-        FROM movie_person
+    <sql id="imageVanityJoins">
         LEFT OUTER JOIN rtactor_img ON preferred_img_type='RTA' AND preferred_img_id=rtactor_img.id
         LEFT OUTER JOIN multiuse_img ON preferred_img_type='MUI' AND preferred_img_id=multiuse_img.id
         LEFT OUTER JOIN photo_img ON preferred_img_type='PHI' AND preferred_img_id=photo_img.id
-        WHERE id = #{id}
-        AND deleted_ind = 0 AND public_ind = 1
+        LEFT OUTER JOIN vanity_actor_url ON 
+            movie_person.id = vanity_actor_url.movie_person_id AND /* primary_ind unused, mostly null */
+            vanity_actor_url.platform = 'RTO' AND
+            vanity_actor_url.deleted_ind = 0
+    </sql>
+
+    <!--  Note: movie_person.public_ind is unused -->
+    <select id="selectPersonById" resultMap="personMap">
+        SELECT
+        <include refid="moviePersonColumns"/>
+        <include refid="moviePersonImageColumns"/>
+        FROM movie_person
+        <include refid="imageVanityJoins" />
+
+        WHERE movie_person.id = #{id}
+        AND movie_person.deleted_ind = 0 
     </select>
 
     <select id="selectPersonForMovieCast" resultMap="personMap">
-        SELECT movie_person.*,
+        SELECT
+        <include refid="moviePersonColumns"/>
         <include refid="moviePersonImageColumns"/>
-        FROM movie_person, movie_cast
-        LEFT OUTER JOIN rtactor_img ON preferred_img_type='RTA' AND preferred_img_id=rtactor_img.id
-        LEFT OUTER JOIN multiuse_img ON preferred_img_type='MUI' AND preferred_img_id=multiuse_img.id
-        LEFT OUTER JOIN photo_img ON preferred_img_type='PHI' AND preferred_img_id=photo_img.id
-        WHERE movie_cast.id = #{id}
-        AND movie_person.id = movie_cast.person_id;
-        AND movie_person.deleted_ind = 0 AND movie_person.public_ind = 1
-        AND movie_cast.deleted_ind = 0
+        FROM movie_person
+        <include refid="imageVanityJoins" />
+        
+        INNER JOIN movie_cast ON 
+            movie_cast.id = #{id} AND 
+            movie_cast.deleted_ind = 0
+            movie_cast.person_id = movie_person.id
+        
+        WHERE movie_person.deleted_ind = 0        
     </select>
 
     <resultMap id="personMap" type="com.rottentomatoes.movieapi.domain.model.Person">
