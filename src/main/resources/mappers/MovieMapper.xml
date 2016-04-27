@@ -44,7 +44,7 @@
         multiuse_img.img_height hero_img_height,
         
         movie_studio.name AS studioName,
-        tomatometer AS value,
+        IF( tomatometer_info.all_critics &lt; 5, null, tomatometer) AS value, /* Enforce tomatometer=null if NA - this should be taken care of by job */
         CASE
             WHEN certified_fresh THEN 'certified_fresh'
             WHEN tomatometer_info.all_critics &lt; 5 THEN 'NA'
