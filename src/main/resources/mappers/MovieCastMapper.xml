@@ -22,35 +22,36 @@
         SELECT
         <include refid="selectColumns"/>
         FROM movie_cast
-        LEFT JOIN movie_person ON movie_cast.person_id = movie_person.id
-        LEFT JOIN movie_character ON movie_cast.id = movie_character.cast_id
-
+        LEFT OUTER JOIN movie_person ON 
+            movie_cast.person_id = movie_person.id AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)            
+        LEFT OUTER JOIN movie_character ON 
+            movie_cast.id = movie_character.cast_id AND (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
         WHERE movie_cast.id = #{movieCastId}
-
-        AND movie_cast.deleted_ind != 1
-        AND movie_person.deleted_ind != 1
-        AND (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
+        AND (movie_cast.deleted_ind IS NULL OR movie_cast.deleted_ind != 1)
+        
     </select>
 
     <select id="selectMovieCastForMovie" resultMap="movieCastResultMap" parameterType="map">
         SELECT
         <include refid="selectColumns"/>
         FROM movie_cast
-        LEFT OUTER JOIN movie_person ON movie_cast.person_id = movie_person.id
-        LEFT OUTER JOIN movie_character ON movie_cast.id = movie_character.cast_id
+        LEFT OUTER JOIN movie_person ON 
+            movie_cast.person_id = movie_person.id AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)   
+        LEFT OUTER JOIN movie_character ON 
+            movie_cast.id = movie_character.cast_id AND (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1) 
         
         LEFT OUTER JOIN rtactor_img ON preferred_img_type='RTA' AND preferred_img_id=rtactor_img.id
         LEFT OUTER JOIN multiuse_img ON preferred_img_type='MUI' AND preferred_img_id=multiuse_img.id
         LEFT OUTER JOIN photo_img ON preferred_img_type='PHI' AND preferred_img_id=photo_img.id
         
-        WHERE (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind != 1)
-        AND (movie_person.deleted_ind IS NULL OR movie_person.deleted_ind != 1)        
-        AND (movie_cast.deleted_ind IS NULL OR movie_cast.deleted_ind != 1)
-        AND movie_cast.movie_id = #{movie_id}
+        WHERE (movie_cast.deleted_ind IS NULL OR movie_cast.deleted_ind != 1)
+            AND movie_cast.movie_id = #{movie_id}
         <if test="role">
             AND movie_cast.role = #{role}
         </if>
-        ORDER BY movie_cast.role, movie_cast.sortkey
+        ORDER BY 
+            FIELD(movie_cast.role, 'DIR','PRO','SCR','EPR','ACT'), /* Return actors last */
+            movie_cast.sortkey
 
         <choose>
             <when test="limit != null and offset != null">
