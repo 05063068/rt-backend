@@ -9,9 +9,9 @@
     <sql id="moviePersonImageColumns">
         preferred_img_id AS img_id,
         CASE preferred_img_type
-            WHEN 'RTA' THEN 'ac'
-            WHEN 'MUI' THEN 'nn'
-            WHEN 'PHI' THEN 'pi'
+            WHEN 'RTA' THEN 'r'
+            WHEN 'MUI' THEN 'n'
+            WHEN 'PHI' THEN 'p'
             ELSE null
         END AS img_type,
         COALESCE(rtactor_img.img_width, multiuse_img.img_width, photo_img.img_width) AS img_width,

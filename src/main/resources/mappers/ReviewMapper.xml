@@ -19,7 +19,7 @@
         critic_img.img_width AS critic_img_width,
         critic_img.img_height AS critic_img_height,
         critic_img.format AS critic_img_format,
-        'cr' AS critic_img_type,
+        'c' AS critic_img_type,
         
         IF(critic_top.critic_id,1,0) is_top_critic
 	</sql>

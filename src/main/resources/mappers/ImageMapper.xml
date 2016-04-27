@@ -23,7 +23,7 @@
             multiuse_img.format AS img_format,
             multiuse_img.img_width AS img_width,
             multiuse_img.img_height AS img_height,
-            'nn' AS img_type
+            'n' AS img_type
         FROM multiuse_img_reference
         LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
         WHERE multiuse_img_reference.media_id=#{movie_id}

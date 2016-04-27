@@ -35,9 +35,9 @@
         movie_img.format AS movie_img_format,
         movie_img.img_width AS movie_img_width,
         movie_img.img_height AS movie_img_height,
-        'mv' AS movie_img_type,
+        'm' AS movie_img_type,
         
-        multiuse_img_reference.media_type AS hero_img_type,
+        'n' AS hero_img_type,
         multiuse_img.id AS hero_img_id,
         multiuse_img.format hero_img_format,
         multiuse_img.img_width hero_img_width,
@@ -74,14 +74,13 @@
             AND multiuse_img_reference.hero_img_ind = 1
             AND multiuse_img_reference.status = 1
         )
-        
-        <!--  TODO: Check status=active -->
     </sql>
 
     <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
         SELECT
         <include refid="movieSelectSql"/>
         WHERE movie.movie_id = #{id}
+        AND movie.status = 1 /* active movies only */
     </select>
 
     <resultMap id="movieResultMap" type="com.rottentomatoes.movieapi.domain.model.Movie">
@@ -93,7 +92,6 @@
                 typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
         <result property="lastModifiedDate" column="last_modified_date" javaType="java.time.ZonedDateTime"/>
-        <result property="status" column="status"/>
         <result property="advisory" column="advisory"/>
         <result property="vanity" column="vanity_token"/>
         <result property="synopsis" column="synopsis"/>

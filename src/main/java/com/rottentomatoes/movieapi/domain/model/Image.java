@@ -13,6 +13,8 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.awt.*;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonApiResource(type = "image")
 @Getter
@@ -25,25 +27,16 @@ public class Image extends AbstractModel {
     protected String format;
     protected String type;
 
-    private ImageType getImageType(String imageString) {
-    	if(imageString == null){
-    		return null;
-    	}
-        switch (imageString.toLowerCase()) {        	
-            case "mv":
-                return ImageType.MOVIE;
-            case "cr":
-                return ImageType.CRITIC;
-            case "ac":
-                return ImageType.RTACTOR;
-            case "pi":
-            	return ImageType.PHOTO;
-            case "fr":
-            case "nn":
-                return ImageType.MULTIUSE;
-            default:
-                return null;
-        }
+    private static Map<String,ImageType> imageTypeEnumMap = null;
+    
+    private synchronized ImageType getImageType(String typeString) {    	
+    	if(imageTypeEnumMap == null){
+    		imageTypeEnumMap = new HashMap<>();
+    		for(ImageType t: ImageType.values()){
+    			imageTypeEnumMap.put(t.getCode(), t);
+    		}
+    	}    	
+    	return imageTypeEnumMap.get(typeString);
     }
 
     private ImageFormat getImageFormat(String imageFormatString) {

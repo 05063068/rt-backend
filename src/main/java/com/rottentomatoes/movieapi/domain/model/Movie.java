@@ -46,7 +46,6 @@ public class Movie extends AbstractModel {
     protected ZonedDateTime creationDate;
     protected ZonedDateTime lastModifiedDate;
     protected String advisory;
-    protected Integer status;
     protected String vanity;
     protected String synopsis;
     protected Integer runningTime;
