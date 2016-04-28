@@ -17,25 +17,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @JsonApiResource(type = "image")
-@Getter
-@Setter
 public class Image extends AbstractModel {
-    protected String thumborId;
+
+
+	protected String thumborId;
     
     protected Integer height;
     protected Integer width;
     protected String format;
 
-    private static Map<String,ImageType> imageTypeEnumMap = null;
-    
-    private synchronized ImageType getImageType(String typeString) {    	
-    	if(imageTypeEnumMap == null){
-    		imageTypeEnumMap = new HashMap<>();
-    		for(ImageType t: ImageType.values()){
-    			imageTypeEnumMap.put(t.getCode(), t);
-    		}
-    	}    	
-    	return imageTypeEnumMap.get(typeString);
+    public ImageType getImageType(String typeString) {    	
+
+		for(ImageType t: ImageType.values()){
+			if(t.getCode().equals(typeString)){
+				return t;
+			}
+		}
+		return null;
     }
 
     private ImageFormat getImageFormat(String imageFormatString) {
@@ -86,10 +84,42 @@ public class Image extends AbstractModel {
             
         String thumborId = builder.build().getEncodedId();
         
-        this.setId(type.getCode()+"-"+id);
-        this.setThumborId(thumborId);
-        this.setHeight(originalHeight);
-        this.setWidth(originalWidth);
-        this.setFormat(format);
+        this.id = type.getCode()+"-"+id;
+        this.thumborId = thumborId;
+        this.height = originalHeight;
+        this.width = originalWidth;
+        this.format = format;
     }
+    
+    public String getThumborId() {
+		return thumborId;
+	}
+
+	public void setThumborId(String thumborId) {
+		this.thumborId = thumborId;
+	}
+
+	public Integer getHeight() {
+		return height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public Integer getWidth() {
+		return width;
+	}
+
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
 }
