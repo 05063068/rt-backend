@@ -67,7 +67,7 @@
         LEFT JOIN movie_meta_data ON movie_meta_data.movie_id = movie.movie_id
         LEFT JOIN tomatometer_info ON tomatometer_info.movie_id = movie.movie_id
         LEFT JOIN movie_synopsis ON movie_synopsis.id = movie_meta_data.synopsis_id
-        LEFT JOIN movie_img ON movie_img.movie_id = movie.movie_id
+        LEFT JOIN movie_img ON movie_img.id = movie.main_image
         LEFT JOIN multiuse_img_reference ON multiuse_img_reference.media_id = movie.movie_id
         LEFT JOIN multiuse_img ON (
             multiuse_img.id = multiuse_img_reference.multiuse_image_id

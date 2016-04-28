@@ -14,6 +14,7 @@ import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import io.katharsis.queryParams.PaginationKeys;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.response.MetaInformation;
+
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Movie;
@@ -38,103 +39,8 @@ public class MovieListRepository extends AbstractRepository implements ResourceR
     @Override
     public MovieList findOne(String listId, RequestParams requestParams) {
         MovieList list = new MovieList();
-        Map<String, Object> selectParams = new HashMap<>();
-        List<Movie> movies;
-
-        LocalDate now;
-        LocalDate start;
-        LocalDate end;
-
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
-        selectParams.put("country", "us");
-
-        switch (listId) {
-            case "top-box-office-estimated":
-                now = LocalDate.now();
-                start = now.with(previousOrSame(DayOfWeek.FRIDAY));
-                selectParams.put("startDate", start);
-
-                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectEstimatedTopBoxOfficeMovies", selectParams);
-
-                list.setId(listId);
-                list.setMovies(movies);
-                return list;
-
-            case "top-box-office":
-                now = LocalDate.now();
-                start = now.with(previousOrSame(DayOfWeek.FRIDAY));
-                selectParams.put("startDate", start);
-
-                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
-
-                list.setId(listId);
-                list.setMovies(movies);
-                return list;
-
-            case "upcoming":
-                now = LocalDate.now();
-                end = now.plusMonths(3);
-
-                selectParams.put("startDate", now);
-                selectParams.put("endDate", end);
-
-                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMovies", selectParams);
-
-                list.setId(listId);
-                list.setMovies(movies);
-                return list;
-
-            case "opening":
-                now = LocalDate.now();
-                start = now.with(previousOrSame(DayOfWeek.MONDAY));
-                end = now.with(nextOrSame(DayOfWeek.SUNDAY));
-
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
-
-                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMovies", selectParams);
-
-                list.setId(listId);
-                list.setMovies(movies);
-                return list;
-
-            case "top-rentals":
-                now = LocalDate.now();
-
-                end = now.with(next(DayOfWeek.SUNDAY));
-                //Start is 10 weeks in the past.
-                start = now.minusWeeks(10);
-
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
-
-                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", selectParams);
-
-                list.setId(listId);
-                list.setMovies(movies);
-                return list;
-                
-            case "new-on-dvd":
-            	// TODO: Need to implement this
-            	now = LocalDate.now();
-
-                end = now.with(next(DayOfWeek.SUNDAY));
-                //Start is 10 weeks in the past.
-                start = now.minusWeeks(10);
-
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
-
-                movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", selectParams);
-
-                list.setId(listId);
-                list.setMovies(movies);
-                return list;
-
-            default:
-                throw new ResourceNotFoundException("Invalid list type");
-        }
+        list.setId(listId);
+        return list;
     }
 
     @Override
