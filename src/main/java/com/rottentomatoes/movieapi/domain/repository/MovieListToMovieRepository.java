@@ -131,23 +131,16 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         selectParams.put("country", "us");
 
         switch ((String) castedResourceId) {
-            case "top-box-office-estimated":
-                now = LocalDate.now();
-                start = now.with(previousOrSame(DayOfWeek.FRIDAY));
-
-                selectParams.put("startDate", start);
-
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectEstimatedTopBoxOfficeMoviesCount", selectParams);
-                metaData.setRequestParams(requestParams);
-                break;
-
             case "top-box-office":
                 now = LocalDate.now();
                 start = now.with(previousOrSame(DayOfWeek.FRIDAY));
 
                 selectParams.put("startDate", start);
 
+                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectEstimatedTopBoxOfficeMoviesCount", selectParams);
+                /*
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesCount", selectParams);
+                */
                 metaData.setRequestParams(requestParams);
                 break;
 
