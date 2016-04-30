@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
- <!--   <logger name="org.springframework.web" level="DEBUG"/>
+    <!--   <logger name="org.springframework.web" level="DEBUG"/>
     <logger name="org.springframework.beans" level="DEBUG"/>-->
     <logger name="com.rottentomatoes.movieapi.mappers" level="DEBUG" />
     <logger name="org.mybatis" level="TRACE" />
     <logger name="org.apache.ibatis" level="TRACE" />
+    <logger name="org.apache.tomcat.jdbc" level="DEBUG" />
     <!-- <logger name="org.apache.tomcat.jdbc" level="DEBUG" /> -->
+
+    <appender name="FILE-json" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <File>logs/application-json.log</File>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+         <!-- daily rollover -->
+         <fileNamePattern>logs/application-json.%d{yyyy-MM-dd}.log</fileNamePattern>
+         <!-- keep 1 day's worth of history -->
+         <maxHistory>1</maxHistory>
+      </rollingPolicy>
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+   </appender>
+   
+   <root level="INFO">
+      <appender-ref ref="FILE-json" />
+   </root>
+
 </configuration>
