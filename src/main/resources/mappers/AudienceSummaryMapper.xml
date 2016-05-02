@@ -5,17 +5,49 @@
 
     <select id="selectAudienceSummaryForMovie" resultMap="audienceSummaryResultMap">
         SELECT
-        movie_id,
-        num_scores AS scoreCount,
-        average_score AS avgScore,
-        num_wts AS wtsCount,
-        num_ni AS notInterestedCount,
-        num_reviews AS reviewsCount
-        FROM rating_summary WHERE movie_id = #{movie_id}
+        rating_summary.movie_id,
+        CASE
+            WHEN theater_release_date > CURDATE() THEN
+                CASE
+                    WHEN num_wts + num_ni &lt; 5 THEN 'NA'
+                    ELSE 'anticipated'                
+                END
+            ELSE 
+                CASE
+                    WHEN num_scores &lt; 5 THEN 'NA'
+                    WHEN num_dtl_liked / num_scores > 60 THEN 'upright'
+                    ELSE 'spilled'
+                END
+        END AS state,
+           CASE
+            WHEN theater_release_date &lt; CURDATE() THEN
+                CASE
+                    WHEN num_wts + num_ni &lt; 5 THEN NULL
+                    ELSE ROUND(num_wts /(num_wts + num_ni) * 100)                
+                END
+            ELSE 
+                CASE
+                    WHEN num_scores &lt; 5 THEN NULL                    
+                    ELSE ROUND(num_dtl_liked/num_scores * 100)
+                END
+        END AS value,
+        
+        ROUND(average_score,1) AS avgScore,
+        (num_wts + num_ni + num_scores) AS audienceCount
+        
+        FROM movie, rating_summary
+        WHERE movie.movie_id = #{movie_id}
+        AND movie.movie_id = rating_summary.movie_id        
     </select>
 
     <resultMap id="audienceSummaryResultMap" type="com.rottentomatoes.movieapi.domain.model.AudienceSummary">
         <id property="id" column="movie_id"/>
+        <result property="audienceCount" column="audienceCount" javaType="int"/>
+        <result property="avgScore" column="avgScore" javaType="double"/>
+        <association property="popcornMeter" javaType="map">
+            <result property="state" column="state" javaType="string" />
+            <result property="value" column="value" javaType="int"/>            
+        </association>
     </resultMap>
 
 </mapper>
