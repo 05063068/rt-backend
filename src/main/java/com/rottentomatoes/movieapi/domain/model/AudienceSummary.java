@@ -1,5 +1,7 @@
 package com.rottentomatoes.movieapi.domain.model;
 
+import java.util.Map;
+
 import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,11 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AudienceSummary extends AbstractModel {
-    protected Integer scoreCount;
+	protected Map<String, Object> popcornMeter;
+	
+    protected Integer audienceCount;
     protected Double avgScore;
-    protected Integer wtsCount;
-    protected Integer notInterestedCount;
-    protected Integer reviewsCount;
 }
 
 
