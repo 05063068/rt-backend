@@ -17,7 +17,7 @@ public class Review extends AbstractModel {
     protected String quote;
     protected String url;
     protected ZonedDateTime creationDate;
-    protected String topCritic;
+    protected boolean topCritic;
     protected String score;
 
     @JsonApiToOne
