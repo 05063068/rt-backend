@@ -10,7 +10,25 @@
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
 	<sql id="selectColumns">
-       	review.*, 
+       	review.id,       
+		review.movie_id, 
+		review.critic_id,
+		review.publication_id,
+		review.status,   
+		review.category, 
+		CASE WHEN review.score='F' THEN 'fresh' WHEN review.score='R' THEN 'rotten' ELSE 'NA'  END AS score,    
+		review.score_ori,
+		review.score_ori_normal,
+		review.quote,    
+		review.url,      
+		review.review,   
+		review.language, 
+		review.creator_user_id,
+		review.modifier_user_id,
+		review.creation_date,
+		review.last_update_date,
+		review.top_ind,  
+ 
        	critic.name AS critic_name,       	
        	critic.vanity_url AS critic_vanity_url,
         publication.name AS publication_name,
