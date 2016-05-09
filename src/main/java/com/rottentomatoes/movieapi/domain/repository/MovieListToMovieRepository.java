@@ -7,6 +7,7 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,8 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Movie findOneTarget(String id, String fieldName, RequestParams requestParams) {
         return null;
     }
+    
+    private static DayOfWeek[] weekendDays = {DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY };
 
     @Override
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
@@ -63,12 +66,18 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
             case "top-box-office":
                 now = LocalDate.now();
                 start = now.with(previousOrSame(DayOfWeek.FRIDAY));
-                selectParams.put("startDate", start);
-
                 /*
-                   List<Movie> retval = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
-                */  
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectEstimatedTopBoxOfficeMovies", selectParams);
+                  Make adjustments to make the data searched match our feed
+                  delivery schedule (Tues-Sun use previous Friday's boxoffice actuals,
+                  Mon use boxoffice estimates)
+                */
+                if (Arrays.asList(weekendDays).contains(now.getDayOfWeek())) {
+                    start = start.minusDays(7);
+                }
+                selectParams.put("startDate", start);
+                selectParams.put("estimated", (now.getDayOfWeek().equals(DayOfWeek.MONDAY))? 1 : 0);
+
+                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
 
             case "upcoming":
                 now = LocalDate.now();

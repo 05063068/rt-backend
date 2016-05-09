@@ -47,7 +47,7 @@
         WHERE mbo.start_date >= #{startDate}
         AND mbo.country = #{country}
         AND mbo.gross > 0
-        AND mbo.estimate_ind = 0
+        AND mbo.estimate_ind = ${estimated}
         GROUP BY movie.movie_id
         ORDER BY mbo.gross DESC
         <include refid="offsetLimitSql"/>
