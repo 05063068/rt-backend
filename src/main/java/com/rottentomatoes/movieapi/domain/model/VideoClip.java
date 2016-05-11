@@ -8,13 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class VideoClip extends AbstractModel {
-    protected Integer duration;
+    
     protected String title;
+    protected String sourceId;
     protected String thumbUrl;
-    protected String format;
+    protected Integer duration;
+    protected String clipType;
     protected String source;
-    protected String url;
-    protected String language;
-    protected String status;
-    protected Integer favoriteCount;
 }

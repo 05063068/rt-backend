@@ -37,9 +37,9 @@ import lombok.Setter;
 @Setter
 public class Movie extends AbstractModel {
 
+	// Atomic attributes
     protected String title;
     protected Integer year;
-
     protected Integer boxOffice;
     protected MpaaRating mpaaRating;
     protected String studioName;
@@ -49,13 +49,18 @@ public class Movie extends AbstractModel {
     protected String vanity;
     protected String synopsis;
     protected Integer runningTime;
-    protected Integer mainTrailer;
     protected String officialUrl;
+    
+    // complex (nested) attributes
     protected Map<String, Object> tomatometer;
     protected Map<String, Object> releaseDates;
+    
+    // attribute level associations (not relationships)
     protected Image posterImage;
     protected Image heroImage;
+    protected VideoClip mainTrailer;
 
+    // relationships
     @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically

@@ -7,24 +7,31 @@
 
 <mapper namespace="com.rottentomatoes.movieapi.mappers.VideoClipMapper">
     <select id="selectVideoClipById" resultMap="videoClipResultMap">
-        SELECT * FROM video_clip WHERE id=#{id}
+        SELECT 
+            <include refid="videoClipColumns" />
+        FROM video_clip WHERE id=#{id}
     </select>
+    
+    <sql id="videoClipColumns">
+        video_clip.id AS videoclip_id,        
+        video_clip.title AS videoclip_title,
+        video_clip.url AS videoclip_url,
+        video_clip.thumb_url AS videoclip_thumburl,
+        video_clip.duration AS videoclip_duration,
+        video_clip.type AS videoclip_type,
+        video_clip.source AS videoclip_source
+    </sql>
+    
     
     <select id="selectVideoClipsForMovie" resultMap="videoClipResultMap" parameterType="map">
         SELECT
-            id,
-            url,
-            language,
-            source,
-            format,
-            title,
-            duration,
-            status,
-            fav_count as "favoriteCount",
-            thumb_url as "thumbUrl"
+           <include refid="videoClipColumns" />
         FROM video_clip 
         WHERE movie_id=#{movie_id}
-        ORDER BY fav_count DESC
+        AND status='A'
+        AND source='VDD'
+         
+        ORDER BY feature_sequence, last_update_date DESC
         <choose>
             <when test="limit != null and offset != null">
                 LIMIT #{offset},#{limit}
@@ -33,16 +40,26 @@
                 LIMIT #{limit}
             </when>
         </choose>
+         
     </select>
 
-    <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip" />
-
+    <resultMap id="videoClipResultMap" type="com.rottentomatoes.movieapi.domain.model.VideoClip">
+        <id property="id" column="videoclip_id" javaType="string"/>
+        <result property="title" column="videoclip_title" javaType="string" />
+        <result property="sourceId" column="videoclip_url" javaType="string" />
+        <result property="thumbUrl" column="videoclip_thumburl" javaType="string" />
+        <result property="duration" column="videoclip_duration" javaType="int"/>
+        <result property="clipType" column="videoclip_type" javaType="string" />
+        <result property="source" column="videoclip_source" javaType="string" />
+    </resultMap>
 
     <select id="selectVideoClipCountForMovie" resultMap="videoClipMetaDataResultMap" parameterType="map">
         SELECT
           count(*) AS totalCount
         FROM video_clip
         WHERE movie_id=#{movie_id}
+        AND status='A'
+        AND source='VDD'
     </select>
 
     <resultMap id="videoClipMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
