@@ -55,7 +55,6 @@ public class MovieToVideoClipRepository extends AbstractRepository implements Re
         MetaDataEnabledList<VideoClip> videoClipList;
         videoClipList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie", selectParams));
 
-        this.getClass();
         return videoClipList;
     }
 
