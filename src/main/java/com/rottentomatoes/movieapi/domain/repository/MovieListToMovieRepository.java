@@ -49,6 +49,25 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     }
     
     private static DayOfWeek[] weekendDays = {DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY };
+    
+    private void setBoxOfficeParams(Map<String, Object> selectParams) {
+        LocalDate now;
+        LocalDate start;
+        LocalDate end;
+
+        now = LocalDate.now();
+        start = now.with(previousOrSame(DayOfWeek.FRIDAY));
+        /*
+          Make adjustments to make the data searched match our feed
+          delivery schedule (Tues-Sun use previous Friday's boxoffice actuals,
+          Mon use boxoffice estimates)
+        */
+        if (Arrays.asList(weekendDays).contains(now.getDayOfWeek())) {
+            start = start.minusDays(7);
+        }
+        selectParams.put("startDate", start);
+        selectParams.put("estimated", (now.getDayOfWeek().equals(DayOfWeek.MONDAY))? 1 : 0);        
+    }
 
     @Override
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
@@ -64,20 +83,13 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         
         switch (listId) {
             case "top-box-office":
-                now = LocalDate.now();
-                start = now.with(previousOrSame(DayOfWeek.FRIDAY));
-                /*
-                  Make adjustments to make the data searched match our feed
-                  delivery schedule (Tues-Sun use previous Friday's boxoffice actuals,
-                  Mon use boxoffice estimates)
-                */
-                if (Arrays.asList(weekendDays).contains(now.getDayOfWeek())) {
-                    start = start.minusDays(7);
-                }
-                selectParams.put("startDate", start);
-                selectParams.put("estimated", (now.getDayOfWeek().equals(DayOfWeek.MONDAY))? 1 : 0);
+                setBoxOfficeParams(selectParams);
 
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
+                List<Movie> movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
+                if (movies.isEmpty()) {
+                    movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallback", selectParams);
+                }
+                return movies;
 
             case "upcoming":
                 now = LocalDate.now();
@@ -141,15 +153,12 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
         switch ((String) castedResourceId) {
             case "top-box-office":
-                now = LocalDate.now();
-                start = now.with(previousOrSame(DayOfWeek.FRIDAY));
+                setBoxOfficeParams(selectParams);
 
-                selectParams.put("startDate", start);
-
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectEstimatedTopBoxOfficeMoviesCount", selectParams);
-                /*
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesCount", selectParams);
-                */
+                if (metaData.totalCount == 0) {
+                    metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallbackCount", selectParams);                    
+                }
                 metaData.setRequestParams(requestParams);
                 break;
 
