@@ -60,9 +60,27 @@
         WHERE mbo.start_date >= #{startDate}
         AND mbo.country = #{country}
         AND mbo.gross > 0
-        AND mbo.estimate_ind = 0
+        AND mbo.estimate_ind = ${estimated}
     </select>
     <resultMap id="topBoxOfficeMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
+
+    <!-- Top Box Office Fallbacke-->
+    <select id="selectTopBoxOfficeMoviesFallback" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
+        SELECT
+        <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
+        INNER JOIN rating_summary mbo ON mbo.movie_id = movie.movie_id
+        WHERE movie.theater_release_date BETWEEN DATE_SUB(#{startDate}, INTERVAL 1 MONTH) AND #{startDate}
+        GROUP BY movie.movie_id
+        ORDER BY mbo.num_wts DESC
+        <include refid="offsetLimitSql"/>
+    </select>
+    
+    <select id="selectTopBoxOfficeMoviesFallbackCount" resultMap="topBoxOfficeMetaDataResultMap" parameterType="map">
+        SELECT
+            COUNT(*) AS totalCount FROM movie
+        INNER JOIN rating_summary mbo ON mbo.movie_id = movie.movie_id
+        WHERE movie.theater_release_date BETWEEN DATE_SUB(#{startDate}, INTERVAL 1 MONTH) AND #{startDate}
+    </select>
 
     <!-- Estimated Top Box Office -->
     <select id="selectEstimatedTopBoxOfficeMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
