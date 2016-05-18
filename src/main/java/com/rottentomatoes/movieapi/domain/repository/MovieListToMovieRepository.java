@@ -73,6 +73,8 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
+        MovieRepository.setMovieParams(selectParams, requestParams);
+        
         LocalDate now;
         LocalDate start;
         LocalDate end;

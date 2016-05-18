@@ -86,6 +86,40 @@
         movie_meta_data.running_time,
         movie_meta_data.official_url,
         movie_synopsis.synopsis,
+        CASE
+            WHEN #{country} = 'US'
+                THEN
+                    CASE 
+                        WHEN (movie.theater_release_date BETWEEN DATE_SUB(#{openingDate}, INTERVAL 7 DAY) AND #{openingDate}) THEN 'opening'
+                        WHEN (movie.theater_release_date BETWEEN now() AND #{upcomingDate}) THEN 'upcoming'
+                        WHEN (movie.theater_release_date BETWEEN #{inTheaterDate} AND now()) THEN 'in-theaters'
+                        ELSE 'NA'
+                    END
+                ELSE
+                    CASE 
+                        WHEN (intl_theater_release.release_date BETWEEN DATE_SUB(#{openingDate}, INTERVAL 7 DAY) AND #{openingDate}) THEN 'opening'
+                        WHEN (intl_theater_release.release_date BETWEEN now() AND #{upcomingDate}) THEN 'upcoming'
+                        WHEN (intl_theater_release.release_date BETWEEN #{inTheaterDate} AND now()) THEN 'in-theaters'
+                        ELSE 'NA'
+                    END
+        END AS opening_window,
+        CASE
+            WHEN #{country} = 'US'
+                THEN
+                    CASE 
+                        WHEN (movie.dvd_release_date BETWEEN #{newDvdDate} AND #{openingDate}) THEN 'new-on-dvd'
+                        WHEN (movie.dvd_release_date BETWEEN now() AND #{upcomingDvdDate}) THEN 'upcoming-dvd'
+                        WHEN (movie.dvd_release_date BETWEEN #{onDvdDate} AND now()) THEN 'on-dvd'
+                        ELSE 'NA'
+                    END
+                ELSE
+                    CASE 
+                        WHEN (intl_dvd_release.release_date BETWEEN #{newDvdDate} AND #{openingDate}) THEN 'new-on-dvd'
+                        WHEN (intl_dvd_release.release_date BETWEEN now() AND #{upcomingDvdDate}) THEN 'upcoming-dvd'
+                        WHEN (intl_dvd_release.release_date BETWEEN #{onDvdDate} AND now()) THEN 'on-dvd'
+                        ELSE 'NA'
+                    END
+        END AS dvd_window,
         <include refid="com.rottentomatoes.movieapi.mappers.VideoClipMapper.videoClipColumns" />
         
         FROM movie
@@ -96,6 +130,10 @@
         LEFT JOIN movie_img ON movie_img.id = movie.main_image
         LEFT JOIN multiuse_img_reference ON multiuse_img_reference.media_id = movie.movie_id
         LEFT JOIN video_clip ON movie.main_trailer = video_clip.id
+        LEFT JOIN movie_intl_release intl_theater_release ON movie.movie_id=intl_theater_release.movie_id 
+                AND intl_theater_release.type='THR' AND intl_theater_release.country=#{country}
+        LEFT JOIN movie_intl_release intl_dvd_release ON movie.movie_id=intl_dvd_release.movie_id 
+                AND intl_dvd_release.type='DVD' AND intl_dvd_release.country=#{country}
     </sql>
 
     <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
@@ -119,6 +157,8 @@
         <result property="synopsis" column="synopsis"/>
         <result property="runningTime" column="running_time"/>
         <result property="officialUrl" column="official_url"/>
+        <result property="openingWindow" column="opening_window" />
+        <result property="dvdWindow" column="dvd_window" />
 
         <result property="studioName" column="studioName"/>
         <association property="releaseDates" javaType="map">
