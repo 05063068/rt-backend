@@ -14,21 +14,21 @@
                 END
             ELSE 
                 CASE
-                    WHEN num_scores &lt; 5 THEN 'NA'
-                    WHEN num_dtl_liked / num_scores > 60 THEN 'upright'
+                    WHEN num_dtl_scores &lt; 5 THEN 'NA'
+                    WHEN ROUND(100 * num_dtl_liked / num_dtl_scores) >= 60 THEN 'upright'
                     ELSE 'spilled'
                 END
         END AS state,
            CASE
-            WHEN theater_release_date &lt; CURDATE() THEN
+            WHEN theater_release_date > CURDATE() THEN
                 CASE
                     WHEN num_wts + num_ni &lt; 5 THEN NULL
-                    ELSE ROUND(num_wts /(num_wts + num_ni) * 100)                
+                    ELSE ROUND(100 * num_wts /(num_wts + num_ni))                
                 END
             ELSE 
                 CASE
-                    WHEN num_scores &lt; 5 THEN NULL                    
-                    ELSE ROUND(num_dtl_liked/num_scores * 100)
+                    WHEN num_dtl_scores &lt; 5 THEN NULL                    
+                    ELSE ROUND(100 * num_dtl_liked/num_dtl_scores)
                 END
         END AS value,
         
