@@ -3,10 +3,6 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <!--   <logger name="org.springframework.web" level="DEBUG"/>
     <logger name="org.springframework.beans" level="ERROR"/>-->
-    <logger name="com.rottentomatoes.movieapi.mappers" level="ERROR" />
-    <logger name="org.mybatis" level="ERROR" />
-    <logger name="org.apache.ibatis" level="ERROR" />
-    <logger name="org.apache.tomcat.jdbc" level="ERROR" />
     <!-- <logger name="org.apache.tomcat.jdbc" level="DEBUG" /> -->
 
     <appender name="FILE-json" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -20,7 +16,7 @@
       <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
    </appender>
    
-   <root level="INFO">
+   <root level="ERROR">
       <appender-ref ref="FILE-json" />
    </root>
 
