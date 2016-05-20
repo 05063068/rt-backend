@@ -60,6 +60,7 @@
         WHERE movie_id=#{movie_id}
         AND status='A'
         AND source='VDD'
+        AND last_update_date > '2015-01-01'
     </select>
 
     <resultMap id="videoClipMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
