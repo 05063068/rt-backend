@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <!--   <logger name="org.springframework.web" level="DEBUG"/>
-    <logger name="org.springframework.beans" level="ERROR"/>-->
-    <!-- <logger name="org.apache.tomcat.jdbc" level="DEBUG" /> -->
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
+    
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+    
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+    <!-- <appender name="FILE"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.%i</fileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy
+            class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+    -->
+
 
     <appender name="FILE-json" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <File>logs/application-json.log</File>
@@ -16,8 +41,9 @@
       <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
    </appender>
    
-   <root level="ERROR">
+   <root level="WARN">
       <appender-ref ref="FILE-json" />
+      <appender-ref ref="CONSOLE" />
    </root>
 
 </configuration>
