@@ -19,13 +19,14 @@
     
     <!-- Opening Movies -->
     <select id="selectOpeningMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
-        SELECT
+        SELECT DISTINCT
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
+        INNER JOIN movie_box_office ON movie.movie_id = movie_box_office.movie_id
         INNER JOIN movie_intl_release mir ON mir.movie_id = movie.movie_id
         INNER JOIN rating_summary rs ON rs.movie_id = mir.movie_id
         WHERE mir.release_date BETWEEN #{startDate} AND #{endDate}
         AND mir.country = #{country}
-        GROUP BY movie.movie_id
+        AND mir.type = "THR"
         ORDER BY mir.limited_ind DESC, rs.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
@@ -36,6 +37,7 @@
         INNER JOIN movie_intl_release mir ON mir.movie_id = movie.movie_id
         WHERE mir.release_date BETWEEN #{startDate} AND #{endDate}
         AND mir.country = #{country}
+        AND mir.type = "THR"
     </select>
     <resultMap id="openingMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
 
