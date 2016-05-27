@@ -54,6 +54,7 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
         selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
+        selectParams.put("country", getCountry(requestParams).getCountryCode());
 
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
             reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectTopCriticReviewsForMovie", selectParams));
@@ -70,6 +71,7 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
         RelatedMetaDataInformation metaData;
 
         selectParams.put("movie_id", castedResourceId);
+        selectParams.put("country", getCountry(requestParams).getCountryCode());
 
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
             metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectTopCriticReviewCountForMovie", selectParams);

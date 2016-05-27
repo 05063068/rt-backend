@@ -57,8 +57,9 @@
         LEFT JOIN critic ON review.critic_id=critic.id 
         LEFT JOIN publication ON review.publication_id=publication.id
         LEFT JOIN critic_img ON critic_img.id = critic.image_id
-        LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US') 
+        LEFT JOIN critic_top ON review.critic_id=critic_top.critic_id
         WHERE review.movie_id = #{movie_id}
+        AND (publication.country=#{country} OR critic_top.country=#{country})
         AND review.status = 'A'
         ORDER BY is_top_critic DESC, review.creation_date DESC
 
@@ -127,6 +128,7 @@
         LEFT JOIN publication ON review.publication_id=publication.id
         LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US')
         WHERE review.movie_id = #{movie_id}
+        AND (publication.country=#{country} OR critic_top.country=#{country})
         AND review.status = 'A'
     </select>
 
@@ -138,6 +140,7 @@
         LEFT JOIN publication ON review.publication_id=publication.id
         INNER JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US')
         WHERE review.movie_id = #{movie_id}
+        AND (publication.country=#{country} OR critic_top.country=#{country})
         AND review.status = 'A'
     </select>
 

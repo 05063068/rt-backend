@@ -1,7 +1,9 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
+import java.util.Map;
 
+import com.rottentomatoes.movieapi.enums.Country;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,5 +40,9 @@ public class AbstractRepository implements Serializable {
         }
         return DEFAULT_OFFSET;
 
+    }
+
+    protected static Country getCountry(RequestParams requestParams) {
+        return Country.getCountryEnumFromString(requestParams.getFilters() != null ? (String) requestParams.getFilters().getOrDefault("country", "us"): "us");
     }
 }

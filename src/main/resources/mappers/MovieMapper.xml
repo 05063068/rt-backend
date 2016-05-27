@@ -12,7 +12,14 @@
         #{reviewLimit} reviewLimit,
         #{videoLimit} videoLimit,
         movie.movie_id,
-        movie.title,
+        <choose>
+            <when test="country != 'us'">
+                movie_intl_title.title,
+            </when>
+            <otherwise>
+                movie.title,
+            </otherwise>
+        </choose>
         movie.year,
         IF(movie.theater_release_date IS NULL, intl_theater_release.release_date, movie.theater_release_date) AS theater_release_date,
         movie.dvd_release_date,
@@ -87,7 +94,7 @@
         movie_meta_data.official_url,
         movie_synopsis.synopsis,
         CASE
-            WHEN #{country} = 'US'
+            WHEN #{country} = 'us'
                 THEN
                     CASE 
                         WHEN (movie.theater_release_date BETWEEN DATE_SUB(#{openingDate}, INTERVAL 7 DAY) AND #{openingDate}) THEN 'opening'
@@ -104,7 +111,7 @@
                     END
         END AS opening_window,
         CASE
-            WHEN #{country} = 'US'
+            WHEN #{country} = 'us'
                 THEN
                     CASE 
                         WHEN (movie.dvd_release_date BETWEEN #{newDvdDate} AND #{openingDate}) THEN 'new-on-dvd'
@@ -134,6 +141,11 @@
                 AND intl_theater_release.type='THR' AND intl_theater_release.country=#{country}
         LEFT JOIN movie_intl_release intl_dvd_release ON movie.movie_id=intl_dvd_release.movie_id 
                 AND intl_dvd_release.type='DVD' AND intl_dvd_release.country=#{country}
+        <if test="country != 'us'">
+            LEFT JOIN movie_intl_title ON movie.movie_id = movie_intl_title.movie_id
+            AND movie_intl_title.country = #{country}
+        </if>
+
     </sql>
 
     <select id="selectMovieById" resultMap="movieResultMap" parameterType="map">
