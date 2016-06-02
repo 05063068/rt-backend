@@ -16,7 +16,7 @@
         video_clip.id AS videoclip_id,        
         video_clip.title AS videoclip_title,
         video_clip.url AS videoclip_url,
-        IF(video_clip.thumb_url REGEXP '^http', video_clip.thumb_url, 'https://' + video_clip.thumb_url) AS videoclip_thumburl,
+        CONCAT("https:",REPLACE(LOWER(video_clip.thumb_url), "http:", "")) AS videoclip_thumburl,
         video_clip.duration AS videoclip_duration,
         video_clip.type AS videoclip_type,
         video_clip.source AS videoclip_source
