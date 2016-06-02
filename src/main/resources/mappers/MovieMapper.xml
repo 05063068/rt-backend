@@ -14,7 +14,7 @@
         movie.movie_id,
         movie.title,
         movie.year,
-        movie.theater_release_date,
+        IF(movie.theater_release_date IS NULL, intl_theater_release.release_date, movie.theater_release_date) AS theater_release_date,
         movie.dvd_release_date,
         movie.status,
         movie.tomatometer,
