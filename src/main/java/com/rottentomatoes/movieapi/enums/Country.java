@@ -15,6 +15,8 @@ public enum Country {
         this.countryCode = countryCode;
     }
 
+    // Only supporting 'first class' countries since these are all we
+    // have data for.
     public static Country getCountryEnumFromString(String country) {
         switch(country.toLowerCase()) {
             case "uk":
@@ -33,8 +35,8 @@ public enum Country {
                 return UNITED_STATES;
         }
     }
-
     public String getCountryCode() {
         return countryCode;
     }
+    public static Country getDefault() { return Country.UNITED_STATES; }
 }

@@ -43,6 +43,10 @@ public class AbstractRepository implements Serializable {
     }
 
     protected static Country getCountry(RequestParams requestParams) {
-        return Country.getCountryEnumFromString(requestParams.getFilters() != null ? (String) requestParams.getFilters().getOrDefault("country", "us"): "us");
+        if (requestParams.getFilters() != null) {
+            return Country.getCountryEnumFromString((String) requestParams.getFilters().get("country"));
+        } else {
+            return Country.getDefault();
+        }
     }
 }
