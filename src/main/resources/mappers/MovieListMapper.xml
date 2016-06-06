@@ -150,4 +150,25 @@
     </select>
     <resultMap id="topRentalMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
 
+    <!-- New DVD -->
+    <select id="selectNewDvd" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
+        SELECT
+        <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
+        INNER JOIN rating_summary rs ON rs.movie_id = movie.movie_id
+        WHERE movie.status = 1
+        AND dvd_release_date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY movie.movie_id
+        ORDER BY dvd_release_date DESC, rs.num_wts DESC
+        <include refid="offsetLimitSql"/>
+    </select>
+
+    <select id="selectNewDvdCount" resultMap="newDvdMetaDataResultMap" parameterType="map">
+        SELECT
+        COUNT(*) AS totalCount FROM movie
+        WHERE movie.status = 1
+        AND movie.dvd_release_date
+        BETWEEN #{startDate} AND #{endDate}
+    </select>
+    <resultMap id="newDvdMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
+
 </mapper>

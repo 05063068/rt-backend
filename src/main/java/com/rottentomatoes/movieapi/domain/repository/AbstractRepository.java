@@ -16,7 +16,7 @@ public class AbstractRepository implements Serializable {
 
     String LIMIT = "Limit";
     Integer DEFAULT_LIMIT = 10;
-    Integer DEFAULT_OFFSET = 0;
+    Integer DEFAULT_OFFSET = 1;
 
     protected Integer getLimit(String fieldName, RequestParams requestParams) {
         if (requestParams != null) {

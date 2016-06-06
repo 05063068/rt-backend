@@ -47,13 +47,12 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Movie findOneTarget(String id, String fieldName, RequestParams requestParams) {
         return null;
     }
-    
-    private static DayOfWeek[] weekendDays = {DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY };
-    
+
+    private static DayOfWeek[] weekendDays = {DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
+
     private void setBoxOfficeParams(Map<String, Object> selectParams) {
         LocalDate now;
         LocalDate start;
-        LocalDate end;
 
         now = LocalDate.now();
         start = now.with(previousOrSame(DayOfWeek.FRIDAY));
@@ -66,7 +65,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
             start = start.minusDays(7);
         }
         selectParams.put("startDate", start);
-        selectParams.put("estimated", (now.getDayOfWeek().equals(DayOfWeek.MONDAY))? 1 : 0);        
+        selectParams.put("estimated", (now.getDayOfWeek().equals(DayOfWeek.MONDAY)) ? 1 : 0);
     }
 
     @Override
@@ -74,7 +73,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         Map<String, Object> selectParams = new HashMap<>();
 
         MovieRepository.setMovieParams(selectParams, requestParams);
-        
+
         LocalDate now;
         LocalDate start;
         LocalDate end;
@@ -82,7 +81,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", "us");
-        
+
         switch (listId) {
             case "top-box-office":
                 setBoxOfficeParams(selectParams);
@@ -125,24 +124,19 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", selectParams);
 
             case "new-on-dvd":
-                // TODO: Need to implement this
                 now = LocalDate.now();
 
-                end = now.with(next(DayOfWeek.SUNDAY));
-                //Start is 10 weeks in the past.
-                start = now.minusWeeks(10);
-
+                start = now.minusMonths(2);
                 selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
+                selectParams.put("endDate", now);
 
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", selectParams);
-
+                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvd", selectParams);
 
             default:
                 throw new ResourceNotFoundException("Invalid list type");
         }
     }
-    
+
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         LocalDate now;
@@ -159,7 +153,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesCount", selectParams);
                 if (metaData.totalCount == 0) {
-                    metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallbackCount", selectParams);                    
+                    metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallbackCount", selectParams);
                 }
                 metaData.setRequestParams(requestParams);
                 break;
@@ -198,14 +192,19 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMoviesCount", selectParams);
                 metaData.setRequestParams(requestParams);
-                break;                
-                
+                break;
+
             case "new-on-dvd":
-            	metaData = new RootMetaDataInformation();
-            	
-            	metaData.setRequestParams(requestParams);                
+                now = LocalDate.now();
+
+                start = now.minusMonths(2);
+                selectParams.put("startDate", start);
+                selectParams.put("endDate", now);
+
+                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvdCount", selectParams);
+                metaData.setRequestParams(requestParams);
 
         }
-		return metaData;
+        return metaData;
     }
 }
