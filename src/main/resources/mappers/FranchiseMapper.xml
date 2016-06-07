@@ -4,7 +4,13 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.FranchiseMapper">
 
     <select id="selectFranchiseById" resultMap="franchiseResultMap" parameterType="map">
-        SELECT * FROM franchise WHERE franchise.id = #{id}
+         SELECT
+          franchise.id,
+          franchise.name AS franchise_name,
+          franchise.main_image AS franchise_main_image,
+          franchise.banner_image AS franchise_banner_image
+        FROM franchise
+        WHERE franchise.id = #{id}
     </select>
 
     <select id="selectFranchiseForMovie" resultMap="franchiseResultMap"  parameterType="map">

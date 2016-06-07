@@ -12,5 +12,10 @@ public class Franchise extends AbstractModel {
     protected String name;
     protected Integer mainImageId;
     protected Integer bannerImageId;
+    protected String vanityUrl;
+
+    public String getVanityUrl() {
+        return name.toLowerCase().replace(' ', '-');
+    }
 
 }
