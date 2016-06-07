@@ -21,15 +21,9 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.flixster.image.Environment;
-import com.flixster.image.IdGenerator;
-import com.flixster.image.ImageFormat;
-import com.flixster.image.ImageType;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 
 import io.katharsis.repository.MetaRepository;
@@ -96,14 +90,14 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
         LocalDate upcomingDvdDate = endOfWeek.plusYears(30);  // 30 is easier to spell than forever, and practically the same
         LocalDate newDvdDate = endOfWeek.minusDays(10*7 -1);
         LocalDate onDvdDate = endOfWeek.minusYears(30);
-        
+
         selectParams.put("upcomingDate", upcomingDate);
         selectParams.put("openingDate", openingDate);
         selectParams.put("inTheaterDate", inTheaterDate);
         selectParams.put("upcomingDvdDate", upcomingDvdDate);
         selectParams.put("newDvdDate", newDvdDate);
         selectParams.put("onDvdDate", onDvdDate);
-        selectParams.put("country", "US");  // TODO: get from requestParams
+        selectParams.put("country", getCountry(requestParams).getCountryCode());
     }
 
     @Override

@@ -80,8 +80,8 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
-        selectParams.put("country", "us");
-
+        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        
         switch (listId) {
             case "top-box-office":
                 setBoxOfficeParams(selectParams);
@@ -145,7 +145,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         RootMetaDataInformation metaData = null;
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("country", "us");
+        selectParams.put("country", getCountry(requestParams).getCountryCode());
 
         switch ((String) castedResourceId) {
             case "top-box-office":
