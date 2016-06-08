@@ -12,14 +12,7 @@
         #{reviewLimit} reviewLimit,
         #{videoLimit} videoLimit,
         movie.movie_id,
-        <choose>
-            <when test="country != 'us'">
-                movie_intl_title.title,
-            </when>
-            <otherwise>
-                movie.title,
-            </otherwise>
-        </choose>
+        IF(movie_intl_title.title IS NULL, movie.title, movie_intl_title.title) AS title,
         movie.year,
         IF(movie.theater_release_date IS NULL, intl_theater_release.release_date, movie.theater_release_date) AS theater_release_date,
         movie.dvd_release_date,
@@ -97,14 +90,14 @@
         CASE
             WHEN #{country} = 'us'
                 THEN
-                    CASE 
+                    CASE
                         WHEN (movie.theater_release_date BETWEEN DATE_SUB(#{openingDate}, INTERVAL 7 DAY) AND #{openingDate}) THEN 'opening'
                         WHEN (movie.theater_release_date BETWEEN now() AND #{upcomingDate}) THEN 'upcoming'
                         WHEN (movie.theater_release_date BETWEEN #{inTheaterDate} AND now()) THEN 'in-theaters'
                         ELSE 'NA'
                     END
                 ELSE
-                    CASE 
+                    CASE
                         WHEN (intl_theater_release.release_date BETWEEN DATE_SUB(#{openingDate}, INTERVAL 7 DAY) AND #{openingDate}) THEN 'opening'
                         WHEN (intl_theater_release.release_date BETWEEN now() AND #{upcomingDate}) THEN 'upcoming'
                         WHEN (intl_theater_release.release_date BETWEEN #{inTheaterDate} AND now()) THEN 'in-theaters'
@@ -129,7 +122,7 @@
                     END
         END AS dvd_window,
         <include refid="com.rottentomatoes.movieapi.mappers.VideoClipMapper.videoClipColumns" />
-        
+
         FROM movie
         LEFT JOIN movie_studio ON movie.studio_id=movie_studio.id
         LEFT JOIN movie_meta_data ON movie_meta_data.movie_id = movie.movie_id
@@ -138,17 +131,15 @@
         LEFT JOIN movie_img ON movie_img.id = movie.main_image
         LEFT JOIN multiuse_img_reference ON multiuse_img_reference.media_id = movie.movie_id
         LEFT JOIN video_clip ON movie.main_trailer = video_clip.id
-        LEFT JOIN movie_intl_release intl_theater_release ON movie.movie_id=intl_theater_release.movie_id 
+        LEFT JOIN movie_intl_release intl_theater_release ON movie.movie_id=intl_theater_release.movie_id
                 AND intl_theater_release.type='THR' AND intl_theater_release.country=#{country}
-        LEFT JOIN movie_intl_release intl_dvd_release ON movie.movie_id=intl_dvd_release.movie_id 
+        LEFT JOIN movie_intl_release intl_dvd_release ON movie.movie_id=intl_dvd_release.movie_id
                 AND intl_dvd_release.type='DVD' AND intl_dvd_release.country=#{country}
-        <if test="country != 'us'">
-            LEFT JOIN movie_intl_title ON movie.movie_id = movie_intl_title.movie_id
-            AND movie_intl_title.country = #{country}
-        </if>
         LEFT JOIN movie_box_office as moviembo ON movie.movie_id=moviembo.movie_id
             AND moviembo.estimate_ind = #{estimated}
             AND moviembo.start_date >= #{startDate}
+        LEFT JOIN movie_intl_title ON movie.movie_id = movie_intl_title.movie_id
+                AND movie_intl_title.country = #{country}
 
     </sql>
 
