@@ -25,7 +25,8 @@
         movie.dvd_release_date,
         movie.status,
         movie.tomatometer,
-        movie.box_office,
+        movie.box_office as cummulative_box_office,
+        moviembo.gross as box_office,
         movie.sequence,
         movie.feature_level,
         movie.mpaa_rating,
@@ -145,6 +146,9 @@
             LEFT JOIN movie_intl_title ON movie.movie_id = movie_intl_title.movie_id
             AND movie_intl_title.country = #{country}
         </if>
+        LEFT JOIN movie_box_office as moviembo ON movie.movie_id=moviembo.movie_id
+            AND moviembo.estimate_ind = #{estimated}
+            AND moviembo.start_date >= #{startDate}
 
     </sql>
 
@@ -160,6 +164,7 @@
         <result property="title" column="title"/>
         <result property="year" column="year"/>
         <result property="boxOffice" column="box_office"/>
+        <result property="cummulativeBoxOffice" column="cummulative_box_office"/>
         <result property="mpaaRating" column="mpaa_rating" javaType="com.rottentomatoes.movieapi.enums.MpaaRating"
                 typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
