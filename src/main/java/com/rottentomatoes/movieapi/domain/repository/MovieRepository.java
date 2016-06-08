@@ -98,6 +98,8 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
         selectParams.put("newDvdDate", newDvdDate);
         selectParams.put("onDvdDate", onDvdDate);
         selectParams.put("country", getCountry(requestParams).getCountryCode());
+        SqlParameterUtils.setBoxOfficeParams(selectParams);
+
     }
 
     @Override

@@ -41,6 +41,7 @@ public class Movie extends AbstractModel {
     protected String title;
     protected Integer year;
     protected Integer boxOffice;
+    protected Integer cummulativeBoxOffice;
     protected MpaaRating mpaaRating;
     protected String studioName;
     protected ZonedDateTime creationDate;
