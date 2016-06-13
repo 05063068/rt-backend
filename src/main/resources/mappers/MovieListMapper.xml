@@ -19,7 +19,7 @@
     
     <!-- Opening Movies -->
     <select id="selectOpeningMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
-        SELECT DISTINCT
+        SELECT
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN movie_box_office ON movie.movie_id = movie_box_office.movie_id
         INNER JOIN movie_intl_release mir ON mir.movie_id = movie.movie_id
@@ -27,6 +27,7 @@
         WHERE mir.release_date BETWEEN #{startDate} AND #{endDate}
         AND mir.country = #{country}
         AND mir.type = "THR"
+        GROUP BY movie.movie_id
         ORDER BY mir.limited_ind DESC, rs.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
