@@ -25,7 +25,6 @@ public class SqlParameterUtils {
             start = start.minusDays(7);
         }
         selectParams.put("startDate", start);
-        selectParams.put("estimated", (now.getDayOfWeek().equals(DayOfWeek.MONDAY)) ? 1 : 0);
     }
 
 
