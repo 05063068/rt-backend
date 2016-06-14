@@ -2,6 +2,7 @@ package com.rottentomatoes.movieapi;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -20,7 +21,10 @@ public class CatalogApiApplication extends SpringBootServletInitializer {
     @Bean
     @ConfigurationProperties(prefix = "datasource.primary")
     public DataSource dataSource() {
-        return DataSourceBuilder.create().type(org.apache.commons.dbcp2.BasicDataSource.class).build();
+        BasicDataSource dataSource = (BasicDataSource) DataSourceBuilder.create().type(org.apache.commons.dbcp2.BasicDataSource.class).build();
+        dataSource.setInitialSize(2);
+        dataSource.setJmxName("shareddb");
+        return dataSource;
     }
 
     @Bean
