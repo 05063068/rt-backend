@@ -10,7 +10,7 @@
     <select id="selectGenresForMovie" resultMap="genreResultMap"  parameterType="map">
           SELECT genre.*
           FROM movie_genre
-          LEFT JOIN genre ON movie_genre.genre_id = genre.id
+          INNER JOIN genre ON movie_genre.genre_id = genre.id
           WHERE movie_genre.movie_id = #{movie_id}
         <if test="limit != null">LIMIT #{limit}</if>
     </select>
