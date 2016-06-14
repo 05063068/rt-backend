@@ -21,9 +21,8 @@
         movie.box_office as cummulative_box_office,
         (SELECT moviembo.gross FROM movie_box_office moviembo
                 WHERE movie.movie_id=moviembo.movie_id
-                AND moviembo.estimate_ind = #{estimated}
-                AND moviembo.start_date >= #{startDate}
-                ORDER BY start_date DESC
+                AND moviembo.start_date >= #{startDate} AND moviembo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
+                ORDER BY moviembo.estimate_ind, start_date DESC
                 LIMIT 1
         ) as box_office,
         movie.sequence,
