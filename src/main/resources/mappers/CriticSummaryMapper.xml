@@ -4,8 +4,18 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.CriticSummaryMapper">
     <select id="selectCriticSummaryForMovie" resultMap="criticSummaryResultMap">
         SELECT 
-        t.*,
-
+        t.id,
+        t.movie_id, 
+        t.fresh_count + t.rotten_count as num_reviews,
+        t.avg_score,
+        t.consensus,
+        t.last_update_date,
+        t.certified_fresh,
+        t.pending_certified,
+        t.fresh_count,
+        t.rotten_count,
+        t.dvd_count,
+        t.fresh_count + t.rotten_count as all_critics,
         CONVERT(tc.top_fresh_count/tc.top_critics*100, UNSIGNED) AS top_country_tomatometer_value, /* TODO: Precalculate */
         CASE
             WHEN tc.top_critics &lt; 5 OR tc.top_critics IS NULL THEN 'NA'
