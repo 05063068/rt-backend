@@ -23,7 +23,7 @@ public class CatalogApiApplication extends SpringBootServletInitializer {
     public DataSource dataSource() {
         BasicDataSource dataSource = (BasicDataSource) DataSourceBuilder.create().type(org.apache.commons.dbcp2.BasicDataSource.class).build();
         dataSource.setInitialSize(2);
-        dataSource.setJmxName("shareddb");
+        dataSource.setDefaultReadOnly(true);
         return dataSource;
     }
 
