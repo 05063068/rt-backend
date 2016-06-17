@@ -74,9 +74,10 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
             case "upcoming":
                 now = LocalDate.now();
-                end = now.plusMonths(3);
+                start = now.with(next(DayOfWeek.MONDAY));
+                end = start.plusMonths(3);
 
-                selectParams.put("startDate", now);
+                selectParams.put("startDate", start);
                 selectParams.put("endDate", end);
 
                 return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMovies", selectParams);
