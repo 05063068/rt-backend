@@ -46,7 +46,7 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
     }
 
     @Override
-    public void delete(String aLong) {
+    public void delete(String Long) {
     }
 
     /**

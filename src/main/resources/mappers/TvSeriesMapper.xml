@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.TvSeriesMapper">
+
+    <sql id="tvSeriesSelectSql">
+        tv_series.id,
+        tv_series.title,
+        tv_series.description
+        FROM tv_series
+    </sql>
+
+    <select id="selectTvSeriesById" resultMap="tvSeriesResultMap" parameterType="map">
+        SELECT
+        <include refid="tvSeriesSelectSql"/>
+        WHERE tv_series.id = #{id}
+    </select>
+
+    <resultMap id="tvSeriesResultMap" type="com.rottentomatoes.movieapi.domain.model.TvSeries">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+</mapper>
