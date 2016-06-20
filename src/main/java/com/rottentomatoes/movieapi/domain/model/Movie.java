@@ -53,6 +53,7 @@ public class Movie extends AbstractModel {
     protected String officialUrl;
     protected String openingWindow;
     protected String dvdWindow;
+    protected String releaseScope;
     
     // complex (nested) attributes
     protected Map<String, Object> tomatometer;

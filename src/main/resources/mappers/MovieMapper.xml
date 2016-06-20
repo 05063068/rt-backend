@@ -126,6 +126,7 @@
                         ELSE 'NA'
                     END
         END AS dvd_window,
+        IF(intl_theater_release.limited_ind=1,"limited", "wide") as release_scope,
         <include refid="com.rottentomatoes.movieapi.mappers.VideoClipMapper.videoClipColumns" />
 
         FROM movie
@@ -168,6 +169,7 @@
         <result property="officialUrl" column="official_url"/>
         <result property="openingWindow" column="opening_window" />
         <result property="dvdWindow" column="dvd_window" />
+        <result property="releaseScope" column="release_scope" />
 
         <result property="studioName" column="studioName"/>
         <association property="releaseDates" javaType="map">
