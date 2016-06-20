@@ -23,5 +23,5 @@ public class TvSeason extends AbstractModel {
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    private Iterable<TvEpisode> tvEpisodes;
+    private Iterable<TvEpisode> tvEpisode;
 }
