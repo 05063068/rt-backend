@@ -134,10 +134,9 @@
         SELECT
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN rating_summary s ON s.movie_id = movie.movie_id
-        AND movie.status = 1
+        WHERE movie.status = 1
         AND movie.dvd_release_date
         BETWEEN #{startDate} AND #{endDate}
-        GROUP BY movie.movie_id
         ORDER BY movie.dvd_release_date DESC, s.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>

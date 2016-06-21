@@ -97,7 +97,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
                 end = now.with(next(DayOfWeek.SUNDAY));
                 //Start is 10 weeks in the past.
-                start = now.minusWeeks(10);
+                start = now.minusWeeks(2);
 
                 selectParams.put("startDate", start);
                 selectParams.put("endDate", end);
