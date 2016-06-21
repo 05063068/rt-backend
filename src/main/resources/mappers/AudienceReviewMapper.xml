@@ -8,7 +8,7 @@
         CONCAT(rating_digest.first_name,' ',rating_digest.last_name) AS user_name,
         rating_digest.thumbnail_url,
         rating_digest.elite_ind = 1 AS super_reviewer,
-        rating_digest.score,
+        IF(rating_digest.score > 5, (rating_digest.score - 6) * 2 + 1 , rating_digest.score * 2) as score,
         rating_digest.comment,
         rating_digest.rating_date
 	</sql>
