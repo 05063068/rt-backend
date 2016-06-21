@@ -60,7 +60,7 @@
         LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
         LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
         WHERE review.movie_id = #{movie_id}
-        AND review.status = 'A'
+        AND review.status = 'A' AND (critic.approved_ind=1 Or publication.approved_ind=1)
         ORDER BY is_top_critic DESC, review.creation_date DESC
 
         <choose>
