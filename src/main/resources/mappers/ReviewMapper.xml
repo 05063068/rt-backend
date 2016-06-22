@@ -3,9 +3,6 @@
 <!-- 
   Notes: Reviews sorted by top status first and then by descending creation date
          A 'top review's is one made by a top critic (one appearing in the critic_top table)
-         
-  TODO: Account for top publications too?
-
  -->
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
@@ -51,18 +48,48 @@
         WHERE review.id = #{id}
     </select>
 
+    <sql id="commonSubselectJoins">
+        LEFT JOIN critic ON review.critic_id=critic.id
+        LEFT JOIN publication ON review.publication_id=publication.id
+        LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
+        LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
+    </sql>
+
+    <!-- Note
+        - top 6 reviews are from top critics (sortkey=1), order by descending creation date
+        - next 6 are from non-top critics (sortkey=0), order by descending creation date
+        - rest are mixed (sortkey=null), no dupes from first 12 are allowed, order by descending creation date
+    -->
     <select id="selectAllReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
         SELECT <include refid="selectColumns" />
         FROM review
-        LEFT JOIN critic ON review.critic_id=critic.id
-        LEFT JOIN publication ON review.publication_id=publication.id
+        <include refid="commonSubselectJoins" />
         LEFT JOIN critic_img ON critic_img.id = critic.image_id
-        LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
-        LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
-        WHERE review.movie_id = #{movie_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 Or publication.approved_ind=1)
-        ORDER BY is_top_critic DESC, review.creation_date DESC
+        LEFT JOIN (
+            (
+                SELECT review.id, 1 AS sort_key FROM review
+                <include refid="commonSubselectJoins" />
+                WHERE review.movie_id = #{movie_id}
+                AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+                AND (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL)
+                ORDER BY review.creation_date DESC
+                LIMIT 6
+            )
+            UNION
+            (
+                SELECT review.id, 0 AS sort_key FROM review
+                <include refid="commonSubselectJoins" />
+                WHERE review.movie_id = #{movie_id}
+                AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+                AND NOT (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL)
+                ORDER BY review.creation_date DESC
+                LIMIT 6
+            )
+        ) featured ON review.id=featured.id
 
+        WHERE review.movie_id = #{movie_id}
+        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        ORDER BY featured.sort_key DESC, review.creation_date DESC
         <choose>
             <when test="limit != null and offset != null">
                 LIMIT #{offset},#{limit}
@@ -78,10 +105,12 @@
         FROM review
         LEFT JOIN critic ON review.critic_id=critic.id
         LEFT JOIN publication ON review.publication_id=publication.id
+        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
         LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
         WHERE review.movie_id = #{movie_id}
-        AND review.status = 'A'
+        AND review.status = 'A' AND (critic.approved_ind=1 Or publication.approved_ind=1)
+        AND is_top_critic = 1
         ORDER BY review.creation_date DESC
 
         <choose>
