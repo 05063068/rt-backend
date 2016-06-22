@@ -32,7 +32,6 @@ public class SqlParameterUtils {
         LocalDate now = LocalDate.now();
         LocalDate start = now.with(next(DayOfWeek.MONDAY));
         LocalDate end = start.plusMonths(3);
-
         selectParams.put("startDate", start);
         selectParams.put("endDate", end);
 
@@ -43,7 +42,6 @@ public class SqlParameterUtils {
         LocalDate now = LocalDate.now();
         LocalDate start = now.with(previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = now.with(nextOrSame(DayOfWeek.SUNDAY));
-
         selectParams.put("startDate", start);
         selectParams.put("endDate", end);
 
@@ -52,10 +50,8 @@ public class SqlParameterUtils {
 
     static Map<String, Object> setTopRentalsParams(Map<String, Object> selectParams) {
         LocalDate now = LocalDate.now();
-        LocalDate end = now.with(next(DayOfWeek.SUNDAY));
-        //Start is 10 weeks in the past.
-        LocalDate start = now.minusWeeks(2);
-
+        LocalDate end = now.with(previousOrSame(DayOfWeek.SUNDAY));
+        LocalDate start = now.minusMonths(2);
         selectParams.put("startDate", start);
         selectParams.put("endDate", end);
 
@@ -64,12 +60,11 @@ public class SqlParameterUtils {
 
     static Map<String, Object> setNewOnDvdParams(Map<String, Object> selectParams) {
         LocalDate now = LocalDate.now();
-        LocalDate start = now.minusMonths(2);
+        LocalDate start =  now.with(previousOrSame(DayOfWeek.MONDAY));
+        LocalDate end = now.with(next(DayOfWeek.SUNDAY));
         selectParams.put("startDate", start);
-        selectParams.put("endDate", now);
+        selectParams.put("endDate", end);
 
         return selectParams;
     }
-
-
 }
