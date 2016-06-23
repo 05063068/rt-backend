@@ -25,6 +25,7 @@
         LEFT JOIN movie_intl_release mir ON mir.movie_id = movie.movie_id AND mir.country = #{country}
         INNER JOIN rating_summary rs ON rs.movie_id = mir.movie_id
         WHERE mir.release_date BETWEEN #{startDate} AND #{endDate}
+        AND movie.status = 1
         AND mir.type = "THR"
         ORDER BY mir.limited_ind ASC, rs.num_wts DESC
         <include refid="offsetLimitSql"/>
@@ -37,6 +38,7 @@
         LEFT JOIN movie_intl_release mir ON mir.movie_id = movie.movie_id AND mir.country = #{country}
         INNER JOIN rating_summary rs ON rs.movie_id = mir.movie_id
         WHERE mir.release_date BETWEEN #{startDate} AND #{endDate}
+        AND movie.status = 1
         AND mir.type = "THR"
     </select>
     <resultMap id="openingMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
@@ -50,6 +52,7 @@
         WHERE mbo.start_date >= #{startDate} AND mbo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
         AND mbo.country = #{country}
         AND mbo.gross > 0
+        AND movie.status = 1
         GROUP BY movie.movie_id
         <!-- We order by box_office which is the box office value reported to the user, not the product of the above clauses -->
         ORDER BY box_office DESC
@@ -63,6 +66,7 @@
         WHERE mbo.start_date >= #{startDate} AND mbo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
         AND mbo.country = #{country}
         AND mbo.gross > 0
+        AND movie.status = 1
     </select>
     <resultMap id="topBoxOfficeMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
 
@@ -72,6 +76,7 @@
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN rating_summary mbo ON mbo.movie_id = movie.movie_id
         WHERE movie.theater_release_date BETWEEN DATE_SUB(#{startDate}, INTERVAL 1 MONTH) AND #{startDate}
+        AND movie.status = 1
         GROUP BY movie.movie_id
         ORDER BY mbo.num_wts DESC
         <include refid="offsetLimitSql"/>
@@ -82,6 +87,7 @@
             COUNT(*) AS totalCount FROM movie
         INNER JOIN rating_summary mbo ON mbo.movie_id = movie.movie_id
         WHERE movie.theater_release_date BETWEEN DATE_SUB(#{startDate}, INTERVAL 1 MONTH) AND #{startDate}
+        AND movie.status = 1
     </select>
 
     <!-- Estimated Top Box Office -->
@@ -94,6 +100,7 @@
         WHERE sh.deleted_ind=0
         AND sh.show_date=#{startDate}
         AND t.country= #{country}
+        AND movie.status = 1
         GROUP BY ms.movie_id ORDER BY SUM(LENGTH(sh.times)) DESC
         <include refid="offsetLimitSql"/>
     </select>
@@ -107,6 +114,7 @@
         WHERE sh.deleted_ind=0
         AND sh.show_date=#{startDate}
         AND t.country= #{country}
+        AND movie.status = 1
     </select>
     <resultMap id="estimatedTopBoxOfficeMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
 
@@ -118,6 +126,7 @@
         LEFT JOIN movie_intl_release mir ON mir.movie_id = movie.movie_id AND mir.country = #{country} AND mir.type = 'THR'
         WHERE movie.theater_release_date BETWEEN #{startDate} AND #{endDate}
         AND s.num_wts > 1
+        AND movie.status = 1
         ORDER BY movie.theater_release_date ASC, s.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
@@ -129,6 +138,7 @@
         LEFT JOIN movie_intl_release mir ON mir.movie_id = movie.movie_id AND mir.country = #{country} AND mir.type = 'THR'
         WHERE movie.theater_release_date BETWEEN #{startDate} AND #{endDate}
         AND s.num_wts > 1
+        AND movie.status = 1
     </select>
     <resultMap id="upcomingMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
 
