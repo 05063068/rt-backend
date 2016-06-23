@@ -1,13 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
-import static java.time.temporal.TemporalAdjusters.next;
-import static java.time.temporal.TemporalAdjusters.nextOrSame;
-import static java.time.temporal.TemporalAdjusters.previousOrSame;
-
 import java.io.Serializable;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,21 +44,15 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     @Override
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-
         MovieRepository.setMovieParams(selectParams, requestParams);
-
-        LocalDate now;
-        LocalDate start;
-        LocalDate end;
 
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
-        
+
         switch (listId) {
             case "top-box-office":
-                SqlParameterUtils.setBoxOfficeParams(selectParams);
-
+                selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
                 List<Movie> movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
                 if (movies.isEmpty()) {
                     movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallback", selectParams);
@@ -73,45 +60,16 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 return movies;
 
             case "upcoming":
-                now = LocalDate.now();
-                start = now.with(next(DayOfWeek.MONDAY));
-                end = start.plusMonths(3);
-
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
-
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMovies", selectParams);
+                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMovies", SqlParameterUtils.setUpcomingParams(selectParams));
 
             case "opening":
-                now = LocalDate.now();
-                start = now.with(previousOrSame(DayOfWeek.MONDAY));
-                end = now.with(nextOrSame(DayOfWeek.SUNDAY));
-
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
-
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMovies", selectParams);
+                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMovies", SqlParameterUtils.setOpeningParams(selectParams));
 
             case "top-rentals":
-                now = LocalDate.now();
-
-                end = now.with(next(DayOfWeek.SUNDAY));
-                //Start is 10 weeks in the past.
-                start = now.minusWeeks(10);
-
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
-
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", selectParams);
+                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", SqlParameterUtils.setTopRentalsParams(selectParams));
 
             case "new-on-dvd":
-                now = LocalDate.now();
-
-                start = now.minusMonths(2);
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", now);
-
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvd", selectParams);
+                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvd", SqlParameterUtils.setNewOnDvdParams(selectParams));
 
             default:
                 throw new ResourceNotFoundException("Invalid list type");
@@ -120,18 +78,14 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
-        LocalDate now;
-        LocalDate start;
-        LocalDate end;
         RootMetaDataInformation metaData = null;
-
         Map<String, Object> selectParams = new HashMap<>();
+
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
         switch ((String) castedResourceId) {
             case "top-box-office":
-                SqlParameterUtils.setBoxOfficeParams(selectParams);
-
+                selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesCount", selectParams);
                 if (metaData.totalCount == 0) {
                     metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallbackCount", selectParams);
@@ -140,49 +94,22 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 break;
 
             case "upcoming":
-                now = LocalDate.now();
-                end = now.plusMonths(3);
-
-                selectParams.put("startDate", now);
-                selectParams.put("endDate", end);
-
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMoviesCount", selectParams);
+                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMoviesCount", SqlParameterUtils.setUpcomingParams(selectParams));
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "opening":
-                now = LocalDate.now();
-                start = now.with(previousOrSame(DayOfWeek.MONDAY));
-                end = now.with(nextOrSame(DayOfWeek.SUNDAY));
-
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
-
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMoviesCount", selectParams);
+                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMoviesCount", SqlParameterUtils.setOpeningParams(selectParams));
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "top-rentals":
-                now = LocalDate.now();
-                end = now.with(next(DayOfWeek.SUNDAY));
-                //Start is 10 weeks in the past.
-                start = now.minusWeeks(10);
-
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", end);
-
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMoviesCount", selectParams);
+                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMoviesCount", SqlParameterUtils.setTopRentalsParams(selectParams));
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "new-on-dvd":
-                now = LocalDate.now();
-
-                start = now.minusMonths(2);
-                selectParams.put("startDate", start);
-                selectParams.put("endDate", now);
-
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvdCount", selectParams);
+                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvdCount", SqlParameterUtils.setNewOnDvdParams(selectParams));
                 metaData.setRequestParams(requestParams);
 
         }
