@@ -21,8 +21,9 @@
         movie.box_office as cummulative_box_office,
         (SELECT moviembo.gross FROM movie_box_office moviembo
                 WHERE movie.movie_id=moviembo.movie_id
-                AND moviembo.start_date >= #{startDate} AND moviembo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
-                ORDER BY moviembo.estimate_ind, start_date DESC
+                AND moviembo.start_date >= #{boxOfficeStartDate} AND moviembo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
+                AND estimate_ind = 0
+                ORDER BY theaters DESC
                 LIMIT 1
         ) as box_office,
         movie.sequence,
@@ -36,43 +37,43 @@
         movie.studio_id,
         movie.auto_update_ind,
         movie.trailer_update_ind,
-        
+
         movie_img.id AS movie_img_id,
         movie_img.format AS movie_img_format,
         movie_img.img_width AS movie_img_width,
         movie_img.img_height AS movie_img_height,
         'm' AS movie_img_type,
-        
+
         'n' AS hero_img_type,
-        (SELECT i.id 
-            FROM multiuse_img_reference r 
-            JOIN multiuse_img i on i.id=r.multiuse_image_id 
-            WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2') 
-                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1) 
+        (SELECT i.id
+            FROM multiuse_img_reference r
+            JOIN multiuse_img i on i.id=r.multiuse_image_id
+            WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2')
+                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1)
             ORDER BY r.hero_img_ind DESC, i.img_width/i.img_height DESC limit 1
         )  AS hero_img_id,
-        (SELECT i.format 
-            FROM multiuse_img_reference r 
-            JOIN multiuse_img i on i.id=r.multiuse_image_id 
-            WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2') 
-                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1) 
+        (SELECT i.format
+            FROM multiuse_img_reference r
+            JOIN multiuse_img i on i.id=r.multiuse_image_id
+            WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2')
+                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1)
             ORDER BY r.hero_img_ind DESC, i.img_width/i.img_height DESC limit 1
         )  AS hero_img_format,
-        (SELECT i.img_width 
-            FROM multiuse_img_reference r 
-            JOIN multiuse_img i on i.id=r.multiuse_image_id 
-            WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2') 
-                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1) 
+        (SELECT i.img_width
+            FROM multiuse_img_reference r
+            JOIN multiuse_img i on i.id=r.multiuse_image_id
+            WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2')
+                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1)
             ORDER BY r.hero_img_ind DESC, i.img_width/i.img_height DESC limit 1
         )  AS hero_img_width,
-        (SELECT i.img_height 
-            FROM multiuse_img_reference r 
-            JOIN multiuse_img i on i.id=r.multiuse_image_id 
-            WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2') 
-                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1) 
+        (SELECT i.img_height
+            FROM multiuse_img_reference r
+            JOIN multiuse_img i on i.id=r.multiuse_image_id
+            WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2')
+                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1)
             ORDER BY r.hero_img_ind DESC, i.img_width/i.img_height DESC limit 1
         )  AS hero_img_height,
-        
+
         movie_studio.name AS studioName,
         IF( tomatometer_info.all_critics &lt; 5, null, tomatometer) AS value, /* Enforce tomatometer=null if NA - this should be taken care of by job */
         CASE
@@ -88,7 +89,7 @@
             AND primary_ind = 1
             AND platform = 'RTO'
             ORDER BY url ASC LIMIT 1
-        ) AS vanity_token, 
+        ) AS vanity_token,
         movie_meta_data.running_time,
         movie_meta_data.official_url,
         movie_synopsis.synopsis,
@@ -112,14 +113,14 @@
         CASE
             WHEN #{country} = 'us'
                 THEN
-                    CASE 
+                    CASE
                         WHEN (movie.dvd_release_date BETWEEN #{newDvdDate} AND #{openingDate}) THEN 'new-on-dvd'
                         WHEN (movie.dvd_release_date BETWEEN now() AND #{upcomingDvdDate}) THEN 'upcoming-dvd'
                         WHEN (movie.dvd_release_date BETWEEN #{onDvdDate} AND now()) THEN 'on-dvd'
                         ELSE 'NA'
                     END
                 ELSE
-                    CASE 
+                    CASE
                         WHEN (intl_dvd_release.release_date BETWEEN #{newDvdDate} AND #{openingDate}) THEN 'new-on-dvd'
                         WHEN (intl_dvd_release.release_date BETWEEN now() AND #{upcomingDvdDate}) THEN 'upcoming-dvd'
                         WHEN (intl_dvd_release.release_date BETWEEN #{onDvdDate} AND now()) THEN 'on-dvd'
@@ -184,7 +185,7 @@
         <association property="mainTrailer" resultMap="com.rottentomatoes.movieapi.mappers.VideoClipMapper.videoClipResultMap" />
 
         <association property="posterImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="movie_" notNullColumn="img_id"/>
-        
+
         <association property="heroImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="hero_" notNullColumn="img_id"/>
 
     </resultMap>

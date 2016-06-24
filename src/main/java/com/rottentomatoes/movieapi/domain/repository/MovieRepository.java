@@ -16,6 +16,7 @@
  */
 package com.rottentomatoes.movieapi.domain.repository;
 
+import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getMostRecentFriday;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
 import java.io.Serializable;
@@ -90,8 +91,10 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
         LocalDate upcomingDvdDate = endOfWeek.plusYears(30);  // 30 is easier to spell than forever, and practically the same
         LocalDate newDvdDate = endOfWeek.minusDays(10*7 -1);
         LocalDate onDvdDate = endOfWeek.minusYears(30);
+        LocalDate boxOfficeStartDate =  getMostRecentFriday();
 
         selectParams.put("upcomingDate", upcomingDate);
+        selectParams.put("boxOfficeStartDate", boxOfficeStartDate);
         selectParams.put("openingDate", openingDate);
         selectParams.put("inTheaterDate", inTheaterDate);
         selectParams.put("upcomingDvdDate", upcomingDvdDate);

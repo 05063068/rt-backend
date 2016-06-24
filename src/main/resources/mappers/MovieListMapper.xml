@@ -46,16 +46,16 @@
     <!-- Top Box Office -->
     <select id="selectTopBoxOfficeMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
         SELECT
+        MAX(mbo.theaters),
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         <!-- The join and where limit the scope of the query -->
         INNER JOIN movie_box_office mbo ON mbo.movie_id = movie.movie_id
-        WHERE mbo.start_date >= #{startDate} AND mbo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
-        AND mbo.country = #{country}
-        AND mbo.gross > 0
+        WHERE mbo.start_date BETWEEN #{startDate} AND #{endDate}
+        AND mbo.country = #{country}  AND mbo.gross > 0  AND mbo.estimate_ind = 0
         AND movie.status = 1
         GROUP BY movie.movie_id
         <!-- We order by box_office which is the box office value reported to the user, not the product of the above clauses -->
-        ORDER BY box_office DESC
+        ORDER BY mbo.gross DESC
         <include refid="offsetLimitSql"/>
     </select>
     
