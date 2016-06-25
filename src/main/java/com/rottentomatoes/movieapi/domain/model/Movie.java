@@ -75,10 +75,10 @@ public class Movie extends AbstractModel {
     @JsonApiLookupIncludeAutomatically
     protected Franchise franchise;
 
-    @JsonApiToOne
+    @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected Affiliates affiliates;
+    protected Iterable<Affiliate> affiliates;
 
     @JsonApiToOne
     @JsonApiLazy

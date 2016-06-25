@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.AffiliateMapper">
+
+    <!--  will need to set movie_id for this to work -->
+    <select id="selectAffiliateById" resultMap="affiliateResultMap" parameterType="map">
+      SELECT * FROM
+        (<include refid="uglyUnionSelectForAffiliteInfo" />) s
+      WHERE id = #{id}
+    </select>
+    
+    <sql id="uglyUnionSelectForAffiliteInfo">
+      SELECT
+          #{movie_id} * 100 + 1 as id,
+          IF(a.prime_ind=1,
+               CONCAT('http://www.amazon.com/gp/video/primesignup?t=0m0s&amp;redirectToAsin=', s.code, '?rottetomao_piv_mv-20'),
+               CONCAT(a.url, '?tag=rottetomao_aiv_mv-20')
+           ) as url,
+          "Amazon" as affiliate_name,
+          IF(a.prime_ind=1, 'prime', '') as special_status,
+          a.prime_ind,
+          a.creation_date
+      FROM movie_source s, amz_vid a
+      WHERE a.movie_source_id = s.id
+      AND s.movie_id=#{movie_id}
+      AND deleted_ind = 0
+      UNION SELECT
+          #{movie_id} * 100 + 2 as id,
+          CONCAT("https://www.fandangonow.com/details/", a.source_id) as url,
+          "FandangoNow" as affiliate_name,
+          "" as special_status,
+          1 as prime_ind,
+          a.creation_date
+      FROM affiliate_availability a
+      WHERE
+          a.movie_id = #{movie_id}
+          AND a.source = 'FDN'
+          AND (a.first_availability &lt; now() OR a.first_availability IS NULL)
+          AND (a.last_availability > now() OR a.last_availability IS NULL)
+      UNION SELECT
+          #{movie_id} * 100 + 3 as id,
+          u.url,
+          "Itunes" as affiliate_name,
+          "" as special_status,
+          1 as prime_ind,
+          a.last_update_date as creation_date
+        FROM itunes_price a
+        JOIN movie_source s ON a.source_id=s.id
+        JOIN itunes_url u ON s.id=u.source_id
+        WHERE s.movie_id=#{movie_id}
+        AND (a.type='ITR' OR a.type='ITB') AND a.currency='USD'
+        AND a.country='us' AND a.deleted_ind=0
+      UNION SELECT
+          #{movie_id} * 100 + 4 as id,
+          REPLACE(
+             REPLACE(s.code, "http://api.netflix.com/catalog/movie/", "https://www.netflix.com/title/"),
+             "http://api-public.netflix.com/catalog/titles/movies/", 
+             "https://www.netflix.com/title/"
+          ) as url,
+          "Netflix" as affiliate_name,
+          "streaming" as special_status,
+          1 as prime_ind,
+          iw.start_date as creation_date
+        FROM netflix_iw iw
+        JOIN movie_source s ON s.id=iw.source_id
+        WHERE s.movie_id=#{movie_id}
+        AND (iw.start_date IS NULL OR iw.start_date &lt; now())
+        AND (iw.end_date IS NULL OR iw.end_date > now())
+      UNION SELECT
+          #{movie_id} * 100 + 5 as id,
+          a.url,
+          "Vudu" as affiliate_name,
+          "" as special_status,
+          1 as prime_ind,
+          a.start_date as creation_date
+        FROM vudu_avail a 
+        JOIN vudu_format_avail b ON a.id = b.vudu_avail_id
+        JOIN movie_source c ON a.source_id = c.id
+        WHERE c.movie_id = #{movie_id} 
+        AND (a.start_date IS NULL OR a.start_date &lt; now())
+        AND (a.end_date IS NULL OR a.end_date > now())
+      ORDER BY prime_ind DESC, creation_date DESC
+    </sql>
+    
+
+    <select id="selectAffiliateForMovie" resultMap="affiliateResultMap"  parameterType="map">
+        <include refid="uglyUnionSelectForAffiliteInfo" />
+    </select>
+    
+    <select id="selectAffiliatesForMovieCount" resultMap="affiliateMetaDataResultMap" parameterType="map">
+      SELECT COUNT(DISTINCT s.affiliate_name) as totalCount FROM
+        (<include refid="uglyUnionSelectForAffiliteInfo" />) s
+    </select>
+    
+    <resultMap id="affiliateMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation" />
+    
+    <resultMap id="affiliateResultMap" type="com.rottentomatoes.movieapi.domain.model.Affiliate">
+        <id property="id" column="id" />
+        <id property="url" column="url" />
+        <id property="affiliateName" column="affiliate_name" />
+        <id property="specialStatus" column="special_status" />
+    </resultMap>
+</mapper>
