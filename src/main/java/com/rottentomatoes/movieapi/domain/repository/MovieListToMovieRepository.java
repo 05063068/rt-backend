@@ -1,6 +1,8 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,9 @@ import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.resource.exception.ResourceNotFoundException;
 import io.katharsis.response.MetaInformation;
+
+import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getTodayPST;
+import static java.time.temporal.TemporalAdjusters.previous;
 
 @Component
 public class MovieListToMovieRepository extends AbstractRepository implements RelationshipRepository<MovieList, String, Movie, String>, MetaRepository<Movie> {
@@ -88,6 +93,11 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesCount", selectParams);
                 if (metaData.totalCount == 0) {
+                    LocalDate now = getTodayPST();
+
+                    //exclusive, so if today == Sunday, return last week (so it flips on Monday)
+                    LocalDate mostRecentSunday = now.with(previous(DayOfWeek.SUNDAY));
+                    selectParams.put("startDate", mostRecentSunday);
                     metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallbackCount", selectParams);
                 }
                 metaData.setRequestParams(requestParams);
