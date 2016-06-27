@@ -17,6 +17,7 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getMostRecentFriday;
+import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getTodayPST;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
 import java.io.Serializable;
@@ -81,7 +82,7 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
      */
     static public void setMovieParams(Map<String, Object> selectParams, RequestParams requestParams) {
         LocalDate now;
-        now = LocalDate.now();
+        now = getTodayPST();
         LocalDate startOfWeek = now.with(previousOrSame(DayOfWeek.MONDAY));
         LocalDate endOfWeek = now.plusDays(7);
 
