@@ -8,8 +8,10 @@
           franchise.id,
           franchise.name AS franchise_name,
           franchise.main_image AS franchise_main_image,
-          franchise.banner_image AS franchise_banner_image
+          franchise.banner_image AS franchise_banner_image,
+          vanity_franchise_url.url AS url
         FROM franchise
+        LEFT JOIN vanity_franchise_url ON franchise.id=vanity_franchise_url.franchise_id AND vanity_franchise_url.primary_ind = 1
         WHERE franchise.id = #{id}
     </select>
 
@@ -18,10 +20,12 @@
           franchise.id,
           franchise.name AS franchise_name,
           franchise.main_image AS franchise_main_image,
-          franchise.banner_image AS franchise_banner_image
+          franchise.banner_image AS franchise_banner_image,
+          vanity_franchise_url.url AS url
         FROM franchise_item
         INNER JOIN franchise
         ON franchise_item.franchise_id = franchise.id
+        LEFT JOIN vanity_franchise_url ON franchise.id=vanity_franchise_url.franchise_id AND vanity_franchise_url.primary_ind = 1
         WHERE franchise_item.media_id = #{movie_id}
         AND franchise_item.media_type = "MV"
     </select>
@@ -31,5 +35,6 @@
         <result property="name" column="franchise_name" />
         <result property="mainImageId" column="franchise_main_image" />
         <result property="bannerImageId" column="franchise_banner_image" />
+        <result property="vanity" column="url" />
     </resultMap>
 </mapper>
