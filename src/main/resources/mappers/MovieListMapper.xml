@@ -145,13 +145,14 @@
     <!-- Top Rentals -->
     <select id="selectTopRentalMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
         SELECT
+        WEEK(dvd_release_date) as weekNo,
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN rating_summary rs ON rs.movie_id = movie.movie_id
         WHERE movie.status = 1
         AND movie.dvd_release_date
         BETWEEN #{startDate} AND #{endDate}
         AND rs.num_wts > 1
-        ORDER BY movie.dvd_release_date DESC, rs.num_wts DESC
+        ORDER BY weekNo DESC, rs.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
 
@@ -169,12 +170,13 @@
     <!-- New DVD -->
     <select id="selectNewDvd" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
         SELECT
+        WEEK(dvd_release_date) as weekNo,
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN rating_summary rs ON rs.movie_id = movie.movie_id
         WHERE movie.status = 1
         AND dvd_release_date BETWEEN #{startDate} AND #{endDate}
         AND rs.num_wts > 1
-        ORDER BY dvd_release_date DESC, rs.num_wts DESC
+        ORDER BY weekNo DESC, rs.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
 
