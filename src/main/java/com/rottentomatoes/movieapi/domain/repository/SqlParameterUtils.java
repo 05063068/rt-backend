@@ -74,9 +74,19 @@ public class SqlParameterUtils {
         return selectParams;
     }
 
+    static Map<String, Object> setUpcomingDvdsParam(Map<String, Object> selectParams) {
+        LocalDate now = getTodayPST();
+        LocalDate start = now.with(next(DayOfWeek.MONDAY));
+        LocalDate end = start.plusMonths(3);
+        selectParams.put("startDate", start);
+        selectParams.put("endDate", end);
+
+        return selectParams;
+    }
+
     static Map<String, Object> setNewOnDvdParams(Map<String, Object> selectParams) {
         LocalDate now = getTodayPST();
-        LocalDate start =  now.with(previousOrSame(DayOfWeek.MONDAY));
+        LocalDate start = now.with(previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = now.with(next(DayOfWeek.SUNDAY));
         selectParams.put("startDate", start);
         selectParams.put("endDate", end);
