@@ -55,21 +55,21 @@
             FROM multiuse_img_reference r
             JOIN multiuse_img i on i.id=r.multiuse_image_id
             WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2')
-                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1)
+                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700 AND i.img_height >= 500) OR r.hero_img_ind=1)
             ORDER BY r.hero_img_ind DESC, i.img_width/i.img_height DESC limit 1
         )  AS hero_img_format,
         (SELECT i.img_width
             FROM multiuse_img_reference r
             JOIN multiuse_img i on i.id=r.multiuse_image_id
             WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2')
-                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1)
+                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700 AND i.img_height >= 500) OR r.hero_img_ind=1)
             ORDER BY r.hero_img_ind DESC, i.img_width/i.img_height DESC limit 1
         )  AS hero_img_width,
         (SELECT i.img_height
             FROM multiuse_img_reference r
             JOIN multiuse_img i on i.id=r.multiuse_image_id
             WHERE r.media_type='MV' AND r.media_id=movie.movie_id AND i.subject_type IN ('KYA', 'STL', 'ST2')
-                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700) OR r.hero_img_ind=1)
+                AND r.status='A' AND ((i.img_width/i.img_height > 1.3 AND i.img_width >= 700 AND i.img_height >= 500) OR r.hero_img_ind=1)
             ORDER BY r.hero_img_ind DESC, i.img_width/i.img_height DESC limit 1
         )  AS hero_img_height,
 
