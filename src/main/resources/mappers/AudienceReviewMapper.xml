@@ -17,7 +17,7 @@
     <select id="selectAudienceReviewsForMovie" resultMap="audienceReviewResultMap" parameterType="map">
         SELECT <include refid="selectColumns" />
         FROM rating_digest
-        WHERE rating_digest.movie_id = #{movie_id}
+        WHERE rating_digest.movie_id = #{movie_id} AND rating_digest.score &lt;= 10
         AND deleted_ind != 1
         ORDER BY rating_date DESC
         
