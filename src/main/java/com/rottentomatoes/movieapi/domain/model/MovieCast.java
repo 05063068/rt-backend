@@ -4,7 +4,6 @@ import java.util.List;
 
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToOne;
-import com.rottentomatoes.movieapi.domain.model.Person;
 import lombok.Getter;
 import lombok.Setter;
 
