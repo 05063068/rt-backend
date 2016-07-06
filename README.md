@@ -1,6 +1,12 @@
 # catalog-api
 Catalog API
 
+## V1.1 Release Notes
+* Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
+* Generic window tagging. Release windows are provided as an array of free-form tags (instead of separate 'theaterical' and 'dvd' categories)
+* Rudimentary TV data support.
+
+
 ## Setup and Build Notes
 
 ### Configuring JRE
