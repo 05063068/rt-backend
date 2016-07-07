@@ -21,7 +21,7 @@ public class MovieSupplementaryInfo extends AbstractModel {
     protected String releaseScope;
     protected Integer runningTime;
     protected Integer boxOffice;
-    protected Integer cummulativeBoxOffice;
+    protected Integer cumulativeBoxOffice;
 
     protected Map<String, Object> releaseDates;
 
