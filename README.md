@@ -5,6 +5,7 @@ Catalog API
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
 * Generic window tagging. Release windows are provided as an array of free-form tags (instead of separate 'theaterical' and 'dvd' categories)
 * Rudimentary TV data support.
+* Name change from cummulative_boxoffice to cumulative_boxoffice
 
 
 ## Setup and Build Notes
