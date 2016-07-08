@@ -8,6 +8,22 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
+	
+    <profiles>
+      <profile>
+	   <activation>
+	     <activeByDefault>true</activeByDefault>
+	     <property>
+            <name>!beanstalker.app.ref</name>
+	     </property>
+	  </activation>
+	   <properties>
+	      <beanstalker.app.ref>movie-api</beanstalker.app.ref>
+		  <beanstalker.s3.ref>flx-movie-api</beanstalker.s3.ref>
+	   </properties>
+      </profile>
+    </profiles>
+	
     <name>Flixster Movie API</name>
     <description>Peter</description>
     <properties>
@@ -162,9 +178,9 @@
                 <artifactId>beanstalk-maven-plugin</artifactId>
                 <version>1.4.0</version>
                 <configuration>
-                    <applicationName>movie-api</applicationName>
+                    <applicationName>${beanstalker.app.ref}</applicationName>
                     <environmentRef>${beanstalker.env.ref}</environmentRef>
-                    <s3Bucket>flx-movie-api</s3Bucket>
+                    <s3Bucket>${beanstalker.s3.ref}</s3Bucket>
                     <s3Key>${project.artifactId}/${project.build.finalName}-${maven.build.timestamp}.war</s3Key>
                     <!-- will save as s3://[bucket name]/[artifactId]/artifactId-version-TIMESTAMP.war -->
                 </configuration>

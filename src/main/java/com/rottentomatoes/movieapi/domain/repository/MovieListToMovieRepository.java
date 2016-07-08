@@ -73,6 +73,9 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
             case "top-rentals":
                 return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", SqlParameterUtils.setTopRentalsParams(selectParams));
 
+            case "upcoming-dvds":
+                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingDvds", SqlParameterUtils.setUpcomingDvdsParam(selectParams));
+
             case "new-on-dvd":
                 return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvd", SqlParameterUtils.setNewOnDvdParams(selectParams));
 
@@ -115,6 +118,11 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
             case "top-rentals":
                 metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMoviesCount", SqlParameterUtils.setTopRentalsParams(selectParams));
+                metaData.setRequestParams(requestParams);
+                break;
+
+            case "upcoming-dvds":
+                metaData = sqlSession.selectOne("com.rottentomaties.movieapi.mappers.MovieListMapper.selectUpcomingDvdsCount", SqlParameterUtils.setUpcomingDvdsParam(selectParams));
                 metaData.setRequestParams(requestParams);
                 break;
 
