@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.CriticMapper">
+
+    <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
+      SELECT id, location, url, bio, favorites, quotes
+      FROM critic
+      WHERE critic.id = #{id}
+      AND deleted_ind = 0
+    </select>
+
+    <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="vanity" column="vanity_url"/>
+
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
+    </resultMap>    
+
+    <resultMap id="criticSupplementaryInfoMap" type="com.rottentomatoes.movieapi.domain.model.CriticSupplementaryInfo">
+        <id property="id" column="id" />
+        <result property="location" column="location" />
+        <result property="officialUrl" column="url" />
+        <result property="bio" column="bio" />
+        <result property="favorites" column="favorites" />
+        <result property="quotes" column="quotes" />
+    </resultMap>
+
+</mapper>
+
+

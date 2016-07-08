@@ -133,8 +133,10 @@
         <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
         <result property="topCritic" column="is_top_critic"/>
 
-        <association property="critic" resultMap="criticResultMap" />
+        <!-- Return critic automatically with review -->
+        <association property="critic" resultMap="com.rottentomatoes.movieapi.mappers.CriticMapper.criticResultMap" columnPrefix="critic_"/>
 
+        <!-- Return publication automatically with review -->
         <association property="publication" javaType="com.rottentomatoes.movieapi.domain.model.Publication">
             <id property="id" column="publication_id"/>
             <result property="name" column="publication_name"/>
