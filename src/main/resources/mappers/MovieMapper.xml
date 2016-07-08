@@ -53,7 +53,7 @@
         IF(movie.theater_release_date IS NULL, intl_theater_release.release_date, movie.theater_release_date) AS theater_release_date,
         movie.dvd_release_date,
         IF(intl_theater_release.limited_ind=1,"limited", "wide") as release_scope,
-        movie.box_office as cummulative_box_office,
+        movie.box_office as cumulative_box_office,
             (SELECT moviembo.gross FROM movie_box_office moviembo
                     WHERE movie.movie_id=moviembo.movie_id
                     AND moviembo.start_date >= #{boxOfficeStartDate} AND moviembo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
@@ -181,9 +181,7 @@
         <result property="officialUrl" column="official_url"/>
         <result property="studioName" column="studioName"/>
         <result property="boxOffice" column="box_office"/>
-        <result property="cummulativeBoxOffice" column="cummulative_box_office"/>
-
-
+        <result property="cumulativeBoxOffice" column="cumulative_box_office"/>
         <result property="releaseScope" column="release_scope" />
 
         <association property="releaseDates" javaType="map">
