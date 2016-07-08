@@ -67,14 +67,14 @@
                             WHEN (movie.theater_release_date BETWEEN DATE_SUB(#{openingDate}, INTERVAL 7 DAY) AND #{openingDate}) THEN 'opening'
                             WHEN (movie.theater_release_date BETWEEN now() AND #{upcomingDate}) THEN 'upcoming'
                             WHEN (movie.theater_release_date BETWEEN #{inTheaterDate} AND now()) THEN 'in-theaters'
-                            ELSE 'NA'
+                            ELSE NULL
                         END
                     ELSE
                         CASE
                             WHEN (intl_theater_release.release_date BETWEEN DATE_SUB(#{openingDate}, INTERVAL 7 DAY) AND #{openingDate}) THEN 'opening'
                             WHEN (intl_theater_release.release_date BETWEEN now() AND #{upcomingDate}) THEN 'upcoming'
                             WHEN (intl_theater_release.release_date BETWEEN #{inTheaterDate} AND now()) THEN 'in-theaters'
-                            ELSE 'NA'
+                            ELSE NULL
                         END
             END AS opening_window,
             CASE
@@ -84,14 +84,14 @@
                             WHEN (movie.dvd_release_date BETWEEN #{newDvdDate} AND #{openingDate}) THEN 'new-on-dvd'
                             WHEN (movie.dvd_release_date BETWEEN now() AND #{upcomingDvdDate}) THEN 'upcoming-dvd'
                             WHEN (movie.dvd_release_date BETWEEN #{onDvdDate} AND now()) THEN 'on-dvd'
-                            ELSE 'NA'
+                            ELSE NULL
                         END
                     ELSE
                         CASE
                             WHEN (intl_dvd_release.release_date BETWEEN #{newDvdDate} AND #{openingDate}) THEN 'new-on-dvd'
                             WHEN (intl_dvd_release.release_date BETWEEN now() AND #{upcomingDvdDate}) THEN 'upcoming-dvd'
                             WHEN (intl_dvd_release.release_date BETWEEN #{onDvdDate} AND now()) THEN 'on-dvd'
-                            ELSE 'NA'
+                            ELSE NULL
                         END
             END AS dvd_window,
 
@@ -171,16 +171,17 @@
     </resultMap>
 
     <resultMap id="movieSupplementaryMap" type="com.rottentomatoes.movieapi.domain.model.MovieSupplementaryInfo">
-        <id property="id" column="movie_id"/>
+        <constructor>
+            <idArg column="movie_id" javaType="string"/>
+            <arg column="dvd_window" javaType="string"/>
+            <arg column="opening_window" javaType="string" />
+        </constructor>
         <result property="synopsis" column="synopsis"/>
         <result property="runningTime" column="running_time"/>
         <result property="officialUrl" column="official_url"/>
         <result property="studioName" column="studioName"/>
         <result property="boxOffice" column="box_office"/>
         <result property="cumulativeBoxOffice" column="cumulative_box_office"/>
-        <result property="dvdWindow" column="dvd_window" />
-        <result property="openingWindow" column="opening_window" />
-
         <result property="releaseScope" column="release_scope" />
 
         <association property="releaseDates" javaType="map">
