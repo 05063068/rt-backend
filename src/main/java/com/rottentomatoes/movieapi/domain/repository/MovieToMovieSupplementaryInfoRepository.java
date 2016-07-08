@@ -46,7 +46,6 @@ public class MovieToMovieSupplementaryInfoRepository extends AbstractRepository 
         setMovieParams(selectParams, requestParams);
         MovieSupplementaryInfo movieSupplementaryInfo = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieSupplementaryInfo", selectParams);
 
-        System.out.println(movieSupplementaryInfo);
         return movieSupplementaryInfo;
     }
 
