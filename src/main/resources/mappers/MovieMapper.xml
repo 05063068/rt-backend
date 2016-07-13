@@ -74,10 +74,10 @@
         )  AS hero_img_height,
 
         movie_studio.name AS studioName,
-        IF( tomatometer_info.all_critics &lt; 5, null, tomatometer) AS value, /* Enforce tomatometer=null if NA - this should be taken care of by job */
+        IF( tomatometer_info.rotten_count + tomatometer_info.fresh_count &lt; 5, null, tomatometer) AS value, /* Enforce tomatometer=null if NA - this should be taken care of by job */
         CASE
             WHEN certified_fresh THEN 'certified_fresh'
-            WHEN tomatometer_info.all_critics &lt; 5 THEN 'NA'
+            WHEN tomatometer_info.rotten_count + tomatometer_info.fresh_count &lt; 5 THEN 'NA'
             WHEN tomatometer IS NULL THEN 'NA'
             WHEN (tomatometer >= 60) THEN 'fresh'
             ELSE 'rotten'
