@@ -137,8 +137,10 @@
         LEFT JOIN movie_img ON movie_img.id = movie.main_image
         LEFT JOIN video_clip ON movie.main_trailer = video_clip.id
         LEFT JOIN movie_intl_release intl_theater_release ON movie.movie_id=intl_theater_release.movie_id
+                AND intl_theater_release.deleted_ind=0
                 AND intl_theater_release.type='THR' AND intl_theater_release.country=#{country}
         LEFT JOIN movie_intl_release intl_dvd_release ON movie.movie_id=intl_dvd_release.movie_id
+                AND intl_dvd_release.deleted_ind=0
                 AND intl_dvd_release.type='DVD' AND intl_dvd_release.country=#{country}
         LEFT JOIN movie_intl_title ON movie.movie_id = movie_intl_title.movie_id
                 AND movie_intl_title.country = #{country}
