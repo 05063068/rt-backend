@@ -152,6 +152,7 @@
         AND movie.status = 1 /* active movies only */
     </select>
 
+
     <resultMap id="movieResultMap" type="com.rottentomatoes.movieapi.domain.model.Movie">
         <id property="id" column="movie_id"/>
 
@@ -189,11 +190,13 @@
             <result property="dvd" column="dvd_release_date" javaType="java.time.LocalDate"/>
         </association>
 
+
         <association property="mainTrailer" resultMap="com.rottentomatoes.movieapi.mappers.VideoClipMapper.videoClipResultMap" />
 
         <association property="posterImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="movie_" notNullColumn="img_id"/>
 
         <association property="heroImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="hero_" notNullColumn="img_id"/>
     </resultMap>
+
 
 </mapper>
