@@ -25,8 +25,9 @@ public class SqlParameterUtils {
 
         // We don't want the box office numbers to switch until Monday (we input data over weekend if we get it)
         // So if today is Saturday or Sunday, go back even 1 more week
-        if ( now.equals(DayOfWeek.SATURDAY) || now.equals(DayOfWeek.SUNDAY)) {
-            mostRecentFriday.minusDays(7);
+        if ( now.getDayOfWeek().equals(DayOfWeek.FRIDAY) ||
+                now.getDayOfWeek().equals(DayOfWeek.SATURDAY) || now.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            mostRecentFriday = mostRecentFriday.minusDays(7);
         }
         return mostRecentFriday;
     }
