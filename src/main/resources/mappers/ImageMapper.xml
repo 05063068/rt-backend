@@ -1,35 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!--  
-  TODO: Figure out filter and sort order
-
- -->
-
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ImageMapper">
     <select id="selectImageByIdAndType" resultMap="imageResultMap">
-        SELECT CONCAT('${type}-' , id) AS img_id,
-        '${type}' AS img_type,
+        SELECT
+        id AS img_id,
+        #{type} AS img_type,
         img_width, 
         img_height,
         format AS img_format
-        FROM ${type}        
-        WHERE id=#{id}
+        FROM ${imageTable} WHERE id=#{id}
     </select>
 
     <select id="selectImagesForMovie" resultMap="imageResultMap" parameterType="map">
-        SELECT
+            SELECT
             multiuse_img_reference.media_type AS mediaType,
             multiuse_img.id AS img_id,
             multiuse_img.format AS img_format,
             multiuse_img.img_width AS img_width,
             multiuse_img.img_height AS img_height,
+            multiuse_img.creation_date,
             'n' AS img_type
-        FROM multiuse_img_reference
-        LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
-        WHERE multiuse_img_reference.media_id=#{movie_id}
+            FROM multiuse_img_reference
+            LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
+            WHERE multiuse_img_reference.media_id=#{movie_id}
             AND multiuse_img_reference.media_type='MV'
+            AND multiuse_img.status IN ('A', 'N')
             AND multiuse_img_reference.status IN ('A', 'N')
             AND multiuse_img.subject_type IN ('STL', 'ST2', 'PRD', 'PR2', 'KYA', 'HED', 'HD2', 'GRP', 'GLY', 'GL2', 'CLB')
+        UNION ALL
+            SELECT
+            'MV' AS mediaType,
+            rtmovie_img.id AS img_id,
+            rtmovie_img.format AS img_format,
+            rtmovie_img.img_width AS img_width,
+            rtmovie_img.img_height AS img_height,
+            rtmovie_img.creation_date,
+            'h' AS img_type
+            FROM rtmovie_img
+            WHERE rtmovie_img.status IN ('A', 'N')
+            AND movie_id = #{movie_id}
+        ORDER BY creation_date
         <choose>
             <when test="limit != null and offset != null">
                 LIMIT #{offset},#{limit}
@@ -39,7 +49,6 @@
             </when>
         </choose>
     </select>
-
     <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
         <constructor>
             <idArg column="img_id" javaType="string" /> <!-- required -->
@@ -51,15 +60,21 @@
     </resultMap>
 
     <select id="selectImageCountForMovie" resultMap="imageMataDataResultMap" parameterType="map">
-        SELECT
-          count(*) AS totalCount
-        FROM multiuse_img_reference
-        LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
-        WHERE multiuse_img_reference.media_id=#{movie_id}
-            AND multiuse_img_reference.media_type='MV'
-            AND multiuse_img_reference.status IN ('A', 'N')
-            AND multiuse_img.subject_type IN ('STL', 'ST2', 'PRD', 'PR2', 'KYA', 'HED', 'HD2', 'GRP', 'GLY', 'GL2', 'CLB')
+      SELECT FORMAT(SUM(`count`), 0) AS `totalCount` FROM (
+              SELECT COUNT(*) AS 'count'
+              FROM multiuse_img_reference
+              LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
+              WHERE multiuse_img_reference.media_id=#{movie_id}
+              AND multiuse_img_reference.media_type='MV'
+              AND multiuse_img.status IN ('A', 'N')
+              AND multiuse_img_reference.status IN ('A', 'N')
+              AND multiuse_img.subject_type IN ('STL', 'ST2', 'PRD', 'PR2', 'KYA', 'HED', 'HD2', 'GRP', 'GLY', 'GL2', 'CLB')
+          UNION ALL
+              SELECT COUNT(*) AS 'count'
+              FROM rtmovie_img
+              WHERE status IN ('A', 'N')
+              AND movie_id = #{movie_id}
+        ) as Total;
     </select>
-
     <resultMap id="imageMataDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation"/>
 </mapper>

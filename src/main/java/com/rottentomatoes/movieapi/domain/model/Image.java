@@ -7,39 +7,32 @@ import com.flixster.image.IdGenerator.IdGeneratorBuilder;
 import com.flixster.image.ImageFormat;
 import com.flixster.image.ImageType;
 import io.katharsis.resource.annotations.JsonApiResource;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.awt.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonApiResource(type = "image")
 public class Image extends AbstractModel {
-
-
-	protected String thumborId;
-    
+    protected String thumborId;
     protected Integer height;
     protected Integer width;
     protected String format;
 
-    public ImageType getImageType(String typeString) {    	
+    public ImageType getImageType(String typeString) {
 
-		for(ImageType t: ImageType.values()){
-			if(t.getCode().equals(typeString)){
-				return t;
-			}
-		}
-		return null;
+        for (ImageType t : ImageType.values()) {
+            if (t.getCode().equals(typeString)) {
+                return t;
+            }
+        }
+        return null;
     }
 
     private ImageFormat getImageFormat(String imageFormatString) {
-    	if(imageFormatString == null){
-    		return null;
-    	}
+        if (imageFormatString == null) {
+            return null;
+        }
         switch (imageFormatString.toLowerCase()) {
             case "jpg":
                 return ImageFormat.JPG;
@@ -53,16 +46,16 @@ public class Image extends AbstractModel {
     }
 
     public Image(String id, Integer originalHeight, Integer originalWidth, String format, String mediaType) {
-        if(id == null || mediaType == null){
-        	throw new RuntimeException("Image Id and MediaType cannot be null");
+        if (id == null || mediaType == null) {
+            throw new RuntimeException("Image Id and MediaType cannot be null");
         }
-        
-    	final int EXPIRE_DAYS = 45;
+
+        final int EXPIRE_DAYS = 45;
         final int MAX_WIDTH = 1200;
         ImageType type = getImageType(mediaType);
         Date expiry = DateUtils.addDays(new Date(), EXPIRE_DAYS);
         Environment environment = Environment.PROD;
-        
+
 
         IdGeneratorBuilder builder = IdGenerator.builder()
                 .id(Long.valueOf(id))
@@ -70,56 +63,56 @@ public class Image extends AbstractModel {
                 .expiry(expiry)
                 .environment(environment)
                 .maxWidth(MAX_WIDTH);
- 
+
         // format could be null
-        if(format != null){
-        	ImageFormat imageFormat = getImageFormat(format);
-        	builder.format(imageFormat);
+        if (format != null) {
+            ImageFormat imageFormat = getImageFormat(format);
+            builder.format(imageFormat);
         }
-        
+
         // original Dimensions may not be available
-        if(originalWidth != null && originalHeight != null){
-        	builder.originalSize(new Dimension(originalWidth, originalHeight));
+        if (originalWidth != null && originalHeight != null) {
+            builder.originalSize(new Dimension(originalWidth, originalHeight));
         }
-            
+
         String thumborId = builder.build().getEncodedId();
-        
-        this.id = type.getCode()+"-"+id;
+
+        this.id = type.getCode() + "-" + id;
         this.thumborId = thumborId;
         this.height = originalHeight;
         this.width = originalWidth;
         this.format = format;
     }
-    
+
     public String getThumborId() {
-		return thumborId;
-	}
+        return thumborId;
+    }
 
-	public void setThumborId(String thumborId) {
-		this.thumborId = thumborId;
-	}
+    public void setThumborId(String thumborId) {
+        this.thumborId = thumborId;
+    }
 
-	public Integer getHeight() {
-		return height;
-	}
+    public Integer getHeight() {
+        return height;
+    }
 
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
 
-	public Integer getWidth() {
-		return width;
-	}
+    public Integer getWidth() {
+        return width;
+    }
 
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
 
-	public String getFormat() {
-		return format;
-	}
+    public String getFormat() {
+        return format;
+    }
 
-	public void setFormat(String format) {
-		this.format = format;
-	}
+    public void setFormat(String format) {
+        this.format = format;
+    }
 }
