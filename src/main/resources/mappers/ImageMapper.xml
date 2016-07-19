@@ -61,7 +61,7 @@
 
     <select id="selectImageCountForMovie" resultMap="imageMataDataResultMap" parameterType="map">
       SELECT FORMAT(SUM(`count`), 0) AS `totalCount` FROM (
-              SELECT COUNT(*) AS 'count'
+              SELECT COUNT(multiuse_img.id) AS 'count'
               FROM multiuse_img_reference
               LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
               WHERE multiuse_img_reference.media_id=#{movie_id}
@@ -70,7 +70,7 @@
               AND multiuse_img_reference.status IN ('A', 'N')
               AND multiuse_img.subject_type IN ('STL', 'ST2', 'PRD', 'PR2', 'KYA', 'HED', 'HD2', 'GRP', 'GLY', 'GL2', 'CLB')
           UNION ALL
-              SELECT COUNT(*) AS 'count'
+              SELECT COUNT(rtmovie_img.id) AS 'count'
               FROM rtmovie_img
               WHERE status IN ('A', 'N')
               AND movie_id = #{movie_id}

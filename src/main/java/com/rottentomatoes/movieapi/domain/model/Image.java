@@ -47,7 +47,7 @@ public class Image extends AbstractModel {
 
     public Image(String id, Integer originalHeight, Integer originalWidth, String format, String mediaType) {
         if (id == null || mediaType == null) {
-            throw new RuntimeException("Image Id and MediaType cannot be null");
+            throw new RuntimeException("Neither Image Id nor Media type can be null.");
         }
 
         final int EXPIRE_DAYS = 45;
