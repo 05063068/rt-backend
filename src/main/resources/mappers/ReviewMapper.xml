@@ -6,7 +6,7 @@
  -->
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
-	<sql id="selectColumns">
+	<sql id="reviewSelectColumns">
        	review.id,       
 		review.movie_id, 
 		review.critic_id,
@@ -25,30 +25,21 @@
 		review.creation_date,
 		review.last_update_date,
 		review.top_ind,  
- 
-       	critic.name AS critic_name,
-       	critic.vanity_url AS critic_vanity_url,
-        publication.name AS publication_name,
-        
-        critic.image_id AS critic_img_id,
-        critic_img.img_width AS critic_img_width,
-        critic_img.img_height AS critic_img_height,
-        critic_img.format AS critic_img_format,
-        'c' AS critic_img_type,
-        
-        IF(critic_top.critic_id OR publication_top.publication_id,1,0) is_top_critic
+
+        <include refid="com.rottentomatoes.movieapi.mappers.CriticMapper.criticSelectColumns" />,
+        publication.name AS publication_name
 	</sql>
 
     <select id="selectReviewById" resultMap="reviewResultMap">
-        SELECT <include refid="selectColumns" />
+        SELECT <include refid="reviewSelectColumns" />
         FROM review
-        LEFT JOIN critic ON review.critic_id=critic.id
-        LEFT JOIN publication ON review.publication_id=publication.id
-        LEFT JOIN critic_img ON critic_img.id = critic.image_id
+        <include refid="commonSubselectJoins" />
         WHERE review.id = #{id}
+        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
     </select>
 
     <sql id="commonSubselectJoins">
+        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         LEFT JOIN critic ON review.critic_id=critic.id
         LEFT JOIN publication ON review.publication_id=publication.id
         LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
@@ -61,7 +52,7 @@
         - rest are mixed (sortkey=null), no dupes from first 12 are allowed, order by descending creation date
     -->
     <select id="selectAllReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
-        SELECT <include refid="selectColumns" />
+        SELECT <include refid="reviewSelectColumns" />
         FROM review
         <include refid="commonSubselectJoins" />
         LEFT JOIN critic_img ON critic_img.id = critic.image_id
@@ -101,7 +92,7 @@
     </select>
 
     <select id="selectTopCriticReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
-        SELECT <include refid="selectColumns" />
+        SELECT <include refid="reviewSelectColumns" />
         FROM review
         LEFT JOIN critic ON review.critic_id=critic.id
         LEFT JOIN publication ON review.publication_id=publication.id
