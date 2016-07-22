@@ -79,6 +79,7 @@
 
         WHERE review.movie_id = #{movie_id}
         AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND NOT review.category='DVD'
         ORDER BY featured.sort_key DESC, review.creation_date DESC
         <choose>
             <when test="limit != null and offset != null">
@@ -96,6 +97,7 @@
         <include refid="commonSubselectJoins" />
         WHERE review.movie_id = #{movie_id}
         AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND NOT review.category='DVD'
         HAVING is_top_critic = 1
         ORDER BY review.creation_date DESC
 
