@@ -101,7 +101,7 @@
         LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
         WHERE review.movie_id = #{movie_id}
         AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
-        /*AND is_top_critic = 1*/
+        HAVING is_top_critic = 1
         ORDER BY review.creation_date DESC
 
         <choose>
