@@ -39,10 +39,10 @@
     </select>
 
     <sql id="commonSubselectJoins">
-        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         LEFT JOIN critic ON review.critic_id=critic.id
-        LEFT JOIN publication ON review.publication_id=publication.id
+        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
+        LEFT JOIN publication ON review.publication_id=publication.id
         LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
     </sql>
 
@@ -55,7 +55,6 @@
         SELECT <include refid="reviewSelectColumns" />
         FROM review
         <include refid="commonSubselectJoins" />
-        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         LEFT JOIN (
             (
                 SELECT review.id, 1 AS sort_key FROM review
@@ -94,11 +93,7 @@
     <select id="selectTopCriticReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
         SELECT <include refid="reviewSelectColumns" />
         FROM review
-        LEFT JOIN critic ON review.critic_id=critic.id
-        LEFT JOIN publication ON review.publication_id=publication.id
-        LEFT JOIN critic_img ON critic_img.id = critic.image_id
-        LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
-        LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
+        <include refid="commonSubselectJoins" />
         WHERE review.movie_id = #{movie_id}
         AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
         HAVING is_top_critic = 1
