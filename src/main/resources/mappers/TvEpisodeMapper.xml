@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.TvEpisodeMapper">
+
+    <sql id="tvEpisodeSelectSql">
+        tv_episode.id,
+        tv_episode.title
+        FROM tv_episode
+    </sql>
+
+    <select id="selectTvEpisodeById" resultMap="tvEpisodeResultMap" parameterType="map">
+        SELECT
+        <include refid="tvEpisodeSelectSql"/>
+        WHERE tv_episode.id = #{id}
+    </select>
+
+    <resultMap id="tvEpisodeResultMap" type="com.rottentomatoes.movieapi.domain.model.TvEpisode">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+    </resultMap>
+    
+    <select id="selectTvEpisodeForTvSeason" resultMap="tvEpisodeResultMap" parameterType="map">
+        SELECT
+        <include refid="tvEpisodeSelectSql"/>
+        WHERE tv_episode.tv_season_id = #{tv_season_id}
+        <if test="limit != null">LIMIT #{limit}</if>
+    </select>
+
+</mapper>

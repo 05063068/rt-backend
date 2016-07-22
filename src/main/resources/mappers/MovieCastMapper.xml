@@ -32,24 +32,25 @@
         AND movie_cast.id = #{movieCastId}
     </select>
 
+    <!-- Actorlimit will filter actor array. All others always come full-length  -->
     <select id="selectMovieCastForMovie" resultMap="movieCastResultMap" parameterType="map">
-        <include refid="selectMovieCastWithPerson" />
-            AND movie_cast.movie_id = #{movie_id}
-        <if test="role">
-            AND movie_cast.role = #{role}
+        (
+        <include refid="selectMovieCastWithPerson"/>
+        AND movie_cast.movie_id = #{movie_id}
+        AND movie_cast.role != "ACT"
+        )
+        UNION
+        (
+        <include refid="selectMovieCastWithPerson"/>AND movie_cast.movie_id = #{movie_id}
+        AND movie_cast.movie_id = #{movie_id}
+        AND movie_cast.role = "ACT"
+        <if test="actorsLimit != null">
+            LIMIT #{actorsLimit}
         </if>
-        ORDER BY FIELD(movie_cast.role, 'DIR','PRO','SCR','EPR','ACT'), movie_cast.sortkey
-
-        <choose>
-            <when test="limit != null and offset != null">
-                LIMIT #{offset},#{limit}
-            </when>
-            <when test="limit != null">
-                LIMIT #{limit}
-            </when>
-        </choose>
+        )
     </select>
 
+    
     <resultMap id="movieCastResultMap" type="com.rottentomatoes.movieapi.domain.model.MovieCast">
         <id property="id" column="id"/>
         <result property="role" column="role"/>

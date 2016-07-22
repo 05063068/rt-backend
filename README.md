@@ -1,6 +1,14 @@
 # catalog-api
 Catalog API
 
+## V1.1 Release Notes
+* Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
+* Generic window tagging. Release windows are provided as an array of free-form tags (instead of separate 'theaterical' and 'dvd' categories)
+* Rudimentary TV data support.
+* Name change from cummulative_boxoffice to cumulative_boxoffice
+* MovieCast now presented as MoviePersonnel, which has the 5 personnel types broken out separately. Actors can be limited with the 'actorsLimit' filter.
+
+
 ## Setup and Build Notes
 
 ### Configuring JRE

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.CriticMapper">
+
+    <sql id="criticSelectColumns">
+        critic.id AS critic_id,
+        critic.name AS critic_name,
+       	critic.vanity_url AS critic_vanity_url,
+
+        critic.image_id AS critic_img_id,
+        critic_img.img_width AS critic_img_width,
+        critic_img.img_height AS critic_img_height,
+        critic_img.format AS critic_img_format,
+        'c' AS critic_img_type,
+
+        IF(critic_top.critic_id OR publication_top.publication_id,1,0) AS is_top_critic
+    </sql>
+
+    <select id="selectCriticById" resultMap="criticResultMap">
+        SELECT
+        <include refid="criticSelectColumns" />
+        FROM critic
+        LEFT JOIN critic_img ON critic.image_id = critic_img.id
+        WHERE critic.id = #{id}
+        AND deleted_ind = 0
+    </select>
+
+    <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
+      SELECT id, location, url, bio, favorites, quotes\
+      FROM critic
+      WHERE critic.id = #{id}
+      AND deleted_ind = 0
+    </select>
+
+    <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="vanity" column="vanity_url"/>
+
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
+    </resultMap>    
+
+    <resultMap id="criticSupplementaryInfoMap" type="com.rottentomatoes.movieapi.domain.model.CriticSupplementaryInfo">
+        <id property="id" column="id" />
+        <result property="location" column="location" />
+        <result property="officialUrl" column="url" />
+        <result property="bio" column="bio" />
+        <result property="favorites" column="favorites" />
+        <result property="quotes" column="quotes" />
+    </resultMap>
+
+</mapper>
+
+
