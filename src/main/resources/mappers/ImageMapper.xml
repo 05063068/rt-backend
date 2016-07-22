@@ -29,6 +29,7 @@
         WHERE multiuse_img_reference.media_id=#{movie_id}
             AND multiuse_img_reference.media_type='MV'
             AND multiuse_img_reference.status IN ('A', 'N')
+            AND multiuse_img.status IN ('A', 'N')
             AND multiuse_img.subject_type IN ('STL', 'ST2', 'PRD', 'PR2', 'KYA', 'HED', 'HD2', 'GRP', 'GLY', 'GL2', 'CLB')
         <choose>
             <when test="limit != null and offset != null">
