@@ -51,6 +51,11 @@ public class Movie extends AbstractModel {
     @JsonApiLookupIncludeAutomatically
     protected Franchise franchise;
 
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected MoviePersonnel moviePersonnel;
+
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
@@ -66,10 +71,6 @@ public class Movie extends AbstractModel {
     @JsonApiLookupIncludeAutomatically
     protected Iterable<Genre> genres;
 
-    @JsonApiToMany
-    @JsonApiLazy
-    @JsonApiLookupIncludeAutomatically
-    protected Iterable<MovieCast> movieCast;
 
     @JsonApiToMany
     @JsonApiLazy
