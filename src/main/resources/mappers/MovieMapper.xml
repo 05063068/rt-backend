@@ -22,6 +22,7 @@
         (SELECT moviembo.gross FROM movie_box_office moviembo
                 WHERE movie.movie_id=moviembo.movie_id
                 AND moviembo.start_date >= #{boxOfficeStartDate} AND moviembo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
+                AND moviembo.country = #{country}
                 ORDER BY theaters DESC, estimate_ind ASC
                 LIMIT 1
         ) as box_office,
