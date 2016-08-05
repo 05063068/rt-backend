@@ -27,6 +27,7 @@
 		review.top_ind,  
 
         <include refid="com.rottentomatoes.movieapi.mappers.CriticMapper.criticSelectColumns" />,
+        IF(critic_top.critic_id OR publication_top.publication_id,1,0) AS is_top_critic,
         publication.name AS publication_name
 	</sql>
 
@@ -110,7 +111,28 @@
             </when>
         </choose>
     </select>
-    
+
+    <select id="selectReviewsByCritic" resultMap="reviewResultMap" parameterType="map">
+        SELECT
+        <include refid="reviewSelectColumns" />
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.critic_id = #{critic_id}
+        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND NOT review.category='DVD'
+        ORDER BY review.creation_date DESC
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+
     <resultMap id="reviewResultMap" type="com.rottentomatoes.movieapi.domain.model.Review">
         <id property="id" column="id" />
         <result property="movieId" column="movie_id"/>
