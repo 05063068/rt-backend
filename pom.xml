@@ -46,7 +46,7 @@
         </repository>
         <repository>
             <id>Flixster Internal Repository</id>
-            <url>http://build01.flixster.com/repo/maven2</url>
+            <url>https://s3-us-west-2.amazonaws.com/flx-maven</url>
         </repository>
     </repositories>
 

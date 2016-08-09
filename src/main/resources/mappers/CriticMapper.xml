@@ -12,22 +12,29 @@
         critic_img.img_width AS critic_img_width,
         critic_img.img_height AS critic_img_height,
         critic_img.format AS critic_img_format,
-        'c' AS critic_img_type,
-
-        IF(critic_top.critic_id OR publication_top.publication_id,1,0) AS is_top_critic
+        'c' AS critic_img_type
     </sql>
 
     <select id="selectCriticById" resultMap="criticResultMap">
         SELECT
-        <include refid="criticSelectColumns" />
+        critic.id,
+        critic.name,
+       	critic.vanity_url,
+
+        critic.image_id AS img_id,
+        critic_img.img_width AS img_width,
+        critic_img.img_height AS img_height,
+        critic_img.format AS img_format,
+        'c' AS img_type
         FROM critic
+        LEFT JOIN critic_top ON critic.id = critic_top.critic_id
         LEFT JOIN critic_img ON critic.image_id = critic_img.id
         WHERE critic.id = #{id}
         AND deleted_ind = 0
     </select>
 
     <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
-      SELECT id, location, url, bio, favorites, quotes\
+      SELECT id, location, url, bio, favorites, quotes
       FROM critic
       WHERE critic.id = #{id}
       AND deleted_ind = 0
@@ -38,7 +45,7 @@
         <result property="name" column="name"/>
         <result property="vanity" column="vanity_url"/>
 
-        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id" />
     </resultMap>    
 
     <resultMap id="criticSupplementaryInfoMap" type="com.rottentomatoes.movieapi.domain.model.CriticSupplementaryInfo">
@@ -49,6 +56,8 @@
         <result property="favorites" column="favorites" />
         <result property="quotes" column="quotes" />
     </resultMap>
+
+
 
 </mapper>
 
