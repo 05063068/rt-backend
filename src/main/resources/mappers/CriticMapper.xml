@@ -40,6 +40,36 @@
       AND deleted_ind = 0
     </select>
 
+    <select id="selectAllCritics" resultMap="criticResultMap" parameterType="map">
+        SELECT
+        critic.id,
+        critic.name,
+        critic.vanity_url,
+
+        critic.image_id AS img_id,
+        critic_img.img_width AS img_width,
+        critic_img.img_height AS img_height,
+        critic_img.format AS img_format,
+        'c' AS img_type
+        FROM critic
+        LEFT JOIN critic_img ON critic.image_id = critic_img.id
+        WHERE critic.deleted_ind = 0
+        /*AND critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT'*/
+        <if test="initial != null">
+            AND name LIKE #{initial}
+        </if>
+        ORDER BY critic.name
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
     <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
