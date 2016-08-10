@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.PublicationMapper">
+
+    <sql id="publicationSelectColumns">
+        publication.id publication_id,
+        publication.name publication_name,
+        publication.url publication_url,
+        publication.editorial_url publication_editorial_url,
+        publication.country publication_country
+    </sql>
+
+    <select id="selectPublicationById" resultMap="publicationResultMap">
+      SELECT
+        <include refid="publicationSelectColumns" />
+      FROM publication
+      WHERE publication.id = #{id}
+      AND approved_ind=1 AND deleted_ind=0
+    </select>
+
+    <select id="selectPublicationsByCritic" resultMap="publicationResultMap">
+        SELECT
+        <include refid="publicationSelectColumns" />
+        FROM publication
+        INNER JOIN critic_publication_map ON publication.id = critic_publication_map.publication_id
+        WHERE critic_publication_map.critic_id = #{critic_id}
+        AND publication.approved_ind=1 AND publication.deleted_ind=0
+    </select>
+
+
+    <select id="selectAllPublications" resultMap="publicationResultMap">
+        SELECT
+        <include refid="publicationSelectColumns" />
+        FROM publication
+        WHERE approved_ind=1 AND deleted_ind=0
+        <if test="initial != null">
+            AND publication.name LIKE #{initial}
+        </if>
+        ORDER BY publication.name
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+    <resultMap id="publicationResultMap" type="com.rottentomatoes.movieapi.domain.model.Publication">
+        <id property="id" column="publication_id" />
+        <result property="name" column="publication_name" />
+        <result property="url" column="publication_url" />
+        <result property="editorialUrl" column="publication_editorial_url" />
+        <result property="country" column="publication_country" />
+    </resultMap>
+
+
+
+</mapper>
+
+

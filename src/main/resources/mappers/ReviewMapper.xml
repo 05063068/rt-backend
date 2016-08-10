@@ -27,8 +27,10 @@
 		review.top_ind,  
 
         <include refid="com.rottentomatoes.movieapi.mappers.CriticMapper.criticSelectColumns" />,
-        IF(critic_top.critic_id OR publication_top.publication_id,1,0) AS is_top_critic,
-        publication.name AS publication_name
+        <include refid="com.rottentomatoes.movieapi.mappers.PublicationMapper.publicationSelectColumns" />,
+
+        IF(critic_top.critic_id OR publication_top.publication_id,1,0) AS is_top_critic
+
 	</sql>
 
     <select id="selectReviewById" resultMap="reviewResultMap">
@@ -143,24 +145,12 @@
         <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
         <result property="topCritic" column="is_top_critic"/>
 
-        <!-- Return critic automatically with review -->
+        <!-- Return critic automatically with review for efficiency -->
         <association property="critic" resultMap="com.rottentomatoes.movieapi.mappers.CriticMapper.criticResultMap" columnPrefix="critic_"/>
 
-        <!-- Return publication automatically with review -->
-        <association property="publication" javaType="com.rottentomatoes.movieapi.domain.model.Publication">
-            <id property="id" column="publication_id"/>
-            <result property="name" column="publication_name"/>
-        </association>
+        <!-- Return publication automatically with review for efficiency -->
+        <association property="publication" resultMap="com.rottentomatoes.movieapi.mappers.PublicationMapper.publicationResultMap" />
     </resultMap>
-    
-
-    <!--  TODO: Move into own CriticMapper.xml -->
-    <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">   
-        <id property="id" column="critic_id"/>
-        <result property="name" column="critic_name"/>
-        <result property="vanity" column="critic_vanity_url"/>
-        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="critic_" notNullColumn="img_id"/>
-    </resultMap>    
 
     <select id="selectAllReviewCountForMovie" resultMap="reviewMetaDataResultMap" parameterType="map">
         SELECT
