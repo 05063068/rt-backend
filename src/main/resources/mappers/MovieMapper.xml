@@ -54,12 +54,13 @@
         movie.dvd_release_date,
         IF(intl_theater_release.limited_ind=1,"limited", "wide") as release_scope,
         movie.box_office as cumulative_box_office,
-            (SELECT moviembo.gross FROM movie_box_office moviembo
-                    WHERE movie.movie_id=moviembo.movie_id
-                    AND moviembo.start_date >= #{boxOfficeStartDate} AND moviembo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
-                    ORDER BY theaters DESC, estimate_ind ASC
-                    LIMIT 1
-            ) as box_office,
+        (SELECT moviembo.gross FROM movie_box_office moviembo
+            WHERE movie.movie_id=moviembo.movie_id
+            AND moviembo.start_date >= #{boxOfficeStartDate} AND moviembo.start_date &lt; ADDDATE(#{startDate}, INTERVAL 1 WEEK)
+            AND moviembo.country = #{country}
+            ORDER BY estimate_ind ASC, theaters DESC
+            LIMIT 1
+        ) as box_office,
             CASE
                 WHEN #{country} = 'us'
                     THEN
@@ -197,6 +198,5 @@
 
         <association property="heroImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="hero_" notNullColumn="img_id"/>
     </resultMap>
-
 
 </mapper>

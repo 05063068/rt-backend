@@ -53,7 +53,7 @@
         
         INNER JOIN movie_cast ON 
             movie_cast.id = #{id} AND 
-            movie_cast.deleted_ind = 0
+            movie_cast.deleted_ind = 0 AND
             movie_cast.person_id = movie_person.id
         
         WHERE movie_person.deleted_ind = 0        
