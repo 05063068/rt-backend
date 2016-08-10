@@ -6,6 +6,7 @@ import io.katharsis.repository.ResourceRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -33,8 +34,20 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Iterable<Critic> findAll(RequestParams requestParams) {
-        // TODO Auto-generated method stub
-        return null;
+        // Return list of all critics. Allow filter by last name
+
+
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("limit", getLimit("", requestParams));
+        selectParams.put("offset", getOffset("", requestParams));
+
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("initial")){
+            selectParams.put("initial",requestParams.getFilters().get("initial")+"%");
+        }
+
+        List<Critic> critics = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.CriticMapper.selectAllCritics", selectParams);
+        return critics;
+
     }
 
     @Override
