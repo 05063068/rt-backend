@@ -1,5 +1,4 @@
-# catalog-api
-Catalog API
+# Catalog API/RT Backend
 
 ## V1.1 Release Notes
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
@@ -13,9 +12,6 @@ Catalog API
 * Critics list (at the /critic endpoint), supports ?filter={"initial":"p"}
 * Publication and Critic lists can be retrieved by accessing respective object endpoints without an id (`/critic`, `/publication`)
 * Publication and Critic lists can be filtered alphabetically `?filter={"initial":"p"}`
-
-
->>>>>>> Stashed changes
 
 ## Setup and Build Notes
 
