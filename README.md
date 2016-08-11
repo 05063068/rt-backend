@@ -7,11 +7,13 @@
 * Name change from cummulative_boxoffice to cumulative_boxoffice
 * MovieCast now presented as MoviePersonnel, which has the 5 personnel types broken out separately. Actors can be limited with the special-case 'actorsLimit' filter.
 * EMS-349 Built in expander (&expand=true)
-* Critic object now a full-featured endpoint that can by retrieved directly
+* Publication and Critic now a full-featured endpoints that can by retrieved directly
 * CriticSupplementaryInfo, Critic reviews and Critic affiliated Publications available as relationships of the `critic` object
 * Critics list (at the /critic endpoint), supports ?filter={"initial":"p"}
 * Publication and Critic lists can be retrieved by accessing respective object endpoints without an id (`/critic`, `/publication`)
 * Publication and Critic lists can be filtered alphabetically `?filter={"initial":"p"}`
+* Critic has relationship of affiliated Publications (and vice versa)
+* Full counts Publication and Critic reviews retrievable via meta object
 
 ## Setup and Build Notes
 

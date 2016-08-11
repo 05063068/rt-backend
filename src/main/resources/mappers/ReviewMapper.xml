@@ -134,6 +134,28 @@
         </choose>
     </select>
 
+    <select id="selectReviewsByPublication" resultMap="reviewResultMap" parameterType="map">
+        SELECT
+        <include refid="reviewSelectColumns" />
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.publication_id = #{publication_id}
+        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND NOT review.category='DVD'
+        ORDER BY review.creation_date DESC
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+
+
 
     <resultMap id="reviewResultMap" type="com.rottentomatoes.movieapi.domain.model.Review">
         <id property="id" column="id" />
@@ -174,6 +196,28 @@
         WHERE review.movie_id = #{movie_id}
         AND (publication.country=#{country} OR critic_top.country=#{country})
         AND review.status = 'A'
+    </select>
+
+
+    <select id="selectAllReviewCountForCritic" resultMap="reviewMetaDataResultMap" parameterType="map">
+        SELECT
+        COUNT(*) as totalCount
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.critic_id = #{critic_id}
+        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND NOT review.category='DVD'
+    </select>
+
+
+    <select id="selectAllReviewCountForPublication" resultMap="reviewMetaDataResultMap" parameterType="map">
+        SELECT
+          COUNT(*) as totalCount
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.publication_id = #{publication_id}
+        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND NOT review.category='DVD'
     </select>
 
     <resultMap id="reviewMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
