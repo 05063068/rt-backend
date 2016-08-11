@@ -27,4 +27,8 @@ public class Critic extends AbstractModel {
     @JsonApiLookupIncludeAutomatically
     protected Iterable<Review> reviews;
 
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Publication> affiliatedPublications;
 }

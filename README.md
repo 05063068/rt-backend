@@ -1,5 +1,4 @@
-# catalog-api
-Catalog API
+# Catalog API/RT Backend
 
 ## V1.1 Release Notes
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
@@ -9,8 +8,10 @@ Catalog API
 * MovieCast now presented as MoviePersonnel, which has the 5 personnel types broken out separately. Actors can be limited with the special-case 'actorsLimit' filter.
 * EMS-349 Built in expander (&expand=true)
 * Critic object now a full-featured endpoint that can by retrieved directly
-* CriticSupplementaryInfo and critic reviews relationship
+* CriticSupplementaryInfo, Critic reviews and Critic affiliated Publications available as relationships of the `critic` object
 * Critics list (at the /critic endpoint), supports ?filter={"initial":"p"}
+* Publication and Critic lists can be retrieved by accessing respective object endpoints without an id (`/critic`, `/publication`)
+* Publication and Critic lists can be filtered alphabetically `?filter={"initial":"p"}`
 
 ## Setup and Build Notes
 
