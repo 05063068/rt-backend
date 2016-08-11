@@ -33,6 +33,26 @@
         AND deleted_ind = 0
     </select>
 
+    <select id="selectCriticsByPublication" resultMap="criticResultMap">
+        SELECT
+        critic.id,
+        critic.name,
+        critic.vanity_url,
+
+        critic.image_id AS img_id,
+        critic_img.img_width AS img_width,
+        critic_img.img_height AS img_height,
+        critic_img.format AS img_format,
+        'c' AS img_type
+        FROM critic
+        LEFT JOIN critic_top ON critic.id = critic_top.critic_id
+        LEFT JOIN critic_img ON critic.image_id = critic_img.id
+        INNER JOIN critic_publication_map
+          ON critic_publication_map.critic_id = critic.id
+        WHERE critic_publication_map.publication_id = #{publication_id}
+        AND deleted_ind = 0
+    </select>
+
     <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
       SELECT id, location, url, bio, favorites, quotes
       FROM critic
