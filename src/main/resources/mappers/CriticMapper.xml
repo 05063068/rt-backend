@@ -17,64 +17,65 @@
 
     <select id="selectCriticById" resultMap="criticResultMap">
         SELECT
-        critic.id,
-        critic.name,
-       	critic.vanity_url,
-
-        critic.image_id AS img_id,
-        critic_img.img_width AS img_width,
-        critic_img.img_height AS img_height,
-        critic_img.format AS img_format,
-        'c' AS img_type
+        <include refid="criticSelectColumns" />
         FROM critic
         LEFT JOIN critic_top ON critic.id = critic_top.critic_id
         LEFT JOIN critic_img ON critic.image_id = critic_img.id
         WHERE critic.id = #{id}
-        AND deleted_ind = 0
+        AND critic.deleted_ind = 0
     </select>
 
     <select id="selectCriticsByPublication" resultMap="criticResultMap">
         SELECT
-        critic.id,
-        critic.name,
-        critic.vanity_url,
-
-        critic.image_id AS img_id,
-        critic_img.img_width AS img_width,
-        critic_img.img_height AS img_height,
-        critic_img.format AS img_format,
-        'c' AS img_type
+        <include refid="criticSelectColumns" />
         FROM critic
         LEFT JOIN critic_top ON critic.id = critic_top.critic_id
         LEFT JOIN critic_img ON critic.image_id = critic_img.id
         INNER JOIN critic_publication_map
           ON critic_publication_map.critic_id = critic.id
         WHERE critic_publication_map.publication_id = #{publication_id}
-        AND deleted_ind = 0
+        AND critic.deleted_ind = 0
+        ORDER BY critic.name
+    </select>
+
+
+    <select id="selectCriticsByCriticGroup" resultMap="criticResultMap">
+        SELECT
+        <include refid="criticSelectColumns" />
+        FROM critic
+        LEFT JOIN critic_top ON critic.id = critic_top.critic_id
+        LEFT JOIN critic_img ON critic.image_id = critic_img.id
+        INNER JOIN critic_list_item
+        ON critic_list_item.critic_id = critic.id
+        WHERE critic_list_item.list_id = #{group_id}
+        AND critic.deleted_ind = 0
+        ORDER BY critic.name
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
     </select>
 
     <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
       SELECT id, location, url, bio, favorites, quotes
       FROM critic
       WHERE critic.id = #{id}
-      AND deleted_ind = 0
+      AND critic.deleted_ind = 0
     </select>
 
     <select id="selectAllCritics" resultMap="criticResultMap" parameterType="map">
         SELECT
-        critic.id,
-        critic.name,
-        critic.vanity_url,
-
-        critic.image_id AS img_id,
-        critic_img.img_width AS img_width,
-        critic_img.img_height AS img_height,
-        critic_img.format AS img_format,
-        'c' AS img_type
+        <include refid="criticSelectColumns" />
         FROM critic
+        LEFT JOIN critic_top ON critic.id = critic_top.critic_id
         LEFT JOIN critic_img ON critic.image_id = critic_img.id
         WHERE critic.deleted_ind = 0
-        /*AND critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT'*/
+        <!-- TODO: Diable checkuntil flags available in production AND critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT' -->
         <if test="initial != null">
             AND name LIKE #{initial}
         </if>
@@ -91,11 +92,11 @@
     </select>
 
     <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="vanity" column="vanity_url"/>
+        <id property="id" column="critic_id"/>
+        <result property="name" column="critic_name"/>
+        <result property="vanity" column="critic_vanity_url"/>
 
-        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id" />
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id" columnPrefix="critic_"/>
     </resultMap>    
 
     <resultMap id="criticSupplementaryInfoMap" type="com.rottentomatoes.movieapi.domain.model.CriticSupplementaryInfo">
