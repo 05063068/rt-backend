@@ -92,4 +92,9 @@ public class Movie extends AbstractModel {
     @JsonApiLookupIncludeAutomatically
     protected Iterable<Image> images;
 
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Quote> quotes;
+
 }
