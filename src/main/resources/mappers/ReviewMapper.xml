@@ -27,6 +27,7 @@
 		review.top_ind,  
 
         <include refid="com.rottentomatoes.movieapi.mappers.CriticMapper.criticSelectColumns" />,
+
         <include refid="com.rottentomatoes.movieapi.mappers.PublicationMapper.publicationSelectColumns" />,
 
         IF(critic_top.critic_id OR publication_top.publication_id,1,0) AS is_top_critic
@@ -168,7 +169,7 @@
         <result property="topCritic" column="is_top_critic"/>
 
         <!-- Return critic automatically with review for efficiency -->
-        <association property="critic" resultMap="com.rottentomatoes.movieapi.mappers.CriticMapper.criticResultMap" columnPrefix="critic_"/>
+        <association property="critic" resultMap="com.rottentomatoes.movieapi.mappers.CriticMapper.criticResultMap"/>
 
         <!-- Return publication automatically with review for efficiency -->
         <association property="publication" resultMap="com.rottentomatoes.movieapi.mappers.PublicationMapper.publicationResultMap" />
