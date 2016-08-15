@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.dbtalk.QuoteMapper">
+
+
+
+    <select id="selectQuoteById" resultMap="quoteResultMap">
+      SELECT
+        fact_movie_quote.id AS quote_id,
+        fact_movie_quote.creation_date AS creation_date,
+        fact_movie_quote_item.id AS line_id,
+        fact_movie_quote_item.quoted_line AS line_text,
+        fact_movie_quote_item.character_id AS line_character_id
+
+      FROM fact_movie_quote
+      LEFT JOIN fact_movie_quote_item
+        ON fact_movie_quote.id = fact_movie_quote_item.fact_movie_quote_id
+      WHERE fact_movie_quote.id = #{id}
+      ORDER BY fact_movie_quote_item.sequence
+    </select>
+
+
+    <select id="selectQuotesByMovie" resultMap="quoteResultMap">
+        SELECT
+        fact_movie_quote.id AS quote_id,
+        fact_movie_quote.creation_date AS creation_date,
+        fact_movie_quote_item.id AS line_id,
+        fact_movie_quote_item.quoted_line AS line_text,
+        fact_movie_quote_item.character_id AS line_character_id
+
+        FROM fact_movie_quote
+        LEFT JOIN fact_movie_quote_item
+        ON fact_movie_quote.id = fact_movie_quote_item.fact_movie_quote_id
+        WHERE fact_movie_quote.movie_id = #{movie_id}
+        ORDER BY fact_movie_quote.creation_date DESC, fact_movie_quote_item.sequence
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+
+    <resultMap id="quoteResultMap" type="com.rottentomatoes.movieapi.domain.model.Quote">
+        <id property="id" column="quote_id"/>
+        <result property="creationDate" column="creation_date" />
+
+        <collection property="lines" javaType="list" ofType="map" column="line_id">
+            <result property="text" column="line_text"/>
+            <result property="characterId" column="line_character_id" javaType="string"/>
+        </collection>
+    </resultMap>
+
+</mapper>
+
+
