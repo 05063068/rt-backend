@@ -7,5 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Character {
+    protected String id; // Does not inherit AbstractModel so id needs to be declared.
     protected String name;
 }
