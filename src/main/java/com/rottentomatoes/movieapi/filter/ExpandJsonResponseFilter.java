@@ -19,7 +19,6 @@ import io.katharsis.servlet.SampleKatharsisFilter;
 /**
  * Filter to Expand the response Json by including the related objects in the core object 
  */
-@Component
 public class ExpandJsonResponseFilter extends SampleKatharsisFilter {
 
     @Override
