@@ -14,6 +14,8 @@
 * Publication and Critic lists can be filtered alphabetically `?filter={"initial":"p"}`
 * Critic has relationship of affiliated Publications (and vice versa)
 * Full counts Publication and Critic reviews retrievable via meta object
+* Quotes retrieved from dbtalk `/movie/9?include=["quotes"]`
+* Critic groups `/criticGroup`, `/criticGroup/18?include=["critics"]`
 
 ## Setup and Build Notes
 
