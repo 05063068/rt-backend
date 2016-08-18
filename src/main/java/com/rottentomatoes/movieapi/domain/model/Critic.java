@@ -16,6 +16,8 @@ public class Critic extends AbstractModel {
     protected String name;
     protected Image mainImage;
     protected String vanity;
+    protected String status;
+    protected boolean tmApproved;
 
     @JsonApiToOne
     @JsonApiLazy

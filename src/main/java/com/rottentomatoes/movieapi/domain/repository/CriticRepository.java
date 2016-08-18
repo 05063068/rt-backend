@@ -51,11 +51,11 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
             if(requestParams.getFilters().containsKey("initial")) {
                 selectParams.put("initial", requestParams.getFilters().get("initial") + "%");
             }
-            if(requestParams.getFilters().containsKey("status") ) {
-                String status = (String)requestParams.getFilters().get("status");
-                if(status.equals(CriticStatus.CURRENT) || status.equals(CriticStatus.LEGACY)) {
-                    selectParams.put("status", status);
-                }
+            if(requestParams.getFilters().containsKey("lastInitial")){
+                selectParams.put("lastInitial", requestParams.getFilters().get("lastInitial")+"%");
+            }
+            if(requestParams.getFilters().containsKey("legacy")){
+                selectParams.put("legacy", requestParams.getFilters().get("legacy"));
             }
         }
 
