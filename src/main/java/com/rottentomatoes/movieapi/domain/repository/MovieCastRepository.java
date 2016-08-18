@@ -24,8 +24,8 @@ public class MovieCastRepository extends AbstractRepository implements ResourceR
     @Override
     public MovieCast findOne(String movieCastId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movieCastId", movieCastId);
-        MovieCast movieCast = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        MovieCast movieCast = (MovieCast) preEmsClient.callPreEmsEntity(selectParams, "movie-personnel", movieCastId, MovieCast.class);
         return movieCast;
     }
 

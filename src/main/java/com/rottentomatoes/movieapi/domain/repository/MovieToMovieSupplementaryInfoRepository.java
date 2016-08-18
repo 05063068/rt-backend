@@ -42,9 +42,10 @@ public class MovieToMovieSupplementaryInfoRepository extends AbstractRepository 
     @Override
     public MovieSupplementaryInfo findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
         setMovieParams(selectParams, requestParams);
-        MovieSupplementaryInfo movieSupplementaryInfo = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieSupplementaryInfo", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<MovieSupplementaryInfo>(preEmsConfig);
+        MovieSupplementaryInfo movieSupplementaryInfo = (MovieSupplementaryInfo) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/supplementary-info", MovieSupplementaryInfo.class);
+
 
         return movieSupplementaryInfo;
     }

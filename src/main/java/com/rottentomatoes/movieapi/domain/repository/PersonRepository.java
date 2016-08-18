@@ -1,5 +1,7 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.util.HashMap;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
@@ -22,7 +24,8 @@ public class PersonRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Person findOne(String personId, RequestParams requestParams) {
-        Person person = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PersonMapper.selectPersonById", personId);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Person person = (Person) preEmsClient.callPreEmsEntity(new HashMap<String,Object>(), "person", personId, Person.class);
         return person;
     }
 

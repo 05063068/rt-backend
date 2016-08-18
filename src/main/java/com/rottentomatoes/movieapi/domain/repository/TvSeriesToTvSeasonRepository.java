@@ -1,5 +1,7 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +41,11 @@ public class TvSeriesToTvSeasonRepository extends AbstractRepository implements 
     @Override
     public Iterable<TvSeason> findManyTargets(String tvSeriesId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("tv_series_id", tvSeriesId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
-        List<TvSeason> tvSeasonList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.TvSeasonMapper.selectTvSeasonForTvSeries", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<List<TvSeason>>(preEmsConfig);
+        List<TvSeason> tvSeasonList = (List<TvSeason>)preEmsClient.callPreEmsList(selectParams, "tv-series", tvSeriesId + "/season", TypeFactory.defaultInstance().constructCollectionType(List.class,  TvSeason.class));
+
         return tvSeasonList;
     }
 }

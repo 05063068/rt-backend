@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Publication;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
@@ -26,9 +27,9 @@ public class PublicationRepository extends AbstractRepository implements Resourc
     public Publication findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", id);
 
-        Publication publication = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PublicationMapper.selectPublicationById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Publication publication = (Publication) preEmsClient.callPreEmsEntity(selectParams, "publication", id, Publication.class);
         return publication;
     }
 
@@ -45,7 +46,9 @@ public class PublicationRepository extends AbstractRepository implements Resourc
             selectParams.put("initial",requestParams.getFilters().get("initial")+"%");
         }
 
-        List<Publication> publications = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.PublicationMapper.selectAllPublications", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<List<Publication>>(preEmsConfig);
+        List<Publication> publications = (List<Publication>)preEmsClient.callPreEmsList(selectParams, "publication", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Publication.class));
+
         return publications;
 
     }

@@ -2,10 +2,12 @@ package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.VideoClip;
@@ -52,18 +54,17 @@ public class MovieToVideoClipRepository extends AbstractRepository implements Re
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        MetaDataEnabledList<VideoClip> videoClipList;
-        videoClipList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipsForMovie", selectParams));
-
-        return videoClipList;
+        PreEmsClient preEmsClient = new PreEmsClient<List<VideoClip>>(preEmsConfig);
+        List<VideoClip> rawVideoClipList = (List<VideoClip>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/videoclip", TypeFactory.defaultInstance().constructCollectionType(List.class,  VideoClip.class));
+        return new MetaDataEnabledList(rawVideoClipList);
     }
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", castedResourceId);
 
-        RelatedMetaDataInformation metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipCountForMovie", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
+        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", castedResourceId + "/videoclip/meta", RelatedMetaDataInformation.class);
         if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }

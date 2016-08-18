@@ -21,6 +21,9 @@ public class AbstractRepository implements Serializable {
     @Autowired
     @Qualifier("talkSession")
     protected SqlSession talkSession;
+    
+    @Autowired
+    protected PreEmsConfig preEmsConfig;
 
 
     String LIMIT = "Limit";

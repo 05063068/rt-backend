@@ -38,14 +38,14 @@ public class MovieToCriticSummaryRepository extends AbstractRepository implement
     @Override
     public CriticSummary findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
             selectParams.put(CRITIC_TYPE, TOP_CRITICS);
         }
 
-        CriticSummary criticSummary = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticSummaryMapper.selectCriticSummaryForMovie", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        CriticSummary criticSummary = (CriticSummary) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/critic-summary", CriticSummary.class);
         return criticSummary;
     }
 

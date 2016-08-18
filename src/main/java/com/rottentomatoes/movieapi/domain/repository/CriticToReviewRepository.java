@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Critic;
 import com.rottentomatoes.movieapi.domain.model.Review;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("rawtypes")
@@ -45,11 +47,11 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
     @Override
     public Iterable<Review> findManyTargets(String criticId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("critic_id", criticId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsByCritic", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<Iterable<Review>>(preEmsConfig);
+        return (Iterable<Review>) preEmsClient.callPreEmsList(selectParams, "critic", criticId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
     }
 
 
@@ -58,8 +60,8 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
         RelatedMetaDataInformation metaData;
         Map<String, Object> selectParams = new HashMap<>();
 
-        selectParams.put("critic_id", criticId);
-        metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviewCountForCritic", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
+        metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "critic", criticId.toString() + "/review/meta", RelatedMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;
     }

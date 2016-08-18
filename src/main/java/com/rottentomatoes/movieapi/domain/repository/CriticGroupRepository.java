@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.CriticGroup;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
@@ -26,18 +27,19 @@ public class CriticGroupRepository extends AbstractRepository implements Resourc
     public CriticGroup findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", id);
-        CriticGroup criticGroup = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticGroupMapper.selectCriticGroupById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<CriticGroup>(preEmsConfig);
+        CriticGroup criticGroup = (CriticGroup)preEmsClient.callPreEmsEntity(selectParams, "critic-group", id, CriticGroup.class);
         return criticGroup;
     }
 
     @Override
     public Iterable<CriticGroup> findAll(RequestParams requestParams) {
 
+        PreEmsClient preEmsClient = new PreEmsClient<List<CriticGroup>>(preEmsConfig);
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
-        List<CriticGroup> criticGroups = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.CriticGroupMapper.selectAllCriticGroups", selectParams);
+        List<CriticGroup> criticGroups = (List<CriticGroup>) preEmsClient.callPreEmsList(selectParams, "critic-group", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  CriticGroup.class));
         return criticGroups;
 
     }
