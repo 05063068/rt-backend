@@ -30,11 +30,10 @@ public class TvEpisodeRepository extends AbstractRepository implements
     @Override
     public TvEpisode findOne(String tvEpisodeId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", tvEpisodeId);
-        TvEpisode tvSeries = sqlSession.selectOne(
-                "com.rottentomatoes.movieapi.mappers.TvEpisodeMapper.selectTvEpisodeById",
-                selectParams);
-        return tvSeries;
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        TvEpisode tvEpisode = (TvEpisode) preEmsClient.callPreEmsEntity(selectParams, "tv-episode", tvEpisodeId, TvEpisode.class);
+
+        return tvEpisode;
     }
 
     @Override

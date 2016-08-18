@@ -1,16 +1,20 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.domain.model.MoviePersonnel;
 import com.rottentomatoes.movieapi.enums.MovieCastRole;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaInformation;
+
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +45,14 @@ public class MovieToMoviePersonnelRepository extends AbstractRepository implemen
 
     @Override
     public MoviePersonnel findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
+        PreEmsClient preEmsClient = new PreEmsClient<List<MovieCast>>(preEmsConfig);
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("movie_id", movieId);
-        selectParams.put("actorsLimit", getActorsLimit(requestParams));
-
-
-        List<MovieCast> personList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieCastMapper.selectMovieCastForMovie", selectParams);
+        Integer limit = getActorsLimit(requestParams);
+        if (limit != null) {
+            selectParams.put("actorsLimit", limit);
+        }
+        List<MovieCast> personList = (List<MovieCast>) preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/personnel", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieCast.class));
 
         // Load MoviePersonnel object manually;
         MoviePersonnel moviePersonnel = new MoviePersonnel();

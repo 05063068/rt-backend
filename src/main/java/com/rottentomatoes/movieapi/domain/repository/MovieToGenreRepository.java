@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Genre;
@@ -39,10 +40,11 @@ public class MovieToGenreRepository extends AbstractRepository implements Relati
     @Override
     public Iterable<Genre> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
-        List<Genre> genreList = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.GenreMapper.selectGenresForMovie", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<List<Genre>>(preEmsConfig);
+        List<Genre> genreList = (List<Genre>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/genre", TypeFactory.defaultInstance().constructCollectionType(List.class,  Genre.class));
+
         return genreList;
     }
 }

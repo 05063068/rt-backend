@@ -2,7 +2,10 @@ package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import org.springframework.stereotype.Component;
 
@@ -52,9 +55,11 @@ public class MovieToAudienceReviewRepository extends AbstractRepository implemen
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.AudienceReviewMapper.selectAudienceReviewsForMovie", selectParams));
-        StringSanitizationUtils.sanitizeAudienceReviews(reviewList);
-        return reviewList;
+          PreEmsClient preEmsClient = new PreEmsClient<List<AudienceReview>>(preEmsConfig);
+          List<AudienceReview> rawReviewList = (List<AudienceReview>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/audience-review", TypeFactory.defaultInstance().constructCollectionType(List.class,  AudienceReview.class));
+          reviewList = new MetaDataEnabledList(rawReviewList);
+
+          return reviewList;
     }
 
     @Override

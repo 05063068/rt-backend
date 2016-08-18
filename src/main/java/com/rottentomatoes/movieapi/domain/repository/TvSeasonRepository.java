@@ -31,11 +31,8 @@ public class TvSeasonRepository extends AbstractRepository implements ResourceRe
     @Override
     public TvSeason findOne(String tvSeasonId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", tvSeasonId);
-        TvSeason tvSeason = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.TvSeasonMapper.selectTvSeasonById", selectParams);
-
-        tvSeason.setVanity(getSeasonVanity(tvSeason));
-
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        TvSeason tvSeason = (TvSeason) preEmsClient.callPreEmsEntity(selectParams, "tv-season", tvSeasonId, TvSeason.class);
         return tvSeason;
     }
 

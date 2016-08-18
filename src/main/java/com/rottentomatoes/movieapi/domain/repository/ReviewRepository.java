@@ -1,6 +1,8 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import com.rottentomatoes.movieapi.domain.model.Critic;
+import java.util.HashMap;
+
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Review;
@@ -27,7 +29,8 @@ public class ReviewRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Review findOne(String reviewId, RequestParams requestParams) {
-        Review review = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewById", reviewId);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Review review = (Review) preEmsClient.callPreEmsEntity(new HashMap<String,Object>(), "review", reviewId, Review.class);
         return review;
     }
 
