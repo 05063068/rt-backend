@@ -1,0 +1,48 @@
+package com.rottentomatoes.movieapi.domain.repository;
+
+import com.rottentomatoes.movieapi.domain.model.Person;
+import com.rottentomatoes.movieapi.domain.model.MovieFilmographyItem;
+import io.katharsis.queryParams.RequestParams;
+import io.katharsis.repository.RelationshipRepository;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@SuppressWarnings("rawtypes")
+@Component
+public class PersonToMovieFilmographyItemRepository extends AbstractRepository implements RelationshipRepository<Person, String, MovieFilmographyItem, String> {
+
+    @Override
+    public void setRelation(Person person, String s, String s2) {
+
+    }
+
+    @Override
+    public void setRelations(Person person, Iterable<String> iterable, String s) {
+
+    }
+
+    @Override
+    public void addRelations(Person person, Iterable<String> iterable, String s) {
+
+    }
+
+    @Override
+    public void removeRelations(Person person, Iterable<String> iterable, String s) {
+
+    }
+
+    @Override
+    public MovieFilmographyItem findOneTarget(String personId, String fieldName, RequestParams requestParams) {
+        return null;
+    }
+
+    @Override
+    public Iterable<MovieFilmographyItem> findManyTargets(String s, String s2, RequestParams requestParams) {
+        Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("person_id", s);
+
+        return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.FilmographyItemMapper.selectMovieFilmographyItemByPerson", selectParams);
+    }
+}

@@ -13,7 +13,7 @@
         SELECT
         movie_cast.*,
         movie_character.name character_name,
-        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonColumns"/>
+        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonColumns"/>,
         <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonImageColumns"/>
         FROM movie_cast
         INNER JOIN movie_person ON 
