@@ -16,6 +16,7 @@
 * Full counts Publication and Critic reviews retrievable via meta object
 * Quotes retrieved from dbtalk `/movie/9?include=["quotes"]`
 * Critic groups `/criticGroup`, `/criticGroup/18?include=["critics"]`
+* Person (e.g. actors) have PersonSupplementaryInfo and also Filmography via movieFilmography. (TV not implemented yet)
 
 ## Setup and Build Notes
 
