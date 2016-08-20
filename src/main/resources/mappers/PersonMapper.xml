@@ -7,7 +7,7 @@
     <sql id="moviePersonColumns">
         movie_person.name AS movie_person_name,
         movie_person.id AS movie_person_id,
-        vanity_actor_url.url AS movie_person_vanity,
+        vanity_actor_url.url AS movie_person_vanity
     </sql>
     <sql id="moviePersonImageColumns">
         preferred_img_id AS img_id,
@@ -35,18 +35,30 @@
     <!--  Note: movie_person.public_ind is unused -->
     <select id="selectPersonById" resultMap="personMap">
         SELECT
-        <include refid="moviePersonColumns"/>
+        <include refid="moviePersonColumns"/>,
         <include refid="moviePersonImageColumns"/>
         FROM movie_person
         <include refid="imageVanityJoins" />
 
         WHERE movie_person.id = #{id}
-        AND movie_person.deleted_ind = 0 
+        AND movie_person.deleted_ind = 0
     </select>
 
+    <select id="selectPersonSupplementaryInfo" resultMap="personSupplementaryInfoMap">
+        SELECT
+          movie_person.id,
+          movie_person.bio,
+          movie_person.bio_long,
+          movie_person.dob
+        FROM movie_person
+        WHERE movie_person.id = #{person_id}
+        AND movie_person.deleted_ind = 0
+    </select>
+
+    <!-- TODO: Figure out whether to observe public_ind or not -->
     <select id="selectPersonForMovieCast" resultMap="personMap">
         SELECT
-        <include refid="moviePersonColumns"/>
+        <include refid="moviePersonColumns"/>,
         <include refid="moviePersonImageColumns"/>
         FROM movie_person
         <include refid="imageVanityJoins" />
@@ -66,6 +78,13 @@
       
         <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id"/>
       
+    </resultMap>
+
+    <resultMap id="personSupplementaryInfoMap" type="com.rottentomatoes.movieapi.domain.model.PersonSupplementaryInfo">
+        <id property="id" column="id"/>
+        <result property="summaryBiography" column="bio" />
+        <result property="longBiography" column="bio_long" />
+        <result property="dateOfBirth" column="dob" />
     </resultMap>
 
 </mapper>
