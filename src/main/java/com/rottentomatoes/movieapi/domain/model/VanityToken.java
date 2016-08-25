@@ -10,5 +10,4 @@ import lombok.Setter;
 @Setter
 public class VanityToken extends AbstractModel {
     protected String movieId;
-    protected String platform;
 }
