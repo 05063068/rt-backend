@@ -156,6 +156,36 @@
     </select>
 
 
+    <select id="selectAllReviews" resultMap="reviewResultMap" parameterType="map">
+        SELECT <include refid="reviewSelectColumns" />
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+
+        <choose>
+            <when test="category == 'theatrical'">
+                AND review.category='MOV'
+            </when>
+            <when test="category == 'dvd'">
+                AND review.category='DVD'
+            </when>
+            <when test="category == 'quick'">
+                AND review.category='QCK'
+            </when>
+        </choose>
+
+        ORDER BY review.creation_date DESC
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
 
 
     <resultMap id="reviewResultMap" type="com.rottentomatoes.movieapi.domain.model.Review">
@@ -167,6 +197,7 @@
         <result property="url" column="url"/>
         <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
         <result property="topCritic" column="is_top_critic"/>
+        <result property="category" column="category" />
 
         <!-- Return critic automatically with review for efficiency -->
         <association property="critic" resultMap="com.rottentomatoes.movieapi.mappers.CriticMapper.criticResultMap"/>

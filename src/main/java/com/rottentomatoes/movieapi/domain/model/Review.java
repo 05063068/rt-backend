@@ -21,6 +21,7 @@ public class Review extends AbstractModel {
     protected ZonedDateTime creationDate;
     protected boolean topCritic;
     protected String score;
+    protected String category;
 
     @JsonApiToOne
     protected Critic critic;
