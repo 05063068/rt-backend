@@ -17,6 +17,7 @@
 * Quotes retrieved from dbtalk `/movie/9?include=["quotes"]`
 * Critic groups `/criticGroup`, `/criticGroup/18?include=["critics"]`
 * Person (e.g. actors) have PersonSupplementaryInfo and also Filmography via movieFilmography. (TV not implemented yet)
+* Latest theatrical, dvd and quick reviews can be retrieved like so `/review?filter={"category":"dvd"}` (other categories are `theatrical` and `quick`)
 
 ## Setup and Build Notes
 
