@@ -9,7 +9,7 @@
 * EMS-349 Built in expander (&expand=true)
 * Publication and Critic now a full-featured endpoints that can by retrieved directly
 * CriticSupplementaryInfo, Critic reviews and Critic affiliated Publications available as relationships of the `critic` object
-* Critics list (at the /critic endpoint), supports ?filter={"initial":"p"}
+* Critics list (at the /critic endpoint), supports initial `?filter={"initial":"p"}` and status `?filter={"status":"current"}` filtering. (status can be `current` or `legacy`)  
 * Publication and Critic lists can be retrieved by accessing respective object endpoints without an id (`/critic`, `/publication`)
 * Publication and Critic lists can be filtered alphabetically `?filter={"initial":"p"}`
 * Critic has relationship of affiliated Publications (and vice versa)

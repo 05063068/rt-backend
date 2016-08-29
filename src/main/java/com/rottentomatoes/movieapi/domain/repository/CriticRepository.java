@@ -41,8 +41,13 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
 
-        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("initial")){
-            selectParams.put("initial",requestParams.getFilters().get("initial")+"%");
+        if(requestParams.getFilters() != null){
+            if(requestParams.getFilters().containsKey("initial")) {
+                selectParams.put("initial", requestParams.getFilters().get("initial") + "%");
+            }
+            if(requestParams.getFilters().containsKey("status")) {
+                selectParams.put("status", requestParams.getFilters().get("status"));
+            }
         }
 
         List<Critic> critics = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.CriticMapper.selectAllCritics", selectParams);
