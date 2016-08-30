@@ -12,6 +12,12 @@ import java.util.Map;
 @Component
 public class CriticRepository extends AbstractRepository implements ResourceRepository<Critic, String> {
 
+    // Acceptable values for status filter
+    private interface CriticStatus {
+        String CURRENT = "current";
+        String LEGACY = "legacy";
+    }
+
     @Override
     public <S extends Critic> S save(S entity) {
         return null;
@@ -41,8 +47,16 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
 
-        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("initial")){
-            selectParams.put("initial",requestParams.getFilters().get("initial")+"%");
+        if(requestParams.getFilters() != null){
+            if(requestParams.getFilters().containsKey("initial")) {
+                selectParams.put("initial", requestParams.getFilters().get("initial") + "%");
+            }
+            if(requestParams.getFilters().containsKey("status") ) {
+                String status = (String)requestParams.getFilters().get("status");
+                if(status.equals(CriticStatus.CURRENT) || status.equals(CriticStatus.LEGACY)) {
+                    selectParams.put("status", status);
+                }
+            }
         }
 
         List<Critic> critics = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.CriticMapper.selectAllCritics", selectParams);

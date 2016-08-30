@@ -24,7 +24,6 @@
         FROM critic
         WHERE vanity_url = #{criticVanityToken}
         AND deleted_ind = 0
-        AND (critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT')
         ORDER BY creation_date DESC
 		LIMIT 1
     </select>

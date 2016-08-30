@@ -23,7 +23,6 @@
         LEFT JOIN critic_img ON critic.image_id = critic_img.id
         WHERE critic.id = #{id}
         AND critic.deleted_ind = 0
-        AND (critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT')
     </select>
 
     <select id="selectCriticsByPublication" resultMap="criticResultMap">
@@ -36,7 +35,6 @@
           ON critic_publication_map.critic_id = critic.id
         WHERE critic_publication_map.publication_id = #{publication_id}
         AND critic.deleted_ind = 0
-        AND (critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT')
         ORDER BY critic.name
     </select>
 
@@ -51,7 +49,6 @@
         ON critic_list_item.critic_id = critic.id
         WHERE critic_list_item.list_id = #{group_id}
         AND critic.deleted_ind = 0
-        AND (critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT')
         ORDER BY critic.name
 
         <choose>
@@ -79,10 +76,20 @@
         LEFT JOIN critic_top ON critic.id = critic_top.critic_id
         LEFT JOIN critic_img ON critic.image_id = critic_img.id
         WHERE critic.deleted_ind = 0
-        AND (critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT')
+
         <if test="initial != null">
             AND name LIKE #{initial}
         </if>
+
+        <choose>
+            <when test="status == 'current'">
+                AND (critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT')
+            </when>
+            <when test="status == 'legacy'">
+                AND (critic.status = 'LEGACY' OR critic.status = 'ADMIN_PROTECTED_LEGACY')
+            </when>
+        </choose>
+
         ORDER BY critic.name
 
         <choose>
