@@ -65,6 +65,7 @@
                 <include refid="commonSubselectJoins" />
                 WHERE review.movie_id = #{movie_id}
                 AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+                AND review.quote IS NOT NULL
                 AND (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL)
                 ORDER BY review.creation_date DESC
                 LIMIT 6
@@ -75,6 +76,7 @@
                 <include refid="commonSubselectJoins" />
                 WHERE review.movie_id = #{movie_id}
                 AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+                AND review.quote IS NOT NULL
                 AND NOT (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL)
                 ORDER BY review.creation_date DESC
                 LIMIT 6
