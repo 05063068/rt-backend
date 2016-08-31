@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.MediaListItemMapper">
+
+    <select id="selectMediaListItemById" resultMap="mediaListItemMap" parameterType="map">
+        SELECT
+        id,
+        media_list_id,
+        media_id,
+        media_type,
+        sortkey,
+        creation_date
+        FROM media_list_item
+        WHERE id = #{id}
+        LIMIT #{offset}, #{limit};
+    </select>
+
+    <select id="selectMediaListItemsForMediaList" resultMap="mediaListItemMap" parameterType="map">
+        SELECT
+        id,
+        media_list_id,
+        media_id,
+        media_type,
+        sortkey,
+        creation_date
+        FROM media_list_item
+        WHERE media_list_id = #{media_list_id}
+        <if test="limit != null">LIMIT #{limit}</if>
+    </select>
+
+    <resultMap id="mediaListItemMap" type="com.rottentomatoes.movieapi.domain.model.MediaListItem">
+        <id property="id" column="id" />
+        <result property="mediaListId" column="media_list_id"/>
+        <result property="mediaType" column="media_type"/>
+        <result property="sortkey" column="sortkey"/>
+        <result property="creationDate" column="creation_date"/>
+    </resultMap>
+
+</mapper>

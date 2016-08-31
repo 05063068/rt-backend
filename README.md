@@ -1,5 +1,8 @@
 # Catalog API/RT Backend
 
+## V1.2 Release Notes
+* Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
+
 ## V1.1 Release Notes
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
 * Generic window tagging. Release windows are provided as an array of free-form tags (instead of separate 'theaterical' and 'dvd' categories)
