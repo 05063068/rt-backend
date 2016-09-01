@@ -8,7 +8,8 @@
         publication.name publication_name,
         publication.url publication_url,
         publication.editorial_url publication_editorial_url,
-        publication.country publication_country
+        publication.country publication_country,
+        publication.approved_ind
     </sql>
 
     <select id="selectPublicationById" resultMap="publicationResultMap">
@@ -54,6 +55,7 @@
         <result property="url" column="publication_url" />
         <result property="editorialUrl" column="publication_editorial_url" />
         <result property="country" column="publication_country" />
+        <result property="tomatometerApproved" column="approved_ind" />
     </resultMap>
 
 
