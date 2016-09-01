@@ -16,7 +16,7 @@
         <include refid="publicationSelectColumns" />
       FROM publication
       WHERE publication.id = #{id}
-      AND approved_ind=1 AND deleted_ind=0
+      AND deleted_ind=0
     </select>
 
     <select id="selectPublicationsByCritic" resultMap="publicationResultMap">
@@ -25,7 +25,7 @@
         FROM publication
         INNER JOIN critic_publication_map ON publication.id = critic_publication_map.publication_id
         WHERE critic_publication_map.critic_id = #{critic_id}
-        AND publication.approved_ind=1 AND publication.deleted_ind=0
+        AND publication.deleted_ind=0
     </select>
 
 
@@ -33,7 +33,7 @@
         SELECT
         <include refid="publicationSelectColumns" />
         FROM publication
-        WHERE approved_ind=1 AND deleted_ind=0
+        WHERE deleted_ind=0
         <if test="initial != null">
             AND publication.name LIKE #{initial}
         </if>
