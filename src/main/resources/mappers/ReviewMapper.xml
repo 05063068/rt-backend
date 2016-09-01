@@ -39,7 +39,7 @@
         FROM review
         <include refid="commonSubselectJoins" />
         WHERE review.id = #{id}
-        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND review.status = 'A'
     </select>
 
     <sql id="commonSubselectJoins">
@@ -84,7 +84,7 @@
         ) featured ON review.id=featured.id
 
         WHERE review.movie_id = #{movie_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND review.status = 'A'
         AND NOT review.category='DVD'
         ORDER BY featured.sort_key DESC, review.creation_date DESC
         <choose>
@@ -102,7 +102,7 @@
         FROM review
         <include refid="commonSubselectJoins" />
         WHERE review.movie_id = #{movie_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND review.status = 'A'
         AND NOT review.category='DVD'
         HAVING is_top_critic = 1
         ORDER BY review.creation_date DESC
@@ -123,7 +123,7 @@
         FROM review
         <include refid="commonSubselectJoins" />
         WHERE review.critic_id = #{critic_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND review.status = 'A'
         AND NOT review.category='DVD'
         ORDER BY review.creation_date DESC
 
@@ -143,7 +143,7 @@
         FROM review
         <include refid="commonSubselectJoins" />
         WHERE review.publication_id = #{publication_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND review.status = 'A'
         AND NOT review.category='DVD'
         ORDER BY review.creation_date DESC
 
@@ -162,7 +162,7 @@
         SELECT <include refid="reviewSelectColumns" />
         FROM review
         <include refid="commonSubselectJoins" />
-        WHERE review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        WHERE review.status = 'A'
 
         <choose>
             <when test="category == 'theatrical'">
@@ -239,7 +239,7 @@
         FROM review
         <include refid="commonSubselectJoins" />
         WHERE review.critic_id = #{critic_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND review.status = 'A'
         AND NOT review.category='DVD'
     </select>
 
@@ -250,7 +250,7 @@
         FROM review
         <include refid="commonSubselectJoins" />
         WHERE review.publication_id = #{publication_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND review.status = 'A'
         AND NOT review.category='DVD'
     </select>
 
