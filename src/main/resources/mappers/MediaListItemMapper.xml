@@ -33,6 +33,7 @@
         <id property="id" column="id" />
         <result property="mediaListId" column="media_list_id"/>
         <result property="mediaType" column="media_type"/>
+        <result property="mediaId" column="media_id"/>
         <result property="sortkey" column="sortkey"/>
         <result property="creationDate" column="creation_date"/>
     </resultMap>
