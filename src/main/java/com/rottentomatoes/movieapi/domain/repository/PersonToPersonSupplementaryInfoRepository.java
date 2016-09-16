@@ -42,8 +42,8 @@ public class PersonToPersonSupplementaryInfoRepository extends AbstractRepositor
     @Override
     public PersonSupplementaryInfo findOneTarget(String personId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("person_id", personId);
-        PersonSupplementaryInfo personSupplementaryInfo = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PersonMapper.selectPersonSupplementaryInfo", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        PersonSupplementaryInfo personSupplementaryInfo = (PersonSupplementaryInfo) preEmsClient.callPreEmsEntity(selectParams, "person", personId + "/supplement", PersonSupplementaryInfo.class);
 
         return personSupplementaryInfo;
     }

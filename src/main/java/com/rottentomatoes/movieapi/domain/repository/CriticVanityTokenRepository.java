@@ -23,8 +23,8 @@ public class CriticVanityTokenRepository extends AbstractRepository implements R
     @Override
     public CriticVanityToken findOne(String criticVanityToken, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("criticVanityToken", criticVanityToken);
-        CriticVanityToken token = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VanityTokenMapper.selectCriticVanityToken", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        CriticVanityToken token = (CriticVanityToken) preEmsClient.callPreEmsEntity(selectParams, "critic-vanity-token", criticVanityToken, CriticVanityToken.class);
         return token;
     }
 
