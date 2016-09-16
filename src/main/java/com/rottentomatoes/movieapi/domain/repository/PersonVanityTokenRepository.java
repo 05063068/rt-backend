@@ -23,8 +23,8 @@ public class PersonVanityTokenRepository extends AbstractRepository implements R
     @Override
     public PersonVanityToken findOne(String personVanityToken, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("personVanityToken", personVanityToken);
-        PersonVanityToken token = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VanityTokenMapper.selectPersonVanityToken", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        PersonVanityToken token = (PersonVanityToken) preEmsClient.callPreEmsEntity(selectParams, "person-vanity-token", personVanityToken, PersonVanityToken.class);
         return token;
     }
 

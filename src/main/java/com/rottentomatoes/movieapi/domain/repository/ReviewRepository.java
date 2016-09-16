@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Critic;
 import java.util.HashMap;
 
@@ -46,7 +47,9 @@ public class ReviewRepository extends AbstractRepository implements ResourceRepo
             selectParams.put("category", requestParams.getFilters().get("category"));
         }
 
-        List<Review> reviews = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviews", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<List<Review>>(preEmsConfig);
+        List<Review> reviews = (List<Review>)preEmsClient.callPreEmsList(selectParams, "review", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
+
         return reviews;
     }
 
