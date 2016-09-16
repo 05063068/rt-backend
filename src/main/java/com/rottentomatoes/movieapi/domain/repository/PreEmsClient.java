@@ -76,7 +76,6 @@ public class PreEmsClient<T> {
             }
             urlString = UriComponentsBuilder.fromUriString(urlString).queryParams(params).build(true).toString();
             URL url = new URL(urlString);
-            Object rawResponse = jsonDecoder.doDecode(url);
             jsonResult = jsonDecoder.doDecode(url);
         } catch (MalformedURLException mue) {
             preEmsConfig.log("Malformed URL: ", mue);
