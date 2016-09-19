@@ -6,9 +6,7 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class PromoSectionToPromoItemRepository extends AbstractRepository implements RelationshipRepository<PromoSection, String, PromoItem, String> {
@@ -45,6 +43,31 @@ public class PromoSectionToPromoItemRepository extends AbstractRepository implem
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
         List<PromoItem> promoItems = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.PromoItemMapper.selectPromoItemsByPromoSectionId", selectParams);
-        return promoItems;
+
+
+        HashMap<Integer, PromoItem> promoItemMap = getPromoItemsByStartTime(promoItems);
+
+        return promoItemMap.values();
+    }
+
+    // Rolls through results and returns one record per sequence number. This is meant to be
+    // temporary so that work on the front end can continue. The best solution would be to
+    // do this in sql.
+    private HashMap<Integer, PromoItem> getPromoItemsByStartTime(List<PromoItem> promoItems) {
+        HashMap<Integer, PromoItem> promoItemMap = new HashMap<>();
+        for (PromoItem promoItem : promoItems) {
+            int sequence = promoItem.getSequence();
+            if (promoItemMap.containsKey(sequence)) {
+                PromoItem existingPromoItem = promoItemMap.get(sequence);
+
+                if (existingPromoItem.getStartTime().isBefore(promoItem.getStartTime())) {
+                    promoItemMap.put(sequence, promoItem);
+                }
+
+            } else {
+                promoItemMap.put(sequence, promoItem);
+            }
+        }
+        return promoItemMap;
     }
 }

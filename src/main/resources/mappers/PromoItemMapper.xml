@@ -51,6 +51,7 @@
         WHERE deleted_ind = 0
         AND promo_section = #{promo_section}
         AND country = #{country}
+        AND start_time &lt; NOW()
         ORDER BY sequence
     </select>
 
