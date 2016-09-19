@@ -47,7 +47,6 @@ public class MovieToMoviePersonnelRepository extends AbstractRepository implemen
     public MoviePersonnel findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         PreEmsClient preEmsClient = new PreEmsClient<List<MovieCast>>(preEmsConfig);
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
         Integer limit = getActorsLimit(requestParams);
         if (limit != null) {
             selectParams.put("actorsLimit", limit);
