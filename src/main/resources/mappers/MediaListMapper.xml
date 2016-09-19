@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.MediaListMapper">
+
+    <select id="selectMediaListsForCategory" resultMap="mediaListMap" parameterType="map">
+        SELECT
+        id,
+        category_id,
+        start_date,
+        title
+        FROM media_list
+        WHERE category_id = #{category_id}
+        AND deleted_ind = 0
+        AND start_date &lt;= CURDATE()
+        ORDER BY start_date DESC limit 1;
+    </select>
+
+    <select id="selectMediaLists" resultMap="mediaListMap" parameterType="map">
+        SELECT
+        id,
+        category_id,
+        start_date,
+        title
+        FROM media_list
+        WHERE deleted_ind = 0
+        LIMIT #{offset}, #{limit};
+    </select>
+
+    <select id="selectMediaList" resultMap="mediaListMap" parameterType="map">
+        SELECT
+        id,
+        category_id,
+        start_date,
+        title
+        FROM media_list
+        WHERE id = #{id}
+        AND deleted_ind = 0
+    </select>
+
+    <resultMap id="mediaListMap" type="com.rottentomatoes.movieapi.domain.model.MediaList">
+        <id property="id" column="id" />
+        <result property="title" column="title"/>
+        <result property="startDate" column="start_date"/>
+        <result property="categoryId" column="category_id"/>
+    </resultMap>
+
+</mapper>
