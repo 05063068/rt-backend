@@ -18,6 +18,7 @@ public class Critic extends AbstractModel {
     protected String vanity;
     protected String status;
     protected boolean tmApproved;
+    protected Integer agreePercent;
 
     @JsonApiToOne
     @JsonApiLazy
@@ -33,4 +34,13 @@ public class Critic extends AbstractModel {
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected Iterable<Publication> affiliatedPublications;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<CriticGroup> affiliatedGroups;
+
+    public void setAgreePercent(Integer percentage) {
+        agreePercent = percentage;
+    }
 }

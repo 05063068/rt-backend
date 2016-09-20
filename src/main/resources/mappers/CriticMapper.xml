@@ -24,7 +24,7 @@
         FROM critic
         LEFT JOIN critic_top ON critic.id = critic_top.critic_id
         LEFT JOIN critic_img ON critic.image_id = critic_img.id
-        WHERE critic.id = #{id}
+        WHERE (critic.id = #{critic_id} OR critic.vanity_url = #{critic_id})
         AND critic.deleted_ind = 0
     </select>
 
@@ -67,7 +67,7 @@
     <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
       SELECT id, location, url, bio, favorites, quotes
       FROM critic
-      WHERE critic.id = #{id}
+      WHERE (critic.id = #{critic_id} OR critic.vanity_url = #{critic_id})
       AND critic.deleted_ind = 0
     </select>
 

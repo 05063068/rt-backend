@@ -23,11 +23,35 @@
         ORDER BY name
     </select>
 
+    <select id="selectCriticGroupsByCritic" resultMap="criticGroupResultMap" parameterType="map">
+        SELECT
+        critic_list.id AS id,
+        name,
+        url
+        FROM critic_list
+        INNER JOIN critic_list_item
+        ON critic_list.id = critic_list_item.list_id
+        WHERE critic_list_item.critic_id = #{critic_id}
+        AND deleted_ind = 0
+        ORDER BY name
+    </select>
+
+    <select id="selectAllCriticGroupCountForCritic" resultMap="criticGroupMetaDataResultMap" parameterType="map">
+        SELECT
+            COUNT(*) AS totalCount
+        FROM critic_list
+        INNER JOIN critic_list_item
+        ON critic_list.id = critic_list_item.list_id
+        WHERE critic_list_item.critic_id = #{critic_id}
+        AND deleted_ind = 0
+    </select>
 
     <resultMap id="criticGroupResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticGroup">
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="url" column="url" />
-
     </resultMap>
+
+    <resultMap id="criticGroupMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
+
 </mapper>

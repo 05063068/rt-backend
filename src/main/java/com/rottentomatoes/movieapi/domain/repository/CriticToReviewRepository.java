@@ -46,6 +46,12 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
     public Iterable<Review> findManyTargets(String criticId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("critic_id", criticId);
+
+        // order of the reviews, can be one of "best" or "worst"
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("order")) {
+            selectParams.put("order", requestParams.getFilters().get("order"));
+        }
+
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
