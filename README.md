@@ -4,6 +4,7 @@
 * Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
 * Added promo item support. `/promoSection`, `/promoItem`
 * TvSeason now has vanity and tomatometer data. 
+* Tomatometer approved filter added to `/critic`.`filter={"tmApproved":[true/false]}`
 
 ## V1.1 Release Notes
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
