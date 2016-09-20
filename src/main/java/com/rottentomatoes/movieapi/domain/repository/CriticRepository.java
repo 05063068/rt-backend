@@ -12,12 +12,6 @@ import java.util.Map;
 @Component
 public class CriticRepository extends AbstractRepository implements ResourceRepository<Critic, String> {
 
-    // Acceptable values for status filter
-    private interface CriticStatus {
-        String CURRENT = "current";
-        String LEGACY = "legacy";
-    }
-
     @Override
     public <S extends Critic> S save(S entity) {
         return null;
@@ -56,6 +50,9 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
             }
             if(requestParams.getFilters().containsKey("legacy")){
                 selectParams.put("legacy", requestParams.getFilters().get("legacy"));
+            }
+            if(requestParams.getFilters().containsKey("tmApproved")){
+                selectParams.put("tmApproved", requestParams.getFilters().get("tmApproved"));
             }
         }
 

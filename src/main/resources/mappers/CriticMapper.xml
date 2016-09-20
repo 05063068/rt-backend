@@ -94,6 +94,9 @@
         <if test="lastInitial != null">
             AND critic.last_name LIKE #{lastInitial}
         </if>
+        <if test="tmApproved != null">
+            AND critic.approved_ind = #{tmApproved}
+        </if>
 
         ORDER BY critic_lastname
 
