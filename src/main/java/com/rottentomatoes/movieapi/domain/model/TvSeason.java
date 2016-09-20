@@ -1,6 +1,7 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 import java.util.Date;
+import java.util.Map;
 
 import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
@@ -19,6 +20,10 @@ public class TvSeason extends AbstractModel {
     private String tvSeriesId;
     private Date startDate;
     private Date endDate;
+    private String vanity;
+
+    // complex (nested) attributes
+    protected Map<String, Object> tomatometer;
 
     @JsonApiToMany
     @JsonApiLazy

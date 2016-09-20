@@ -8,6 +8,8 @@ import io.katharsis.response.MetaInformation;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +33,9 @@ public class TvSeasonRepository extends AbstractRepository implements ResourceRe
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("id", tvSeasonId);
         TvSeason tvSeason = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.TvSeasonMapper.selectTvSeasonById", selectParams);
+
+        tvSeason.setVanity(getSeasonVanity(tvSeason));
+
         return tvSeason;
     }
 
@@ -42,6 +47,18 @@ public class TvSeasonRepository extends AbstractRepository implements ResourceRe
     @Override
     public Iterable<TvSeason> findAll(Iterable<String> iterable, RequestParams requestParams) {
         return null;
+    }
+
+    // Sets the vanity for the season which unfortunately does not
+    // exist in the db and has to be constructed.
+    private String getSeasonVanity(TvSeason tvSeason) {
+        String seasonNumber = tvSeason.getSeasonNumber();
+        if (seasonNumber != null) {
+            NumberFormat doubleZeroFormatter = new DecimalFormat("00");
+            return String.format("/tv/%s/s%s/", tvSeason.getVanity(), doubleZeroFormatter.format(Integer.parseInt(tvSeason.getSeasonNumber())));
+        } else {
+            return String.format("/tv/%s/%d/", tvSeason.getVanity(), Integer.parseInt(tvSeason.getId()));
+        }
     }
 
 }
