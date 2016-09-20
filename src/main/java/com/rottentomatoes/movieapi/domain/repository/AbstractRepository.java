@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.rottentomatoes.movieapi.enums.Country;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import io.katharsis.queryParams.PaginationKeys;
@@ -14,14 +12,7 @@ import io.katharsis.queryParams.RequestParams;
 
 @Component
 public class AbstractRepository implements Serializable {
-    @Autowired
-    @Qualifier("sqlSession")
-    protected SqlSession sqlSession;
 
-    @Autowired
-    @Qualifier("talkSession")
-    protected SqlSession talkSession;
-    
     @Autowired
     protected PreEmsConfig preEmsConfig;
 
