@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.TvSeasonMapper">
+
+    <sql id="tvSeasonSelectSql">
+        tv_season.id,
+        tv_season.name,
+        tv_season.season_number,
+        tv_season.description,
+        tv_season.tv_series_id,
+        tv_season.start_date,
+        tv_season.end_date
+        FROM tv_season
+    </sql>
+
+    <select id="selectTvSeasonById" resultMap="tvSeasonResultMap" parameterType="map">
+        SELECT
+        <include refid="tvSeasonSelectSql"/>
+        WHERE tv_season.id = #{id}
+    </select>
+
+    <resultMap id="tvSeasonResultMap" type="com.rottentomatoes.movieapi.domain.model.TvSeason">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="seasonNumber" column="season_number"/>
+        <result property="description" column="description"/>
+        <result property="tvSeriesId" column="tv_series_id"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+    </resultMap>
+
+    <select id="selectTvSeasonForTvSeries" resultMap="tvSeasonResultMap"  parameterType="map">
+          SELECT 
+              tv_season.id,
+              tv_season.name,
+              tv_season.season_number,
+              tv_season.description,
+              tv_season.tv_series_id,
+              tv_season.start_date,
+              tv_season.end_date
+          FROM tv_season
+          WHERE tv_season.tv_series_id = #{tv_series_id}
+        <if test="limit != null">LIMIT #{limit}</if>
+    </select>
+</mapper>

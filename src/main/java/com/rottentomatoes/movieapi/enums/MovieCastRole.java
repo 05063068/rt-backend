@@ -23,7 +23,7 @@ public enum MovieCastRole {
         return this.name;
     }
 
-    private String getCode() {
+    public String getCode() {
         return this.code;
     }
 

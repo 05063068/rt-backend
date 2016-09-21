@@ -1,5 +1,7 @@
 package com.rottentomatoes.movieapi.domain.model;
 
+import io.katharsis.resource.annotations.JsonApiLazy;
+import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToOne;
 import lombok.Getter;
@@ -19,6 +21,7 @@ public class Review extends AbstractModel {
     protected ZonedDateTime creationDate;
     protected boolean topCritic;
     protected String score;
+    protected String category;
 
     @JsonApiToOne
     protected Critic critic;

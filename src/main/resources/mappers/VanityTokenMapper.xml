@@ -1,18 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+
 <mapper namespace="com.rottentomatoes.movieapi.mappers.VanityTokenMapper">
     <select id="selectVanityToken" resultMap="vanityTokenResultMap">
-		SELECT *
-			FROM vanity_movie_url
-			WHERE url = #{vanityToken}
-			AND primary_ind = 1
-			AND platform = 'RTO'
+		SELECT movie_id, url
+        FROM vanity_movie_url
+        WHERE url = #{vanityToken}
+        AND platform = 'RTO' <!-- No deleted_ind -->
+        ORDER BY primary_ind DESC, creation_date DESC
+        LIMIT 1
     </select>
-    
-	<resultMap id="vanityTokenResultMap" type="com.rottentomatoes.movieapi.domain.model.VanityToken">
+    <select id="selectPersonVanityToken" resultMap="personVanityTokenResultMap">
+        SELECT movie_person_id, url
+        FROM vanity_actor_url
+        WHERE url = #{personVanityToken}
+        AND platform = 'RTO'
+        AND deleted_ind = 0
+        ORDER BY primary_ind DESC, creation_date DESC
+		LIMIT 1
+    </select>
+    <select id="selectCriticVanityToken" resultMap="criticVanityTokenResultMap">
+        SELECT id, vanity_url
+        FROM critic
+        WHERE vanity_url = #{criticVanityToken}
+        AND deleted_ind = 0
+        ORDER BY creation_date DESC
+		LIMIT 1
+    </select>
+
+
+
+    <resultMap id="vanityTokenResultMap" type="com.rottentomatoes.movieapi.domain.model.VanityToken">
         <id property="id" column="url" />
         <result property="movieId" column="movie_id" />
-        <result property="platform" column="platform" />
+    </resultMap>
+
+    <resultMap id="personVanityTokenResultMap" type="com.rottentomatoes.movieapi.domain.model.PersonVanityToken">
+        <id property="id" column="url" />
+        <result property="personId" column="movie_person_id" />
+    </resultMap>
+
+    <resultMap id="criticVanityTokenResultMap" type="com.rottentomatoes.movieapi.domain.model.CriticVanityToken">
+        <id property="id" column="vanity_url" />
+        <result property="criticId" column="id" />
     </resultMap>
 </mapper>

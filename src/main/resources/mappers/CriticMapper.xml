@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.CriticMapper">
+
+    <sql id="criticSelectColumns">
+        critic.id AS critic_id,
+        critic.name AS critic_name,
+        critic.last_name AS critic_lastname,
+       	critic.vanity_url AS critic_vanity_url,
+        critic.status AS critic_status,
+        critic.approved_ind AS critic_approved,
+
+        critic.image_id AS critic_img_id,
+        critic_img.img_width AS critic_img_width,
+        critic_img.img_height AS critic_img_height,
+        critic_img.format AS critic_img_format,
+        'c' AS critic_img_type
+    </sql>
+
+    <select id="selectCriticById" resultMap="criticResultMap">
+        SELECT
+        <include refid="criticSelectColumns" />
+        FROM critic
+        LEFT JOIN critic_top ON critic.id = critic_top.critic_id
+        LEFT JOIN critic_img ON critic.image_id = critic_img.id
+        WHERE critic.id = #{id}
+        AND critic.deleted_ind = 0
+    </select>
+
+    <select id="selectCriticsByPublication" resultMap="criticResultMap">
+        SELECT
+        <include refid="criticSelectColumns" />
+        FROM critic
+        LEFT JOIN critic_top ON critic.id = critic_top.critic_id
+        LEFT JOIN critic_img ON critic.image_id = critic_img.id
+        INNER JOIN critic_publication_map
+          ON critic_publication_map.critic_id = critic.id
+        WHERE critic_publication_map.publication_id = #{publication_id}
+        AND critic.deleted_ind = 0
+        ORDER BY critic.name
+    </select>
+
+
+    <select id="selectCriticsByCriticGroup" resultMap="criticResultMap">
+        SELECT
+        <include refid="criticSelectColumns" />
+        FROM critic
+        LEFT JOIN critic_top ON critic.id = critic_top.critic_id
+        LEFT JOIN critic_img ON critic.image_id = critic_img.id
+        INNER JOIN critic_list_item
+        ON critic_list_item.critic_id = critic.id
+        WHERE critic_list_item.list_id = #{group_id}
+        AND critic.deleted_ind = 0
+        ORDER BY critic.name
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+    <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
+      SELECT id, location, url, bio, favorites, quotes
+      FROM critic
+      WHERE critic.id = #{id}
+      AND critic.deleted_ind = 0
+    </select>
+
+    <select id="selectAllCritics" resultMap="criticResultMap" parameterType="map">
+        SELECT
+        <include refid="criticSelectColumns" />
+        FROM critic
+        LEFT JOIN critic_top ON critic.id = critic_top.critic_id
+        LEFT JOIN critic_img ON critic.image_id = critic_img.id
+        WHERE critic.deleted_ind = 0
+
+        <!-- TODO: Diable checkuntil flags available in production AND critic.status = 'CURRENT' OR critic.status = 'ADMIN_PROTECTED_CURRENT' -->
+        <choose>
+            <when test="legacy == true">
+                AND critic.status IN ('LEGACY','ADMIN_PROTECTED_LEGACY')
+            </when>
+            <when test="legacy == false">
+                AND critic.status IN ('CURRENT','ADMIN_PROTECTED_CURRENT')
+            </when>
+        </choose>
+        <if test="initial != null">
+            AND name LIKE #{initial}
+        </if>
+        <if test="lastInitial != null">
+            AND critic.last_name LIKE #{lastInitial}
+        </if>
+
+        ORDER BY critic_lastname
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+    <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">
+        <id property="id" column="critic_id"/>
+        <result property="name" column="critic_name"/>
+        <result property="vanity" column="critic_vanity_url"/>
+        <result property="status" column="critic_status"/>
+        <result property="tmApproved" column="critic_approved"/>
+
+        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" notNullColumn="img_id" columnPrefix="critic_"/>
+    </resultMap>    
+
+    <resultMap id="criticSupplementaryInfoMap" type="com.rottentomatoes.movieapi.domain.model.CriticSupplementaryInfo">
+        <id property="id" column="id" />
+        <result property="location" column="location" />
+        <result property="officialUrl" column="url" />
+        <result property="bio" column="bio" />
+        <result property="favorites" column="favorites" />
+        <result property="quotes" column="quotes" />
+    </resultMap>
+
+
+
+</mapper>
+
+

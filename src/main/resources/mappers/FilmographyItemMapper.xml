@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rottentomatoes.movieapi.mappers.FilmographyItemMapper">
+    <!-- Loads the movieCast/base movie objects automatically, for efficiency -->
+    <select id="selectMovieFilmographyItemByPerson" resultMap="movieFilmographyItem">
+        SELECT
+        movie.movie_id AS movie_id,
+        movie_cast.id AS movie_cast_id,
+        movie_cast.role AS movie_cast_role,
+        movie_character.name AS movie_character_name,
+
+        <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql"/>
+
+        INNER JOIN movie_cast ON movie_cast.movie_id = movie.movie_id
+        LEFT JOIN movie_character ON movie_character.cast_id = movie_cast.id
+
+        WHERE
+          movie_cast.person_id = #{person_id}
+          AND movie_cast.deleted_ind = 0
+          AND (movie_character.deleted_ind IS NULL OR movie_character.deleted_ind = 0)
+          AND movie.status = 1
+
+
+    </select>
+
+    <resultMap id="movieFilmographyItem" type="com.rottentomatoes.movieapi.domain.model.MovieFilmographyItem">
+
+        <id property="id" column="movie_id"/>
+
+        <collection property="roles" column="movie_cast_role" javaType="list" ofType="java.lang.String">
+            <result column="movie_cast_role" />
+        </collection>
+
+        <collection property="characters" column="movie_character" javaType="list" ofType="java.lang.String">
+            <result column="movie_character_name"/>
+        </collection>
+
+    </resultMap>
+
+</mapper>

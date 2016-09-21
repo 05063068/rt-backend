@@ -6,7 +6,7 @@
  -->
  
 <mapper namespace="com.rottentomatoes.movieapi.mappers.ReviewMapper">
-	<sql id="selectColumns">
+	<sql id="reviewSelectColumns">
        	review.id,       
 		review.movie_id, 
 		review.critic_id,
@@ -25,33 +25,28 @@
 		review.creation_date,
 		review.last_update_date,
 		review.top_ind,  
- 
-       	critic.name AS critic_name,
-       	critic.vanity_url AS critic_vanity_url,
-        publication.name AS publication_name,
-        
-        critic.image_id AS critic_img_id,
-        critic_img.img_width AS critic_img_width,
-        critic_img.img_height AS critic_img_height,
-        critic_img.format AS critic_img_format,
-        'c' AS critic_img_type,
-        
-        IF(critic_top.critic_id OR publication_top.publication_id,1,0) is_top_critic
+
+        <include refid="com.rottentomatoes.movieapi.mappers.CriticMapper.criticSelectColumns" />,
+
+        <include refid="com.rottentomatoes.movieapi.mappers.PublicationMapper.publicationSelectColumns" />,
+
+        IF(critic_top.critic_id OR publication_top.publication_id,1,0) AS is_top_critic
+
 	</sql>
 
     <select id="selectReviewById" resultMap="reviewResultMap">
-        SELECT <include refid="selectColumns" />
+        SELECT <include refid="reviewSelectColumns" />
         FROM review
-        LEFT JOIN critic ON review.critic_id=critic.id
-        LEFT JOIN publication ON review.publication_id=publication.id
-        LEFT JOIN critic_img ON critic_img.id = critic.image_id
+        <include refid="commonSubselectJoins" />
         WHERE review.id = #{id}
+        AND review.status = 'A'
     </select>
 
     <sql id="commonSubselectJoins">
         LEFT JOIN critic ON review.critic_id=critic.id
-        LEFT JOIN publication ON review.publication_id=publication.id
+        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
+        LEFT JOIN publication ON review.publication_id=publication.id
         LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
     </sql>
 
@@ -61,16 +56,16 @@
         - rest are mixed (sortkey=null), no dupes from first 12 are allowed, order by descending creation date
     -->
     <select id="selectAllReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
-        SELECT <include refid="selectColumns" />
+        SELECT <include refid="reviewSelectColumns" />
         FROM review
         <include refid="commonSubselectJoins" />
-        LEFT JOIN critic_img ON critic_img.id = critic.image_id
         LEFT JOIN (
             (
                 SELECT review.id, 1 AS sort_key FROM review
                 <include refid="commonSubselectJoins" />
                 WHERE review.movie_id = #{movie_id}
                 AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+                AND review.quote IS NOT NULL
                 AND (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL)
                 ORDER BY review.creation_date DESC
                 LIMIT 6
@@ -81,6 +76,7 @@
                 <include refid="commonSubselectJoins" />
                 WHERE review.movie_id = #{movie_id}
                 AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+                AND review.quote IS NOT NULL
                 AND NOT (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL)
                 ORDER BY review.creation_date DESC
                 LIMIT 6
@@ -88,7 +84,8 @@
         ) featured ON review.id=featured.id
 
         WHERE review.movie_id = #{movie_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND review.status = 'A'
+        AND NOT review.category='DVD'
         ORDER BY featured.sort_key DESC, review.creation_date DESC
         <choose>
             <when test="limit != null and offset != null">
@@ -101,16 +98,13 @@
     </select>
 
     <select id="selectTopCriticReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
-        SELECT <include refid="selectColumns" />
+        SELECT <include refid="reviewSelectColumns" />
         FROM review
-        LEFT JOIN critic ON review.critic_id=critic.id
-        LEFT JOIN publication ON review.publication_id=publication.id
-        LEFT JOIN critic_img ON critic_img.id = critic.image_id
-        LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country=#{country})
-        LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
+        <include refid="commonSubselectJoins" />
         WHERE review.movie_id = #{movie_id}
-        AND review.status = 'A' AND (critic.approved_ind=1 Or publication.approved_ind=1)
-        AND is_top_critic = 1
+        AND review.status = 'A'
+        AND NOT review.category='DVD'
+        HAVING is_top_critic = 1
         ORDER BY review.creation_date DESC
 
         <choose>
@@ -122,7 +116,80 @@
             </when>
         </choose>
     </select>
-    
+
+    <select id="selectReviewsByCritic" resultMap="reviewResultMap" parameterType="map">
+        SELECT
+        <include refid="reviewSelectColumns" />
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.critic_id = #{critic_id}
+        AND review.status = 'A'
+        AND NOT review.category='DVD'
+        ORDER BY review.creation_date DESC
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+    <select id="selectReviewsByPublication" resultMap="reviewResultMap" parameterType="map">
+        SELECT
+        <include refid="reviewSelectColumns" />
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.publication_id = #{publication_id}
+        AND review.status = 'A'
+        AND NOT review.category='DVD'
+        ORDER BY review.creation_date DESC
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+
+    <select id="selectAllReviews" resultMap="reviewResultMap" parameterType="map">
+        SELECT <include refid="reviewSelectColumns" />
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.status = 'A'
+
+        <choose>
+            <when test="category == 'theatrical'">
+                AND review.category='MOV'
+            </when>
+            <when test="category == 'dvd'">
+                AND review.category='DVD'
+            </when>
+            <when test="category == 'quick'">
+                AND review.category='QCK'
+            </when>
+        </choose>
+
+        ORDER BY review.creation_date DESC
+
+        <choose>
+            <when test="limit != null and offset != null">
+                LIMIT #{offset},#{limit}
+            </when>
+            <when test="limit != null">
+                LIMIT #{limit}
+            </when>
+        </choose>
+    </select>
+
+
+
     <resultMap id="reviewResultMap" type="com.rottentomatoes.movieapi.domain.model.Review">
         <id property="id" column="id" />
         <result property="movieId" column="movie_id"/>
@@ -132,23 +199,14 @@
         <result property="url" column="url"/>
         <result property="creationDate" column="creation_date" javaType="java.time.ZonedDateTime"/>
         <result property="topCritic" column="is_top_critic"/>
+        <result property="category" column="category" />
 
-        <association property="critic" resultMap="criticResultMap" />
+        <!-- Return critic automatically with review for efficiency -->
+        <association property="critic" resultMap="com.rottentomatoes.movieapi.mappers.CriticMapper.criticResultMap"/>
 
-        <association property="publication" javaType="com.rottentomatoes.movieapi.domain.model.Publication">
-            <id property="id" column="publication_id"/>
-            <result property="name" column="publication_name"/>
-        </association>
+        <!-- Return publication automatically with review for efficiency -->
+        <association property="publication" resultMap="com.rottentomatoes.movieapi.mappers.PublicationMapper.publicationResultMap" />
     </resultMap>
-    
-
-    <!--  TODO: Move into own CriticMapper.xml -->
-    <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">   
-        <id property="id" column="critic_id"/>
-        <result property="name" column="critic_name"/>
-        <result property="vanity" column="critic_vanity_url"/>
-        <association property="mainImage" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="critic_" notNullColumn="img_id"/>
-    </resultMap>    
 
     <select id="selectAllReviewCountForMovie" resultMap="reviewMetaDataResultMap" parameterType="map">
         SELECT
@@ -172,6 +230,28 @@
         WHERE review.movie_id = #{movie_id}
         AND (publication.country=#{country} OR critic_top.country=#{country})
         AND review.status = 'A'
+    </select>
+
+
+    <select id="selectAllReviewCountForCritic" resultMap="reviewMetaDataResultMap" parameterType="map">
+        SELECT
+        COUNT(*) as totalCount
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.critic_id = #{critic_id}
+        AND review.status = 'A'
+        AND NOT review.category='DVD'
+    </select>
+
+
+    <select id="selectAllReviewCountForPublication" resultMap="reviewMetaDataResultMap" parameterType="map">
+        SELECT
+          COUNT(*) as totalCount
+        FROM review
+        <include refid="commonSubselectJoins" />
+        WHERE review.publication_id = #{publication_id}
+        AND review.status = 'A'
+        AND NOT review.category='DVD'
     </select>
 
     <resultMap id="reviewMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />

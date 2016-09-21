@@ -13,7 +13,7 @@
         SELECT
         movie_cast.*,
         movie_character.name character_name,
-        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonColumns"/>
+        <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonColumns"/>,
         <include refid="com.rottentomatoes.movieapi.mappers.PersonMapper.moviePersonImageColumns"/>
         FROM movie_cast
         INNER JOIN movie_person ON 
@@ -32,22 +32,25 @@
         AND movie_cast.id = #{movieCastId}
     </select>
 
+    <!-- Actorlimit will filter actor array. All others always come full-length  -->
     <select id="selectMovieCastForMovie" resultMap="movieCastResultMap" parameterType="map">
-        <include refid="selectMovieCastWithPerson" />
+        (
+        <include refid="selectMovieCastWithPerson"/>
+        AND movie_cast.movie_id = #{movie_id}
+        AND movie_cast.role != "ACT"
+        )
+        UNION
+        (
+        <include refid="selectMovieCastWithPerson"/>AND movie_cast.movie_id = #{movie_id}
             AND movie_cast.movie_id = #{movie_id} AND movie_cast.deleted_ind=0
-        <if test="role">
-            AND movie_cast.role = #{role}
-        </if>
-        ORDER BY FIELD(movie_cast.role, 'DIR','PRO','SCR','EPR','ACT'), movie_cast.sortkey
-
-        <choose>
-            <when test="limit != null and offset != null">
-                LIMIT #{offset},#{limit}
-            </when>
-            <when test="limit != null">
-                LIMIT #{limit}
-            </when>
-        </choose>
+            AND movie_cast.role = "ACT"
+            <if test="role">
+              AND movie_cast.role = #{role}
+            </if>
+            <if test="actorsLimit != null">
+                LIMIT #{actorsLimit}
+            </if>
+        )
     </select>
 
     <resultMap id="movieCastResultMap" type="com.rottentomatoes.movieapi.domain.model.MovieCast">

@@ -38,7 +38,7 @@
     <repositories>
         <repository>
             <id>flixster-mvn-repo</id>
-            <url>https://raw.githubusercontent.com/flixster/mvn-repo/master/</url>
+            <url>https://raw.githubusercontent.com/flixster/mvn-repo/1.0.2-FLIXSTER/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>io.katharsis</groupId>
             <artifactId>katharsis-core</artifactId>
-            <version>1.0.1-FLIXSTER</version>
+            <version>1.0.2-FLIXSTER</version>
         </dependency>
         <dependency>
             <groupId>io.katharsis</groupId>

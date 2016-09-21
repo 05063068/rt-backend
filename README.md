@@ -1,5 +1,23 @@
-# catalog-api
-Catalog API
+# Catalog API/RT Backend
+
+## V1.1 Release Notes
+* Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
+* Generic window tagging. Release windows are provided as an array of free-form tags (instead of separate 'theaterical' and 'dvd' categories)
+* Rudimentary TV data support.
+* Name change from cummulative_boxoffice to cumulative_boxoffice
+* MovieCast now presented as MoviePersonnel, which has the 5 personnel types broken out separately. Actors can be limited with the special-case 'actorsLimit' filter.
+* EMS-349 Built in expander (&expand=true)
+* Publication and Critic now a full-featured endpoints that can by retrieved directly
+* CriticSupplementaryInfo, Critic reviews and Critic affiliated Publications available as relationships of the `critic` object
+* Critics list (at the /critic endpoint), supports initial `?filter={"initial":"p"}` and status `?filter={"status":"current"}` filtering. (status can be `current` or `legacy`)  
+* Publication and Critic lists can be retrieved by accessing respective object endpoints without an id (`/critic`, `/publication`)
+* Publication and Critic lists can be filtered alphabetically `?filter={"initial":"p"}`
+* Critic has relationship of affiliated Publications (and vice versa)
+* Full counts Publication and Critic reviews retrievable via meta object
+* Quotes retrieved from dbtalk `/movie/9?include=["quotes"]`
+* Critic groups `/criticGroup`, `/criticGroup/18?include=["critics"]`
+* Person (e.g. actors) have PersonSupplementaryInfo and also Filmography via movieFilmography. (TV not implemented yet)
+* Latest theatrical, dvd and quick reviews can be retrieved like so `/review?filter={"category":"dvd"}` (other categories are `theatrical` and `quick`)
 
 ## Setup and Build Notes
 
