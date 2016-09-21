@@ -50,10 +50,19 @@
         LEFT JOIN publication_top ON (review.publication_id=publication_top.publication_id AND publication_top.country=#{country})
     </sql>
 
-    <!-- Note
-        - top 6 reviews are from top critics (sortkey=1), order by descending creation date
-        - next 6 are from non-top critics (sortkey=0), order by descending creation date
-        - rest are mixed (sortkey=null), no dupes from first 12 are allowed, order by descending creation date
+    <!-- Note: Logic below dictates what shows up on the MOB and is carefully crafted to meet strict Product requirements.
+               Please do not change lightly.
+
+        Highlighted Reviews:
+        - top 6 (max) reviews are from top critics (sortkey=1), order by descending creation date
+        - next 6 (max) are from non-top critics (sortkey=0), order by descending creation date
+        - Note that there could be less than 12 highlighted reviews
+        - Rest are mixed (order by sortkey, creation_date), no dupes from first are allowed
+
+        To appear in list at all:
+        - Either critic or publication must be tomatometer approved
+        - Only theatrical reviews. No DVD.
+        - Empty review text not allowed in highlighted section but might be present in backfill
     -->
     <select id="selectAllReviewsForMovie" resultMap="reviewResultMap" parameterType="map">
         SELECT <include refid="reviewSelectColumns" />
@@ -65,6 +74,7 @@
                 <include refid="commonSubselectJoins" />
                 WHERE review.movie_id = #{movie_id}
                 AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+                AND NOT review.category='DVD'
                 AND review.quote IS NOT NULL
                 AND (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL)
                 ORDER BY review.creation_date DESC
@@ -76,6 +86,7 @@
                 <include refid="commonSubselectJoins" />
                 WHERE review.movie_id = #{movie_id}
                 AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+                AND NOT review.category='DVD'
                 AND review.quote IS NOT NULL
                 AND NOT (critic_top.critic_id IS NOT NULL OR publication_top.publication_id IS NOT NULL)
                 ORDER BY review.creation_date DESC
@@ -84,7 +95,7 @@
         ) featured ON review.id=featured.id
 
         WHERE review.movie_id = #{movie_id}
-        AND review.status = 'A'
+        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
         AND NOT review.category='DVD'
         ORDER BY featured.sort_key DESC, review.creation_date DESC
         <choose>
@@ -212,12 +223,10 @@
         SELECT
           count(*) as totalCount
         FROM review
-        LEFT JOIN critic ON review.critic_id=critic.id
-        LEFT JOIN publication ON review.publication_id=publication.id
-        LEFT JOIN critic_top ON (review.critic_id=critic_top.critic_id AND critic_top.country='US')
+        <include refid="commonSubselectJoins" />
         WHERE review.movie_id = #{movie_id}
-        AND (publication.country=#{country} OR critic_top.country=#{country})
-        AND review.status = 'A'
+        AND review.status = 'A' AND (critic.approved_ind=1 OR publication.approved_ind=1)
+        AND NOT review.category='DVD'
     </select>
 
     <select id="selectTopCriticReviewCountForMovie" resultMap="reviewMetaDataResultMap" parameterType="map">
