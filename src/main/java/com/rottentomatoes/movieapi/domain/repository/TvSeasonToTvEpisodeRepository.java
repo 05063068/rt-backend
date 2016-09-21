@@ -1,6 +1,7 @@
 
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
@@ -38,12 +39,10 @@ public class TvSeasonToTvEpisodeRepository extends AbstractRepository implements
     public Iterable<TvEpisode> findManyTargets(String tvSeasonId, String fieldName,
             RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<String, Object>();
-        selectParams.put("tv_season_id", tvSeasonId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
-        List<TvEpisode> tvEpisodeList = sqlSession.selectList(
-                "com.rottentomatoes.movieapi.mappers.TvEpisodeMapper.selectTvEpisodeForTvSeason",
-                selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<List<TvEpisode>>(preEmsConfig);
+        List<TvEpisode> tvEpisodeList = (List<TvEpisode>)preEmsClient.callPreEmsList(selectParams, "tv-season", tvSeasonId + "/episode", TypeFactory.defaultInstance().constructCollectionType(List.class,  TvEpisode.class));
         return tvEpisodeList;
     }
 }

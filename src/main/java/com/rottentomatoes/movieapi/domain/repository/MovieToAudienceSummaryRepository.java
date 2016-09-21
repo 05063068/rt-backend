@@ -35,9 +35,9 @@ public class MovieToAudienceSummaryRepository extends AbstractRepository impleme
     @Override
     public AudienceSummary findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
 
-        AudienceSummary audienceSummary = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.AudienceSummaryMapper.selectAudienceSummaryForMovie", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        AudienceSummary audienceSummary = (AudienceSummary) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/audience-summary", AudienceSummary.class);
         return audienceSummary;
     }
 

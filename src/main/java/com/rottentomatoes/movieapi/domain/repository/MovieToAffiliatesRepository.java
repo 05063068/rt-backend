@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Affiliate;
 import com.rottentomatoes.movieapi.domain.model.Movie;
@@ -43,12 +44,13 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
 
     @Override
     public Affiliate findOneTarget(String affiliateId, String fieldName, RequestParams requestParams) {
-        String movieId = affiliateId.substring(0, affiliateId.length() - 3);
+        String movieId = affiliateId.substring(0, affiliateId.length() - 2);
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
 
-        Affiliate affiliate = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.AffiliateMapper.selectAffiliateById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<Affiliate>(preEmsConfig);
+        Affiliate affiliate = (Affiliate)preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/affiliate/" + affiliateId, Affiliate.class);
+
 
         return affiliate;
     }
@@ -56,9 +58,10 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
     @Override
     public Iterable<Affiliate> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
 
-        List<Affiliate> all_skus = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.AffiliateMapper.selectAffiliateForMovie", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<List<Affiliate>>(preEmsConfig);
+        List<Affiliate> all_skus = (List<Affiliate>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/affiliate", TypeFactory.defaultInstance().constructCollectionType(List.class,  Affiliate.class));
+
         List<Affiliate> affiliates = new ArrayList<>();
         List<String> affiliateNames = new ArrayList<>();
         // filter one entry per affiliate, a group by in the query would jumble up the returned columns
@@ -77,9 +80,10 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         RootMetaDataInformation metaData = null;
         String movieId = castedResourceId.toString();
+        String id = "all";
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
-        metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.AffiliateMapper.selectAffiliatesForMovieCount", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<RootMetaDataInformation>(preEmsConfig);
+        metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;
     }

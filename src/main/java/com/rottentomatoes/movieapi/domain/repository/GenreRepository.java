@@ -27,9 +27,9 @@ public class GenreRepository extends AbstractRepository implements ResourceRepos
     public Genre findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", id);
 
-        Genre genre = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.GenreMapper.selectGenreById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Genre genre = (Genre) preEmsClient.callPreEmsEntity(selectParams, "genre", id, Genre.class);
         return genre;
     }
 

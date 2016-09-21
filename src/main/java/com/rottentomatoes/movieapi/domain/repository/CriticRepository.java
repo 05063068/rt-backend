@@ -1,5 +1,7 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
 import com.rottentomatoes.movieapi.domain.model.Critic;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
@@ -32,9 +34,9 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
     public Critic findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", id);
 
-        Critic critic = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticMapper.selectCriticById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<Critic>(preEmsConfig);
+        Critic critic = (Critic)preEmsClient.callPreEmsEntity(selectParams, "critic", id, Critic.class);
         return critic;
     }
 
@@ -42,6 +44,7 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
     public Iterable<Critic> findAll(RequestParams requestParams) {
         // Return list of all critics. Allow filter by last name
 
+        PreEmsClient preEmsClient = new PreEmsClient<List<Critic>>(preEmsConfig);
 
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit("", requestParams));
@@ -59,9 +62,8 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
             }
         }
 
-        List<Critic> critics = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.CriticMapper.selectAllCritics", selectParams);
+        List<Critic> critics = (List<Critic>) preEmsClient.callPreEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
         return critics;
-
     }
 
     @Override

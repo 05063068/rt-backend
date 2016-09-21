@@ -14,6 +14,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MovieSupplementaryInfo extends AbstractModel {
+    public MovieSupplementaryInfo () {
+        
+    }
+    
     public MovieSupplementaryInfo(String id, String dvdWindow, String openingWindow){
         this.id = id;
         windows = new ArrayList<String>();
