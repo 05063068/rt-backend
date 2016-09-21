@@ -15,7 +15,7 @@ import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 @Component
-public class CriticToReviewRepository extends AbstractRepository implements RelationshipRepository<Critic, String, Review, String>,MetaRepository {
+public class CriticToReviewRepository extends AbstractRepository implements RelationshipRepository<Critic, String, Review, String>, MetaRepository {
 
     @Override
     public void setRelation(Critic critic, String s, String s2) {

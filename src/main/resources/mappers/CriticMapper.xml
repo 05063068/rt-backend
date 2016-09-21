@@ -110,6 +110,24 @@
         </choose>
     </select>
 
+    <select id="selectAllCriticsCount" resultMap="criticMetaDataResultMap" parameterType="map">
+        SELECT
+        COUNT(*) as totalCount
+        FROM critic
+        WHERE critic.deleted_ind = 0
+        <choose>
+            <when test="legacy == true">
+                AND critic.status IN ('LEGACY','ADMIN_PROTECTED_LEGACY')
+            </when>
+            <when test="legacy == false">
+                AND critic.status IN ('CURRENT','ADMIN_PROTECTED_CURRENT')
+            </when>
+        </choose>
+        <if test="tmApproved != null">
+            AND critic.approved_ind = #{tmApproved}
+        </if>
+    </select>
+
     <resultMap id="criticResultMap" type="com.rottentomatoes.movieapi.domain.model.Critic">
         <id property="id" column="critic_id"/>
         <result property="name" column="critic_name"/>
@@ -129,7 +147,7 @@
         <result property="quotes" column="quotes" />
     </resultMap>
 
-
+    <resultMap id="criticMetaDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation" />
 
 </mapper>
 
