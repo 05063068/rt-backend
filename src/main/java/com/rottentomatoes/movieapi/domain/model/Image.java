@@ -18,6 +18,10 @@ public class Image extends AbstractModel {
     protected Integer height;
     protected Integer width;
     protected String format;
+    
+    public Image() {
+        
+    }
 
     public ImageType getImageType(String typeString) {
 

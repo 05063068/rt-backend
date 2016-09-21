@@ -26,31 +26,9 @@ public class QuoteRepository extends AbstractRepository implements ResourceRepos
     public Quote findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", id);
 
-        Quote quote = talkSession.selectOne("com.rottentomatoes.movieapi.mappers.dbtalk.QuoteMapper.selectQuoteById", selectParams);
-        List<Map<String,String>> lines = quote.getLines();
-
-        // Backfill Character name from shared DB
-        Set<String> characterIds = new HashSet<>();
-        for(Map<String,String> line : lines){
-            String characterId = line.get("characterId");
-            if(characterId != null) {
-                characterIds.add(characterId);
-            }
-        }
-
-        selectParams = new HashMap<>();
-        selectParams.put("ids", characterIds);
-        Map<String,Character> characters = sqlSession.selectMap("com.rottentomatoes.movieapi.mappers.CharacterMapper.selectCharactersById", selectParams, "id");
-
-        for(Map<String,String>  line : lines){
-            String characterId = line.get("characterId");
-            if(characterId != null) {
-                line.put("characterName",characters.get(characterId).getName());
-                line.remove("characterId");
-            }
-        }
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Quote quote = (Quote) preEmsClient.callPreEmsEntity(selectParams, "quote", id, Quote.class);
         return quote;
     }
 

@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.util.HashMap;
 import com.rottentomatoes.movieapi.domain.model.VideoClip;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
@@ -19,7 +20,8 @@ public class VideoClipRepository extends AbstractRepository implements ResourceR
 
     @Override
     public VideoClip findOne(String videoClipId, RequestParams requestParams) {
-        VideoClip videoClip = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.VideoClipMapper.selectVideoClipById", videoClipId);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        VideoClip videoClip = (VideoClip) preEmsClient.callPreEmsEntity(new HashMap<String,Object>(), "videoclip", videoClipId, VideoClip.class);
         return videoClip;
     }
 

@@ -46,10 +46,10 @@ public class ImageRepository extends AbstractRepository implements ResourceRepos
         }
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("type", imageType);
-        selectParams.put("id", imageId);
         selectParams.put("imageTable", imageTable);
 
-        Image image = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ImageMapper.selectImageByIdAndType", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Image image = (Image) preEmsClient.callPreEmsEntity(selectParams, "image", imageId, Image.class);
         return image;
     }
 

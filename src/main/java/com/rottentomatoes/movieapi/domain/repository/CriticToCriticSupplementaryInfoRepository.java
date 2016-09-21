@@ -36,8 +36,8 @@ public class CriticToCriticSupplementaryInfoRepository extends AbstractRepositor
     @Override
     public CriticSupplementaryInfo findOneTarget(String criticId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", criticId);
-        CriticSupplementaryInfo criticSupplementaryInfo = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticMapper.selectCriticSupplementaryInfo", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<CriticSupplementaryInfo>(preEmsConfig);
+        CriticSupplementaryInfo criticSupplementaryInfo = (CriticSupplementaryInfo)preEmsClient.callPreEmsEntity(selectParams, "critic", criticId + "/supplementary-info", CriticSupplementaryInfo.class);
 
         return criticSupplementaryInfo;
     }

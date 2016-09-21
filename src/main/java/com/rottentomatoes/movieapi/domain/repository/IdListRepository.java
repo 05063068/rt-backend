@@ -56,8 +56,10 @@ public class IdListRepository extends AbstractRepository implements ResourceRepo
                 selectParams.put("offset", getOffset(fieldName, requestParams));
                 selectParams.put("minReviews", minReviews);
                 selectParams.put("minRatings", minRatings);
-                IdList retval = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.IdListMapper.selectSitemapMovieIds", selectParams);
-                return retval;
+                PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+                IdList idList = (IdList) preEmsClient.callPreEmsEntity(selectParams, "site-map", "movie-ids", IdList.class);
+                return idList;
+
 
             default:
                 throw new ResourceNotFoundException("Invalid list type");

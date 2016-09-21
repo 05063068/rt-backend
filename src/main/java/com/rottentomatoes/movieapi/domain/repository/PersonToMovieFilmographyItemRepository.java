@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Person;
 import com.rottentomatoes.movieapi.domain.model.MovieFilmographyItem;
 import io.katharsis.queryParams.RequestParams;
@@ -7,6 +8,7 @@ import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("rawtypes")
@@ -41,8 +43,10 @@ public class PersonToMovieFilmographyItemRepository extends AbstractRepository i
     @Override
     public Iterable<MovieFilmographyItem> findManyTargets(String s, String s2, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("person_id", s);
 
-        return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.FilmographyItemMapper.selectMovieFilmographyItemByPerson", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<List<MovieFilmographyItem>>(preEmsConfig);
+        List<MovieFilmographyItem> filmography = (List<MovieFilmographyItem>)preEmsClient.callPreEmsList(selectParams, "person", s + "/filmography", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieFilmographyItem.class));
+        return filmography;
+
     }
 }

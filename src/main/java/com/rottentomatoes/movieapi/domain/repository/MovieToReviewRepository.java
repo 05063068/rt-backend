@@ -2,10 +2,12 @@ package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.Review;
@@ -56,27 +58,26 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
         selectParams.put("offset", getOffset(fieldName, requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
-            reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectTopCriticReviewsForMovie", selectParams));
-        } else {
-            reviewList = new MetaDataEnabledList<>(sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviewsForMovie", selectParams));
+        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE)) {
+            selectParams.put(CRITIC_TYPE, requestParams.getFilters().get(CRITIC_TYPE));
         }
-
-        return reviewList;
+        PreEmsClient preEmsClient = new PreEmsClient<List<Review>>(preEmsConfig);
+        List<Review> rawReviewList = (List<Review>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
+        return new MetaDataEnabledList(rawReviewList);
     }
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
-        RelatedMetaDataInformation metaData;
 
-        selectParams.put("movie_id", castedResourceId);
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
+        PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
+        RelatedMetaDataInformation metaData = null;
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
-            metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectTopCriticReviewCountForMovie", selectParams);
+            metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", castedResourceId + "/top-critic-review/meta", RelatedMetaDataInformation.class);
         } else {
-            metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviewCountForMovie", selectParams);
+            metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", castedResourceId + "/review/meta", RelatedMetaDataInformation.class);
         }
 
         if (root instanceof RelationshipRepository) {

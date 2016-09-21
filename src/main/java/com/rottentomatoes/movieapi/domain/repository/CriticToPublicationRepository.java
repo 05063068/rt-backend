@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Critic;
 import com.rottentomatoes.movieapi.domain.model.Publication;
 import io.katharsis.queryParams.RequestParams;
@@ -7,6 +8,7 @@ import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("rawtypes")
@@ -40,9 +42,9 @@ public class CriticToPublicationRepository extends AbstractRepository implements
 
     @Override
     public Iterable<Publication> findManyTargets(String criticId, String fieldName, RequestParams requestParams) {
+        PreEmsClient preEmsClient = new PreEmsClient<Iterable<Publication>>(preEmsConfig);
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("critic_id", criticId);
-        return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.PublicationMapper.selectPublicationsByCritic", selectParams);
+        return (Iterable<Publication>) preEmsClient.callPreEmsList(selectParams, "critic", criticId + "/publication", TypeFactory.defaultInstance().constructCollectionType(List.class,  Publication.class));
     }
 
 }

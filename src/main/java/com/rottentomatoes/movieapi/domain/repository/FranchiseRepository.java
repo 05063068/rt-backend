@@ -26,9 +26,9 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
     public Franchise findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", id);
 
-        Franchise franchise = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.FranchiseMapper.selectFranchiseById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Franchise franchise = (Franchise) preEmsClient.callPreEmsEntity(selectParams, "franchise", id, Franchise.class);
         return franchise;
     }
 

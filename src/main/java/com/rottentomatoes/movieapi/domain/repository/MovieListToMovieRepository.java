@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
@@ -50,6 +51,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         MovieRepository.setMovieParams(selectParams, requestParams);
+        PreEmsClient preEmsClient = new PreEmsClient<List<Movie>>(preEmsConfig);
 
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
@@ -58,26 +60,31 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         switch (listId) {
             case "top-box-office":
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
-                List<Movie> movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMovies", selectParams);
+                List<Movie> movies = (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
                 if (movies.isEmpty()) {
-                    movies = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallback", selectParams);
+                    movies = (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, "fallback", TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
                 }
                 return movies;
 
             case "upcoming":
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMovies", SqlParameterUtils.setUpcomingParams(selectParams));
+                selectParams = SqlParameterUtils.setUpcomingParams(selectParams);
+                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "opening":
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMovies", SqlParameterUtils.setOpeningParams(selectParams));
+                selectParams = SqlParameterUtils.setOpeningParams(selectParams);
+                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "top-rentals":
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMovies", SqlParameterUtils.setTopRentalsParams(selectParams));
+                selectParams = SqlParameterUtils.setTopRentalsParams(selectParams);
+                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "upcoming-dvds":
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingDvds", SqlParameterUtils.setUpcomingDvdsParam(selectParams));
+                selectParams = SqlParameterUtils.setUpcomingDvdsParam(selectParams);
+                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "new-on-dvd":
-                return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvd", SqlParameterUtils.setNewOnDvdParams(selectParams));
+                selectParams = SqlParameterUtils.setNewOnDvdParams(selectParams);
+                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             default:
                 throw new ResourceNotFoundException("Invalid list type");
@@ -88,46 +95,52 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         RootMetaDataInformation metaData = null;
         Map<String, Object> selectParams = new HashMap<>();
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
 
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
         switch ((String) castedResourceId) {
             case "top-box-office":
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesCount", selectParams);
+                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "top-box-office", "meta", RootMetaDataInformation.class);
                 if (metaData.totalCount == 0) {
                     LocalDate now = getTodayPST();
 
                     //exclusive, so if today == Sunday, return last week (so it flips on Monday)
                     LocalDate mostRecentSunday = now.with(previous(DayOfWeek.SUNDAY));
                     selectParams.put("startDate", mostRecentSunday);
-                    metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopBoxOfficeMoviesFallbackCount", selectParams);
+                    metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "top-box-office", "fallback/meta", RootMetaDataInformation.class);
                 }
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "upcoming":
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectUpcomingMoviesCount", SqlParameterUtils.setUpcomingParams(selectParams));
+                selectParams = SqlParameterUtils.setUpcomingParams(selectParams);
+                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "upcoming", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "opening":
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectOpeningMoviesCount", SqlParameterUtils.setOpeningParams(selectParams));
+                selectParams = SqlParameterUtils.setOpeningParams(selectParams);
+                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "opening", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "top-rentals":
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectTopRentalMoviesCount", SqlParameterUtils.setTopRentalsParams(selectParams));
+                selectParams = SqlParameterUtils.setTopRentalsParams(selectParams);
+                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "top-rentals", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "upcoming-dvds":
-                metaData = sqlSession.selectOne("com.rottentomaties.movieapi.mappers.MovieListMapper.selectUpcomingDvdsCount", SqlParameterUtils.setUpcomingDvdsParam(selectParams));
+                selectParams = SqlParameterUtils.setUpcomingDvdsParam(selectParams);
+                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "upcoming-dvds", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "new-on-dvd":
-                metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieListMapper.selectNewDvdCount", SqlParameterUtils.setNewOnDvdParams(selectParams));
+                selectParams = SqlParameterUtils.setNewOnDvdParams(selectParams);
+                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "new-on-dvd", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
 
         }

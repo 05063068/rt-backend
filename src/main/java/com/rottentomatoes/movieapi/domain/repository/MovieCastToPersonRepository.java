@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.util.HashMap;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
@@ -30,7 +31,8 @@ public class MovieCastToPersonRepository extends AbstractRepository implements R
 
     @Override
     public Person findOneTarget(String movieCastId, String fieldName, RequestParams requestParams) {
-        Person person = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.PersonMapper.selectPersonForMovieCast", movieCastId);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Person person = (Person) preEmsClient.callPreEmsEntity(new HashMap<String,Object>(), "movie-personnel", movieCastId + "/person", Person.class);
         return person;
     }
 

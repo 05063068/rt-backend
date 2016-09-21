@@ -29,8 +29,8 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
     @Override
     public TvSeries findOne(String tvSeriesId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", tvSeriesId);
-        TvSeries tvSeries = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.TvSeriesMapper.selectTvSeriesById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        TvSeries tvSeries = (TvSeries) preEmsClient.callPreEmsEntity(selectParams, "tv-series", tvSeriesId, TvSeries.class);
         return tvSeries;
     }
 
