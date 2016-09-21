@@ -219,6 +219,9 @@
         <association property="publication" resultMap="com.rottentomatoes.movieapi.mappers.PublicationMapper.publicationResultMap" />
     </resultMap>
 
+    <!-- TODO: Count should be consistent with tomatometer_info.freshCount + tomatometer_info.rottenCount
+               However codepath is completely different so divergence is expected.
+    -->
     <select id="selectAllReviewCountForMovie" resultMap="reviewMetaDataResultMap" parameterType="map">
         SELECT
           count(*) as totalCount
