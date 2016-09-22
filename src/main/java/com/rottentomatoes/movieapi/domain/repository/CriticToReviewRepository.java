@@ -55,6 +55,11 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
+        // Accepted category filter values are: 'movie', 'dvd', 'quick', 'fresh', or 'rotten'
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("category")) {
+            selectParams.put("category", requestParams.getFilters().get("category"));
+        }
+
         return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsByCritic", selectParams);
     }
 
