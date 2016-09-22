@@ -27,8 +27,9 @@ public class DeSerializeZonedDateTime extends JsonDeserializer<ZonedDateTime> {
                 dateStr = dateStr.substring(0, bracketInd);
             }
             Date date = ctxt.parseDate(dateStr);
+            ZoneId zoneId = ZoneId.of("America/Los_Angeles");
             zonedDate = ZonedDateTime.ofInstant(date.toInstant(),
-                    ZoneId.systemDefault());
+                    zoneId);
         }
         return zonedDate;
     }
