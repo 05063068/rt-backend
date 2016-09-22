@@ -7,6 +7,7 @@
         tv_series.id,
         tv_series.title,
         tv_series.description,
+        vanity_tv_series_url.url AS vanity,
         tomatometer_info_tv.tomatometer value, /* TODO enforce tomatometer=null when state=NA */
         CASE
             WHEN tomatometer_info_tv.certified_fresh THEN 'certified_fresh'
@@ -20,7 +21,8 @@
         LEFT JOIN tomatometer_info_tv
         ON tomatometer_info_tv.media_type='SR'
         AND tomatometer_info_tv.media_id=tv_series.id
-
+        LEFT JOIN vanity_tv_series_url
+        ON vanity_tv_series_url.tv_series_id = tv_series.id
     </sql>
 
     <select id="selectTvSeriesById" resultMap="tvSeriesResultMap" parameterType="map">
@@ -29,9 +31,17 @@
         WHERE tv_series.id = #{id}
     </select>
 
+    <select id="selectTvSeriesBySeasonId" resultMap="tvSeriesResultMap" parameterType="map">
+        SELECT
+        <include refid="tvSeriesSelectSql"/>
+        LEFT JOIN tv_season ON tv_season.tv_series_id = tv_series.id
+        WHERE tv_season.id = #{id}
+    </select>
+
     <resultMap id="tvSeriesResultMap" type="com.rottentomatoes.movieapi.domain.model.TvSeries">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
+        <result property="vanity" column="vanity"/>
         <result property="description" column="description"/>
         <association property="tomatometer" javaType="map">
             <result property="value" column="value"/>

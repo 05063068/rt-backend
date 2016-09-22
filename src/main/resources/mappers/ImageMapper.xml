@@ -23,7 +23,7 @@
             FROM multiuse_img_reference
             LEFT JOIN multiuse_img ON multiuse_img.id = multiuse_img_reference.multiuse_image_id
             WHERE multiuse_img_reference.media_id=#{movie_id}
-            AND multiuse_img_reference.media_type='MV'
+                AND multiuse_img_reference.media_type='MV'
             AND multiuse_img.status IN ('A', 'N')
             AND multiuse_img_reference.status IN ('A', 'N')
             AND multiuse_img.status IN ('A', 'N')
@@ -50,15 +50,6 @@
             </when>
         </choose>
     </select>
-    <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
-        <constructor>
-            <idArg column="img_id" javaType="string" /> <!-- required -->
-            <arg column="img_height" javaType="int" /> <!-- nullable -->
-            <arg column="img_width" javaType="int" /> <!-- nullable -->
-            <arg column="img_format" javaType="string" />  <!-- nullable -->
-            <arg column="img_type" javaType="string" /> <!-- required -->
-        </constructor>
-    </resultMap>
 
     <select id="selectImageCountForMovie" resultMap="imageMataDataResultMap" parameterType="map">
       SELECT FORMAT(SUM(`count`), 0) AS `totalCount` FROM (
@@ -78,4 +69,36 @@
         ) as Total;
     </select>
     <resultMap id="imageMataDataResultMap" type="com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation"/>
+
+    <sql id="tvImageSql">
+        SELECT
+        't' AS img_type,
+        tv_img.id AS img_id,
+        tv_img.img_width AS img_width,
+        tv_img.img_height AS img_height,
+        tv_img.format AS img_format
+        FROM tv_img
+    </sql>
+
+    <select id="selectMainImageForTvSeries" resultMap="imageResultMap" parameterType="map">
+        <include refid="tvImageSql"/>
+        LEFT JOIN tv_series ON tv_series.main_image = tv_img.id
+        WHERE tv_series.id = #{tvSeriesId}
+    </select>
+
+    <select id="selectMainImageForTvSeason" resultMap="imageResultMap" parameterType="map">
+        <include refid="tvImageSql"/>
+        LEFT JOIN tv_season ON tv_season.main_image = tv_img.id
+        WHERE tv_season.id = #{tvSeasonId}
+    </select>
+
+    <resultMap id="imageResultMap" type="com.rottentomatoes.movieapi.domain.model.Image">
+        <constructor>
+            <idArg column="img_id" javaType="string" /> <!-- required -->
+            <arg column="img_height" javaType="int" /> <!-- nullable -->
+            <arg column="img_width" javaType="int" /> <!-- nullable -->
+            <arg column="img_format" javaType="string" />  <!-- nullable -->
+            <arg column="img_type" javaType="string" /> <!-- required -->
+        </constructor>
+    </resultMap>
 </mapper>
