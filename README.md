@@ -1,4 +1,6 @@
 # Catalog API/RT Backend
+## V1.1.1 Release Notes
+* [RT-7744] Do not include reviews from non-tomatometer approved critics.
 
 ## V1.1 Release Notes
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
