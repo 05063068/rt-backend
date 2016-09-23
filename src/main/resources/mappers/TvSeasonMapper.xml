@@ -42,6 +42,7 @@
         <result property="startDate" column="start_date"/>
         <result property="endDate" column="end_date"/>
         <result property="vanity" column="series_url"/>
+        <result property="seriesTitle" column=""/>
 
         <association property="tomatometer" javaType="map">
             <result property="value" column="value"/>
