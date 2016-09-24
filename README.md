@@ -1,4 +1,6 @@
 # Catalog API/RT Backend
+## V1.1.1 Release Notes
+* [RT-7744] Do not include reviews from non-tomatometer approved critics.
 
 ## V1.2 Release Notes
 * Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
