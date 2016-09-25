@@ -30,6 +30,6 @@ public class PreEmsConfig {
     }
     
     public void log(String s, Throwable e) {
-        Logger.logMsg(10,s + e.getMessage());
+        System.console().printf("Pre ems error: %1s", e.getMessage());
     }
 }
