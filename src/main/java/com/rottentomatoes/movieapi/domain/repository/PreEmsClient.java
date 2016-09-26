@@ -72,7 +72,7 @@ public class PreEmsClient<T> {
                 if (selectParams.get(p) == null) {
                     continue;
                 }
-                params.add(p, selectParams.get(p).toString());
+                params.add(p, selectParams.get(p).toString().replaceAll("%", "%25"));
             }
             urlString = UriComponentsBuilder.fromUriString(urlString).queryParams(params).build(true).toString();
             URL url = new URL(urlString);
