@@ -48,11 +48,14 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
         selectParams.put("offset", getOffset("", requestParams));
 
         if(requestParams.getFilters() != null){
+            if(requestParams.getFilters().containsKey("search")) {
+                selectParams.put("search", requestParams.getFilters().get("search") + "%");
+            }
             if(requestParams.getFilters().containsKey("initial")) {
                 selectParams.put("initial", requestParams.getFilters().get("initial") + "%");
             }
             if(requestParams.getFilters().containsKey("lastInitial")){
-                selectParams.put("lastInitial", requestParams.getFilters().get("lastInitial")+"%");
+                selectParams.put("lastInitial", requestParams.getFilters().get("lastInitial") + "%");
             }
             if(requestParams.getFilters().containsKey("legacy")){
                 selectParams.put("legacy", requestParams.getFilters().get("legacy"));
