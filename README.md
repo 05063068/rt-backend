@@ -1,4 +1,9 @@
 # Catalog API/RT Backend
+## V2.1 Release Notes
+* [RT-8020] add "details" field to critic object
+* [RT-8029] add count in critic list metadata, is affected by legacy `?filter={"legacy":true}` and tomatometer approved `?filter={"tmApproved":true}` filters.
+* [RT-7980] add "best" and "worst" ordering for critic reviews `?filter={"order":"best"}`, new "agreePercent" field in critic object, groups affiliated with a critic `?include=["affiliatedGroups"]`, and finding critics via vanity url `/critic/john-smith`
+
 ## V1.1.1 Release Notes
 * [RT-7744] Do not include reviews from non-tomatometer approved critics.
 
@@ -17,7 +22,7 @@
 * EMS-349 Built in expander (&expand=true)
 * Publication and Critic now a full-featured endpoints that can by retrieved directly
 * CriticSupplementaryInfo, Critic reviews and Critic affiliated Publications available as relationships of the `critic` object
-* Critics list (at the /critic endpoint), supports initial `?filter={"initial":"p"}` and status `?filter={"status":"current"}` filtering. (status can be `current` or `legacy`)  
+* Critics list (at the /critic endpoint), supports initial `?filter={"initial":"p"}` and status `?filter={"status":"current"}` filtering. (status can be `current` or `legacy`)
 * Publication and Critic lists can be retrieved by accessing respective object endpoints without an id (`/critic`, `/publication`)
 * Publication and Critic lists can be filtered alphabetically `?filter={"initial":"p"}`
 * Critic has relationship of affiliated Publications (and vice versa)
