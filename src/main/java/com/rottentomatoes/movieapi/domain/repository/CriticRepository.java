@@ -30,9 +30,12 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
     public Critic findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", id);
+        selectParams.put("critic_id", id);
 
         Critic critic = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticMapper.selectCriticById", selectParams);
+        if (critic != null) {
+            critic.setAgreePercent(sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectCriticAgreementPercentage", selectParams));
+        }
         return critic;
     }
 
