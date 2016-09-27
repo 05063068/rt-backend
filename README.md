@@ -4,6 +4,7 @@
 * [RT-8029] add count in critic list metadata, is affected by legacy `?filter={"legacy":true}` and tomatometer approved `?filter={"tmApproved":true}` filters.
 * [RT-7980] add "best" and "worst" ordering for critic reviews `?filter={"order":"best"}`, new "agreePercent" field in critic object, groups affiliated with a critic `?include=["affiliatedGroups"]`, and finding critics via vanity url `/critic/john-smith`
 * [RT-7977] Critic name search via `filter={"search":"bob"}`
+* [RT-7987] ability to filter critic's reviews `?filter={"category":"movie"}`. Valid options are "movie", "dvd", "quick", "fresh", and "rotten".
 
 ## V1.1.1 Release Notes
 * [RT-7744] Do not include reviews from non-tomatometer approved critics.
