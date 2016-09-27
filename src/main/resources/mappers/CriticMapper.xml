@@ -65,10 +65,11 @@
     </select>
 
     <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
-      SELECT id, location, url, bio, details, favorites, quotes
-      FROM critic
-      WHERE (critic.id = #{critic_id} OR critic.vanity_url = #{critic_id})
-      AND critic.deleted_ind = 0
+        SELECT id, location, url, bio, details, favorites, quotes
+        FROM critic
+        WHERE critic.id = #{critic_id}
+        WHERE (critic.id = #{critic_id} OR critic.vanity_url = #{critic_id})
+        AND critic.deleted_ind = 0
     </select>
 
     <select id="selectAllCritics" resultMap="criticResultMap" parameterType="map">
@@ -88,6 +89,9 @@
                 AND critic.status IN ('CURRENT','ADMIN_PROTECTED_CURRENT')
             </when>
         </choose>
+        <if test="search != null">
+            AND critic.name LIKE #{search}
+        </if>
         <if test="initial != null">
             AND name LIKE #{initial}
         </if>
