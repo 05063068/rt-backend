@@ -10,6 +10,8 @@
 * [RT-7977] Critic name search via `filter={"search":"bob"}`
 * [RT-7987] ability to filter critic's reviews `?filter={"category":"movie"}`. Valid options are "movie", "dvd", "quick", "fresh", and "rotten".
 * [RT-7744] Do not include reviews from non-tomatometer approved critics.
+* [RT-8066] Publication name search via `filter={"search":"bob"}`
+* Bug fix - Do not include non-approved quotes
 
 ## V1.1 Release Notes
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.

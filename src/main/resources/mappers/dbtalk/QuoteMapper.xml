@@ -17,12 +17,13 @@
       LEFT JOIN fact_movie_quote_item
         ON fact_movie_quote.id = fact_movie_quote_item.fact_movie_quote_id
       WHERE fact_movie_quote.id = #{id}
+      AND fact_movie_quote.approved_date IS NOT NULL
       ORDER BY fact_movie_quote_item.sequence
     </select>
 
 
     <select id="selectQuotesByMovie" resultMap="quoteResultMap">
-        SELECT
+      SELECT
         fact_movie_quote.id AS quote_id,
         fact_movie_quote.creation_date AS creation_date,
         fact_movie_quote_item.id AS line_id,
@@ -33,6 +34,7 @@
         LEFT JOIN fact_movie_quote_item
         ON fact_movie_quote.id = fact_movie_quote_item.fact_movie_quote_id
         WHERE fact_movie_quote.movie_id = #{movie_id}
+        AND fact_movie_quote.approved_date IS NOT NULL
         ORDER BY fact_movie_quote.creation_date DESC, fact_movie_quote_item.sequence
 
         <choose>
