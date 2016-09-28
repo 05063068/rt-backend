@@ -36,7 +36,7 @@ public class CriticToCriticSupplementaryInfoRepository extends AbstractRepositor
     @Override
     public CriticSupplementaryInfo findOneTarget(String criticId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", criticId);
+        selectParams.put("critic_id", criticId);
         CriticSupplementaryInfo criticSupplementaryInfo = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticMapper.selectCriticSupplementaryInfo", selectParams);
 
         return criticSupplementaryInfo;

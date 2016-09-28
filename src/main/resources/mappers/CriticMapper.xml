@@ -67,7 +67,6 @@
     <select id="selectCriticSupplementaryInfo" resultMap="criticSupplementaryInfoMap" parameterType="map">
         SELECT id, location, url, bio, details, favorites, quotes
         FROM critic
-        WHERE critic.id = #{critic_id}
         WHERE (critic.id = #{critic_id} OR critic.vanity_url = #{critic_id})
         AND critic.deleted_ind = 0
     </select>
