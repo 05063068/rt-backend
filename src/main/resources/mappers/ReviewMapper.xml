@@ -281,7 +281,26 @@
         <include refid="commonSubselectJoins" />
         WHERE (critic.id = #{critic_id} OR critic.vanity_url = #{critic_id})
         AND review.status = 'A'
-        AND NOT review.category='DVD'
+        <choose>
+            <when test="category == 'movie'">
+                AND review.category='MOV'
+            </when>
+            <when test="category == 'dvd'">
+                AND review.category='DVD'
+            </when>
+            <when test="category == 'quick'">
+                AND review.category='QCK'
+            </when>
+            <when test="category == 'fresh'">
+                AND review.score='F'
+            </when>
+            <when test="category == 'rotten'">
+                AND review.score='R'
+            </when>
+            <otherwise>
+                AND NOT review.category='DVD'
+            </otherwise>
+        </choose>
     </select>
 
 

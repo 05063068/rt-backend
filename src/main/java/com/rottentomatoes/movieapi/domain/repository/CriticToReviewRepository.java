@@ -47,18 +47,19 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("critic_id", criticId);
 
-        // order of the reviews, can be one of "best" or "worst"
-        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("order")) {
-            selectParams.put("order", requestParams.getFilters().get("order"));
+        if(requestParams.getFilters() != null) {
+            // order of the reviews, can be one of "best" or "worst"
+            if (requestParams.getFilters().containsKey("order")) {
+                selectParams.put("order", requestParams.getFilters().get("order"));
+            }
+            // Accepted category filter values are "movie", "dvd", "quick", "fresh", or "rotten"
+            if (requestParams.getFilters().containsKey("category")) {
+                selectParams.put("category", requestParams.getFilters().get("category"));
+            }
         }
 
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
-
-        // Accepted category filter values are: 'movie', 'dvd', 'quick', 'fresh', or 'rotten'
-        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("category")) {
-            selectParams.put("category", requestParams.getFilters().get("category"));
-        }
 
         return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectReviewsByCritic", selectParams);
     }
@@ -70,6 +71,9 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
         Map<String, Object> selectParams = new HashMap<>();
 
         selectParams.put("critic_id", criticId);
+        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey("category")) {
+            selectParams.put("category", requestParams.getFilters().get("category"));
+        }
         metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ReviewMapper.selectAllReviewCountForCritic", selectParams);
         metaData.setRequestParams(requestParams);
         return metaData;
