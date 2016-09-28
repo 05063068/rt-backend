@@ -145,15 +145,18 @@
             <when test="category == 'quick'">
                 AND review.category='QCK'
             </when>
-            <when test="category == 'fresh'">
-                AND review.score='F'
-            </when>
-            <when test="category == 'rotten'">
-                AND review.score='R'
-            </when>
             <otherwise>
                 AND NOT review.category='DVD'
             </otherwise>
+        </choose>
+
+        <choose>
+            <when test="score == 'fresh'">
+                AND review.score='F'
+            </when>
+            <when test="score == 'rotten'">
+                AND review.score='R'
+            </when>
         </choose>
 
         <choose>
@@ -291,15 +294,17 @@
             <when test="category == 'quick'">
                 AND review.category='QCK'
             </when>
-            <when test="category == 'fresh'">
-                AND review.score='F'
-            </when>
-            <when test="category == 'rotten'">
-                AND review.score='R'
-            </when>
             <otherwise>
                 AND NOT review.category='DVD'
             </otherwise>
+        </choose>
+        <choose>
+            <when test="score == 'fresh'">
+                AND review.score='F'
+            </when>
+            <when test="score == 'rotten'">
+                AND review.score='R'
+            </when>
         </choose>
     </select>
 
