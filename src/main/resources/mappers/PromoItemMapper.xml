@@ -4,7 +4,7 @@
 <mapper namespace="com.rottentomatoes.movieapi.mappers.PromoItemMapper">
 
     <sql id="promoItemSql">
-        id,
+        promo_item.id,
         promo_section,
         sequence,
         start_date,
@@ -14,7 +14,12 @@
         object_id,
         object_type,
         sub_header,
-        site_image_id
+        site_image_id,
+        site_img.id AS promo_img_id,
+        site_img.format AS promo_img_format,
+        site_img.img_width AS promo_img_width,
+        site_img.img_height AS promo_img_height,
+        'p' AS promo_img_type
         FROM promo_item
     </sql>
 
@@ -32,6 +37,7 @@
     <select id="selectPromoItems" resultMap="promoItemResultMap" parameterType="map">
         SELECT
         <include refid="promoItemSql"/>
+        LEFT JOIN site_img ON site_img.id = promo_item.site_image_id
         WHERE deleted_ind = 0
         AND country = #{country}
         ORDER BY promo_section, sequence
@@ -40,6 +46,7 @@
     <select id="selectPromoItemById" resultMap="promoItemResultMap" parameterType="map">
         SELECT
         <include refid="promoItemSql"/>
+        LEFT JOIN site_img ON site_img.id = promo_item.site_image_id
         WHERE id = #{id}
         AND deleted_ind = 0
         AND country = #{country}
@@ -48,6 +55,7 @@
     <select id="selectPromoItemsByPromoSectionId" resultMap="promoItemResultMap"  parameterType="map">
         SELECT
         <include refid="promoItemSql"/>
+        LEFT JOIN site_img ON site_img.id = promo_item.site_image_id
         WHERE deleted_ind = 0
         AND promo_section = #{promo_section}
         AND country = #{country}
@@ -71,6 +79,7 @@
         <result property="objectType" column="object_type" />
         <result property="subHeader" column="sub_header" />
         <result property="siteImageId" column="site_image_id" />
+        <association property="image" resultMap="com.rottentomatoes.movieapi.mappers.ImageMapper.imageResultMap" columnPrefix="promo_" notNullColumn="img_id"/>
     </resultMap>
 
 </mapper>
