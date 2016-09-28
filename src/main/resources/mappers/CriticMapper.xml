@@ -126,6 +126,15 @@
                 AND critic.status IN ('CURRENT','ADMIN_PROTECTED_CURRENT')
             </when>
         </choose>
+        <if test="search != null">
+            AND critic.name LIKE #{search}
+        </if>
+        <if test="initial != null">
+            AND name LIKE #{initial}
+        </if>
+        <if test="lastInitial != null">
+            AND critic.last_name LIKE #{lastInitial}
+        </if>
         <if test="tmApproved != null">
             AND critic.approved_ind = #{tmApproved}
         </if>
