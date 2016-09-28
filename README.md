@@ -1,19 +1,15 @@
 # Catalog API/RT Backend
-## V2.1 Release Notes
+## 1.2 Release Notes
+* Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
+* Added promo item support. `/promoSection`, `/promoItem`
+* TvSeason now has vanity and tomatometer data. 
+* Tomatometer approved filter added to `/critic`.`filter={"tmApproved":[true/false]}`
 * [RT-8020] add "details" field to critic object
 * [RT-8029] add count in critic list metadata, is affected by legacy `?filter={"legacy":true}` and tomatometer approved `?filter={"tmApproved":true}` filters.
 * [RT-7980] add "best" and "worst" ordering for critic reviews `?filter={"order":"best"}`, new "agreePercent" field in critic object, groups affiliated with a critic `?include=["affiliatedGroups"]`, and finding critics via vanity url `/critic/john-smith`
 * [RT-7977] Critic name search via `filter={"search":"bob"}`
 * [RT-7987] ability to filter critic's reviews `?filter={"category":"movie"}`. Valid options are "movie", "dvd", "quick", "fresh", and "rotten".
-
-## V1.1.1 Release Notes
 * [RT-7744] Do not include reviews from non-tomatometer approved critics.
-
-## V1.2 Release Notes
-* Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
-* Added promo item support. `/promoSection`, `/promoItem`
-* TvSeason now has vanity and tomatometer data. 
-* Tomatometer approved filter added to `/critic`.`filter={"tmApproved":[true/false]}`
 
 ## V1.1 Release Notes
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
