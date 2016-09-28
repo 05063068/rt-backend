@@ -44,6 +44,9 @@ public class PublicationRepository extends AbstractRepository implements Resourc
         if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("initial")){
             selectParams.put("initial",requestParams.getFilters().get("initial")+"%");
         }
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("search")){
+            selectParams.put("search","%"+requestParams.getFilters().get("search")+"%");
+        }
 
         List<Publication> publications = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.PublicationMapper.selectAllPublications", selectParams);
         return publications;

@@ -38,6 +38,9 @@
         <if test="initial != null">
             AND publication.name LIKE #{initial}
         </if>
+        <if test="search != null">
+            AND publication.name LIKE #{search}
+        </if>
         ORDER BY publication.name
         <choose>
             <when test="limit != null and offset != null">
