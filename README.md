@@ -1,8 +1,13 @@
 # Catalog API/RT Backend
-## 1.2 Release Notes
-* Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
-* Added promo item support. `/promoSection`, `/promoItem`
-* TvSeason now has vanity and tomatometer data. 
+## V1.2 Release Notes
+* [RT-7925] added image attribute to promoItem object
+* [RT-8020] add "details" field to critic object
+* [RT-8029] add count in critic list metadata, is affected by legacy `?filter={"legacy":true}` and tomatometer approved `?filter={"tmApproved":true}` filters.
+* [RT-7980] add "best" and "worst" ordering for critic reviews `?filter={"order":"best"}`, new "agreePercent" field in critic object, groups affiliated with a critic `?include=["affiliatedGroups"]`, and finding critics via vanity url `/critic/john-smith`
+* [RT-7744] Do not include reviews from non-tomatometer approved critics.
+* [RT-7925] Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
+* [RT-7925] Added promo item support. `/promoSection`, `/promoItem`
+* [RT-7925] TvSeason now has vanity and tomatometer data. 
 * Tomatometer approved filter added to `/critic`.`filter={"tmApproved":[true/false]}`
 * [RT-8020] add "details" field to critic object
 * [RT-8029] add count in critic list metadata, is affected by legacy `?filter={"legacy":true}` and tomatometer approved `?filter={"tmApproved":true}` filters.

@@ -21,4 +21,5 @@ public class PromoItem extends AbstractModel {
     protected String objectType;
     protected String subHeader;
     protected String siteImageId;
+    private Image image;
  }
