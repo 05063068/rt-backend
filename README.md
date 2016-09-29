@@ -1,10 +1,4 @@
 # Catalog API/RT Backend
-<<<<<<< HEAD
-## 1.2 Release Notes
-* Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
-* Added promo item support. `/promoSection`, `/promoItem`
-* TvSeason now has vanity and tomatometer data. 
-=======
 ## V1.2 Release Notes
 * [RT-7925] added image attribute to promoItem object
 * [RT-8020] add "details" field to critic object
@@ -14,7 +8,6 @@
 * [RT-7925] Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
 * [RT-7925] Added promo item support. `/promoSection`, `/promoItem`
 * [RT-7925] TvSeason now has vanity and tomatometer data. 
->>>>>>> e226576... RT-7925 Promo Items and Media Lists
 * Tomatometer approved filter added to `/critic`.`filter={"tmApproved":[true/false]}`
 * [RT-8020] add "details" field to critic object
 * [RT-8029] add count in critic list metadata, is affected by legacy `?filter={"legacy":true}` and tomatometer approved `?filter={"tmApproved":true}` filters.
