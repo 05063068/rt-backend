@@ -19,7 +19,7 @@
         site_img.format AS promo_img_format,
         site_img.img_width AS promo_img_width,
         site_img.img_height AS promo_img_height,
-        'p' AS promo_img_type
+        's' AS promo_img_type
         FROM promo_item
     </sql>
 
