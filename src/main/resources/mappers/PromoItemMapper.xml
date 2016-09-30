@@ -9,6 +9,7 @@
         sequence,
         start_date,
         start_time,
+        body,
         header,
         url,
         object_id,
@@ -74,6 +75,7 @@
         <result property="startDate" column="start_date" />
         <result property="startTime" column="start_time" />
         <result property="header" column="header" />
+        <result property="body" column="body" />
         <result property="url" column="url" />
         <result property="objectId" column="object_id" />
         <result property="objectType" column="object_type" />
