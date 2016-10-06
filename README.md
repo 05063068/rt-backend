@@ -1,4 +1,7 @@
 # Catalog API/RT Backend
+## V2.1 Release Notes
+* Placeholder note. V2.1 is the Pre-EMS port of V1.2.
+
 ## V1.2 Release Notes
 * [RT-7925] added image attribute to promoItem object
 * [RT-8020] add "details" field to critic object
