@@ -1,5 +1,7 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.io.Console;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +32,13 @@ public class PreEmsConfig {
     }
     
     public void log(String s, Throwable e) {
-        System.console().printf("Pre ems error: %1s", e.getMessage());
+        String exceptionMessage = e.getMessage();
+        if (exceptionMessage == null) {
+            exceptionMessage = s;
+        }
+        Console con = System.console();
+        if (con != null) {
+           con.printf("Pre ems error: %1s", exceptionMessage);
+        }
     }
 }
