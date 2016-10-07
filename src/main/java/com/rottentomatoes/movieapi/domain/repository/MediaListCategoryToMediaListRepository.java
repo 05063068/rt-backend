@@ -39,9 +39,10 @@ public class MediaListCategoryToMediaListRepository extends AbstractRepository i
     @Override
     public MediaList findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("category_id", sourceId);
 
-        MediaList activeMediaList = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MediaListMapper.selectMediaListsForCategory", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        MediaList activeMediaList = (MediaList)preEmsClient.callPreEmsEntity(selectParams, "media-list-category", sourceId + "/list", MediaList.class);
+
         return activeMediaList;
     }
 

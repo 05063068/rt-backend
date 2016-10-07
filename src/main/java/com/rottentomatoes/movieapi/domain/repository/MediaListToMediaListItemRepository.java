@@ -46,9 +46,10 @@ public class MediaListToMediaListItemRepository extends AbstractRepository imple
     @Override
     public Iterable<MediaListItem> findManyTargets(String sourceId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("media_list_id", sourceId);
 
-        List<MediaListItem> mediaListItems = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MediaListItemMapper.selectMediaListItemsForMediaList", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<Iterable<MediaListItem>>(preEmsConfig);
+        List<MediaListItem> mediaListItems = (List<MediaListItem>) preEmsClient.callPreEmsList(selectParams, "media-list", sourceId + "/item", TypeFactory.defaultInstance().constructCollectionType(List.class,  MediaListItem.class));
+
         return mediaListItems;
     }
 }

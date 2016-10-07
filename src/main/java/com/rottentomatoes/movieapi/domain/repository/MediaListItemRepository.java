@@ -20,7 +20,8 @@ public class MediaListItemRepository extends AbstractRepository implements Resou
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        MediaListItem mediaListItem = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MediaListItemMapper.selectMediaListItemById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        MediaListItem mediaListItem = (MediaListItem)preEmsClient.callPreEmsEntity(selectParams, "media-item", itemId, MediaListItem.class);
 
         return mediaListItem;
     }
