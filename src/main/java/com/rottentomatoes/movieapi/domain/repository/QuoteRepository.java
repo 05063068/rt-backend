@@ -42,15 +42,18 @@ public class QuoteRepository extends AbstractRepository implements ResourceRepos
 
         selectParams = new HashMap<>();
         selectParams.put("ids", characterIds);
-        Map<String,Character> characters = sqlSession.selectMap("com.rottentomatoes.movieapi.mappers.CharacterMapper.selectCharactersById", selectParams, "id");
+        if (!characterIds.isEmpty()) {
+            Map<String,Character> characters = sqlSession.selectMap("com.rottentomatoes.movieapi.mappers.CharacterMapper.selectCharactersById", selectParams, "id");
 
-        for(Map<String,String>  line : lines){
-            String characterId = line.get("characterId");
-            if(characterId != null) {
-                line.put("characterName",characters.get(characterId).getName());
-                line.remove("characterId");
+            for(Map<String,String>  line : lines){
+                String characterId = line.get("characterId");
+                if(characterId != null) {
+                    line.put("characterName",characters.get(characterId).getName());
+                    line.remove("characterId");
+                }
             }
         }
+
         return quote;
     }
 

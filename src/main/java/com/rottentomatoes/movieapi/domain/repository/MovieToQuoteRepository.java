@@ -57,18 +57,21 @@ public class MovieToQuoteRepository extends AbstractRepository implements Relati
 
         selectParams = new HashMap<>();
         selectParams.put("ids", characterIds);
-        Map<String,Character> characters = sqlSession.selectMap("com.rottentomatoes.movieapi.mappers.CharacterMapper.selectCharactersById", selectParams, "id");
+        if (!characterIds.isEmpty()) {
+            Map<String,Character> characters = sqlSession.selectMap("com.rottentomatoes.movieapi.mappers.CharacterMapper.selectCharactersById", selectParams, "id");
 
-        for(Quote q : quotes) {
-            List<Map<String,String>> lines = q.getLines();
-            for (Map<String,String> line : lines) {
-                String characterId = line.get("characterId");
-                if (characterId != null) {
-                    line.put("characterName", characters.get(characterId).getName());
-                    line.remove("characterId");
+            for(Quote q : quotes) {
+                List<Map<String,String>> lines = q.getLines();
+                for (Map<String,String> line : lines) {
+                    String characterId = line.get("characterId");
+                    if (characterId != null) {
+                        line.put("characterName", characters.get(characterId).getName());
+                        line.remove("characterId");
+                    }
                 }
             }
         }
+
 
         return quotes;
     }
