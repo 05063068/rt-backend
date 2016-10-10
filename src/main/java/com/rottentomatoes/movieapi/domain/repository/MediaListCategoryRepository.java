@@ -1,8 +1,11 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.MediaListCategory;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
+
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

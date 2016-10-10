@@ -1,10 +1,13 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.MediaList;
 import com.rottentomatoes.movieapi.domain.model.MediaListCategory;
 import com.rottentomatoes.movieapi.domain.model.MediaListItem;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
+
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

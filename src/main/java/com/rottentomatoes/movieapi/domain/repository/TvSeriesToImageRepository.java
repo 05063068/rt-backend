@@ -2,13 +2,17 @@ package com.rottentomatoes.movieapi.domain.repository;
 
 import com.rottentomatoes.movieapi.domain.model.Image;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaInformation;
+
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by patrick on 9/22/16.
@@ -43,7 +47,9 @@ public class TvSeriesToImageRepository extends AbstractRepository implements Rel
 
     @Override
     public Image findOneTarget(String tvSeriesId, String fieldName, RequestParams requestParams) {
-        Image tvImage = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.ImageMapper.selectMainImageForTvSeries", tvSeriesId);
+        Map<String, Object> selectParams = new HashMap<>();
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Image tvImage = (Image)preEmsClient.callPreEmsEntity(selectParams, "tv-series", tvSeriesId + "/main-image", Image.class);
         return tvImage;
     }
 

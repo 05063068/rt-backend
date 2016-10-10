@@ -100,7 +100,8 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
             }
         }
 
-        metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticMapper.selectAllCriticsCount", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
+        metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "critic", "/meta", RelatedMetaDataInformation.class);
         return metaData;
     }
 
