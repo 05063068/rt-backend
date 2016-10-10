@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Character;
 import com.rottentomatoes.movieapi.domain.model.Quote;
 import com.rottentomatoes.movieapi.domain.model.Movie;
@@ -36,39 +37,12 @@ public class MovieToQuoteRepository extends AbstractRepository implements Relati
     @Override
     public Iterable<Quote> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
 
-        Iterable<Quote> quotes = talkSession.selectList("com.rottentomatoes.movieapi.mappers.dbtalk.QuoteMapper.selectQuotesByMovie", selectParams);
-        // Backfill Character name from shared DB
-        Set<String> characterIds = new HashSet<>();
-
-        for(Quote q : quotes) {
-            List<Map<String,String>> lines = q.getLines();
-            for (Map<String,String> line : lines) {
-                String characterId = line.get("characterId");
-                if (characterId != null) {
-                    characterIds.add(characterId);
-                }
-            }
-        }
-
-        selectParams = new HashMap<>();
-        selectParams.put("ids", characterIds);
-        Map<String,Character> characters = sqlSession.selectMap("com.rottentomatoes.movieapi.mappers.CharacterMapper.selectCharactersById", selectParams, "id");
-
-        for(Quote q : quotes) {
-            List<Map<String,String>> lines = q.getLines();
-            for (Map<String,String> line : lines) {
-                String characterId = line.get("characterId");
-                if (characterId != null) {
-                    line.put("characterName", characters.get(characterId).getName());
-                    line.remove("characterId");
-                }
-            }
-        }
+        PreEmsClient preEmsClient = new PreEmsClient<Iterable<Quote>>(preEmsConfig);
+        Iterable<Quote> quotes = (Iterable<Quote>) preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/quote", TypeFactory.defaultInstance().constructCollectionType(List.class,  Quote.class));
 
         return quotes;
     }

@@ -20,12 +20,19 @@ import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.ge
 import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getTodayPST;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 
 import io.katharsis.repository.MetaRepository;
@@ -107,11 +114,12 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
     }
 
     @Override
+    @JsonCreator
     public Movie findOne(String movieId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", movieId);
         setMovieParams(selectParams, requestParams);
-        Movie movie = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MovieMapper.selectMovieById", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Movie movie = (Movie) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId, Movie.class);
         return movie;
     }
 

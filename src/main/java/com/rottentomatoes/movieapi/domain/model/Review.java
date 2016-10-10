@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 @JsonApiResource(type = "review")
 @Getter
 @Setter
@@ -16,6 +18,7 @@ public class Review extends AbstractModel {
     protected String scoreOri;
     protected String quote;
     protected String url;
+    @JsonDeserialize(using = DeSerializeZonedDateTime.class)
     protected ZonedDateTime creationDate;
     protected boolean topCritic;
     protected String score;

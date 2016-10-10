@@ -1,9 +1,12 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.PromoItem;
 import com.rottentomatoes.movieapi.domain.model.PromoSection;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
+
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -39,10 +42,10 @@ public class PromoSectionToPromoItemRepository extends AbstractRepository implem
     @Override
     public Iterable<PromoItem> findManyTargets(String promoSectionId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("promo_section", promoSectionId);
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        List<PromoItem> promoItems = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.PromoItemMapper.selectPromoItemsByPromoSectionId", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<Iterable<PromoItem>>(preEmsConfig);
+        List<PromoItem> promoItems = (List<PromoItem>) preEmsClient.callPreEmsList(selectParams, "promo-item", promoSectionId + "/item/", TypeFactory.defaultInstance().constructCollectionType(List.class,  PromoItem.class));
 
 
         HashMap<Integer, PromoItem> promoItemMap = getPromoItemsByStartTime(promoItems);

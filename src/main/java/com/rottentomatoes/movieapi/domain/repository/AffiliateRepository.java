@@ -30,12 +30,12 @@ public class AffiliateRepository extends AbstractRepository implements ResourceR
     public Affiliate findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("id", id);
-        String movieId = id.substring(0, id.length() - 3);
-        selectParams.put("movie_id", movieId);
+        String movieId = id.substring(0, id.length() - 2);
 
-        Affiliate genre = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.AffiliateMapper.selectAffiliateById", selectParams);
-        return genre;
+        PreEmsClient preEmsClient = new PreEmsClient<Affiliate>(preEmsConfig);
+        Affiliate affiliate = (Affiliate)preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id, Affiliate.class);
+
+        return affiliate;
     }
 
     @Override
@@ -52,9 +52,11 @@ public class AffiliateRepository extends AbstractRepository implements ResourceR
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
-        RootMetaDataInformation metaData = null;
         Map<String, Object> selectParams = new HashMap<>();
-        metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.AffiliateMapper.selectAffiliatesForMovieCount", selectParams);
+        String id = castedResourceId.toString();
+        String movieId = id.substring(0, id.length() - 2);
+        PreEmsClient preEmsClient = new PreEmsClient<RootMetaDataInformation>(preEmsConfig);
+        RootMetaDataInformation metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;
     }

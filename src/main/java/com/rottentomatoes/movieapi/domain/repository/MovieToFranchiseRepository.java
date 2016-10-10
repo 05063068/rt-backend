@@ -33,9 +33,12 @@ public class MovieToFranchiseRepository extends AbstractRepository implements Re
     @Override
     public Franchise findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("movie_id", movieId);
 
-        Franchise franchise = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.FranchiseMapper.selectFranchiseForMovie", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        Franchise franchise = (Franchise) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/franchise", Franchise.class);
+        if (franchise != null && franchise.getId() == null) {
+            franchise = null;
+        }
         return franchise;
     }
 

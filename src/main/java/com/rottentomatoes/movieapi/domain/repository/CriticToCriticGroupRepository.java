@@ -1,16 +1,20 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.CriticGroup;
 import com.rottentomatoes.movieapi.domain.model.Critic;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaInformation;
+
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("rawtypes")
@@ -49,7 +53,8 @@ public class CriticToCriticGroupRepository extends AbstractRepository implements
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        return sqlSession.selectList("com.rottentomatoes.movieapi.mappers.CriticGroupMapper.selectCriticGroupsByCritic", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<Iterable<CriticGroup>>(preEmsConfig);
+        return (Iterable<CriticGroup>) preEmsClient.callPreEmsList(selectParams, "critic", criticId + "/group", TypeFactory.defaultInstance().constructCollectionType(List.class,  CriticGroup.class));
     }
 
     @Override
@@ -57,8 +62,8 @@ public class CriticToCriticGroupRepository extends AbstractRepository implements
         RelatedMetaDataInformation metaData;
         Map<String, Object> selectParams = new HashMap<>();
 
-        selectParams.put("critic_id", criticId);
-        metaData = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.CriticGroupMapper.selectAllCriticGroupCountForCritic", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
+        metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "critic", criticId.toString() + "/group/meta", RelatedMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;
     }

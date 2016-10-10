@@ -2,8 +2,8 @@
 ## V2.1 Release Notes
 * Placeholder note. V2.1 is the Pre-EMS port of V1.2.
 
-## V2.0 Release Notes
-* V2.0 is the Pre-EMS port of V1.1
+## V1.2.1 Release Notes
+* TODO: Integrate Real-EMS (No client-visible API changes)
 
 ## V1.2 Release Notes
 * [RT-7925] added image attribute to promoItem object

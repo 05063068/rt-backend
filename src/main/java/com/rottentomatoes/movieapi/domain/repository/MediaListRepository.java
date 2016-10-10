@@ -1,8 +1,11 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.MediaList;
+
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
+
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -17,9 +20,9 @@ public class MediaListRepository extends AbstractRepository implements ResourceR
         Map<String, Object> selectParams = new HashMap<>();
 
         selectParams.put("country", getCountry(requestParams).getCountryCode());
-        selectParams.put("id", id);
 
-        MediaList mediaList = sqlSession.selectOne("com.rottentomatoes.movieapi.mappers.MediaListMapper.selectMediaList", selectParams);
+        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        MediaList mediaList = (MediaList)preEmsClient.callPreEmsEntity(selectParams, "media-list", id, MediaList.class);
         return mediaList;
     }
 
@@ -31,8 +34,9 @@ public class MediaListRepository extends AbstractRepository implements ResourceR
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        List<MediaList> mediaLists = sqlSession.selectList("com.rottentomatoes.movieapi.mappers.MediaListMapper.selectMediaLists", selectParams);
-
+        PreEmsClient preEmsClient = new PreEmsClient<List<MediaList>>(preEmsConfig);
+        List<MediaList> mediaLists = (List<MediaList>)preEmsClient.callPreEmsList(selectParams, "media-list", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  MediaList.class));
+  
         return mediaLists;
     }
 
