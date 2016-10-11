@@ -121,14 +121,14 @@
     <!-- Upcoming -->
     <select id="selectUpcomingMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
         SELECT
-        WEEK(theater_release_date) as weekNo,
+        (WEEK(theater_release_date) + YEAR(theater_release_date)*100) as yearWeek,
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN rating_summary s ON s.movie_id = movie.movie_id
         LEFT JOIN movie_intl_release mir ON mir.movie_id = movie.movie_id AND mir.country = #{country} AND mir.type = 'THR' AND mir.deleted_ind=0
         WHERE movie.theater_release_date BETWEEN #{startDate} AND #{endDate}
         AND s.num_wts > 1
         AND movie.status = 1
-        ORDER BY weekNo ASC, s.num_wts DESC
+        ORDER BY yearWeek ASC, s.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
 
@@ -146,14 +146,14 @@
     <!-- Top Rentals -->
     <select id="selectTopRentalMovies" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
         SELECT
-        WEEK(dvd_release_date) as weekNo,
+        (WEEK(dvd_release_date) + YEAR(dvd_release_date)*100) as yearWeek,
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN rating_summary rs ON rs.movie_id = movie.movie_id
         WHERE movie.status = 1
         AND movie.dvd_release_date
         BETWEEN #{startDate} AND #{endDate}
         AND rs.num_wts > 1
-        ORDER BY weekNo DESC, rs.num_wts DESC
+        ORDER BY yearWeek DESC, rs.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
 
@@ -171,13 +171,13 @@
     <!-- Upcoming DVDs -->
     <select id="selectUpcomingDvds" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
         SELECT
-        WEEK(dvd_release_date) as weekNo,
+        (WEEK(dvd_release_date) + YEAR(dvd_release_date)*100) as yearWeek,
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN rating_summary rs ON rs.movie_id = movie.movie_id
         WHERE movie.status = 1
         AND dvd_release_date BETWEEN #{startDate} AND #{endDate}
         AND rs.num_wts > 1
-        ORDER BY weekNo ASC, rs.num_wts DESC
+        ORDER BY yearWeek ASC, rs.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
 
@@ -195,13 +195,13 @@
     <!-- New DVD -->
     <select id="selectNewDvd" resultMap="com.rottentomatoes.movieapi.mappers.MovieMapper.movieResultMap" parameterType="map">
         SELECT
-        WEEK(dvd_release_date) as weekNo,
+        (WEEK(dvd_release_date) + YEAR(dvd_release_date)*100) as yearWeek,
         <include refid="com.rottentomatoes.movieapi.mappers.MovieMapper.movieSelectSql" />
         INNER JOIN rating_summary rs ON rs.movie_id = movie.movie_id
         WHERE movie.status = 1
         AND dvd_release_date BETWEEN #{startDate} AND #{endDate}
         AND rs.num_wts > 1
-        ORDER BY weekNo DESC, rs.num_wts DESC
+        ORDER BY yearWeek DESC, rs.num_wts DESC
         <include refid="offsetLimitSql"/>
     </select>
 

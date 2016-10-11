@@ -40,7 +40,6 @@ public class MovieToQuoteRepository extends AbstractRepository implements Relati
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-
         PreEmsClient preEmsClient = new PreEmsClient<Iterable<Quote>>(preEmsConfig);
         Iterable<Quote> quotes = (Iterable<Quote>) preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/quote", TypeFactory.defaultInstance().constructCollectionType(List.class,  Quote.class));
 
