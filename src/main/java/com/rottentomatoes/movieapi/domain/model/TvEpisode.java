@@ -2,22 +2,24 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.katharsis.resource.annotations.JsonApiLazy;
+import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
+import io.katharsis.resource.annotations.JsonApiToMany;
+import io.katharsis.resource.annotations.JsonApiToOne;
+import io.katharsis.response.MetaDataEnabledList;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Map;
 
-@JsonApiResource(type = "episode")
+@JsonApiResource(type = "tvEpisode")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 public class TvEpisode extends AbstractModel {
     protected String title;
     protected String vanityUrl;
-
-//    protected String trailerUrl;
-//    protected String posterUrl;
 
     protected int episodeNumber;
     protected String tvSeasonId;
@@ -29,5 +31,27 @@ public class TvEpisode extends AbstractModel {
 
     // complex (nested) attributes
     protected Map<String, Object> tomatometer;
+    protected Map<String, Object> posterImage;
+    protected Map<String, Object> heroImage;
+    protected Map<String, Object> mainTrailer;
 
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected MoviePersonnel tvPersonnel;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected MetaDataEnabledList<VideoClip> videoClips;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Image> images;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Review> reviews;
 }

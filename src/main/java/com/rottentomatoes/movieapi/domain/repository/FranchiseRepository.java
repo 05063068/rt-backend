@@ -36,8 +36,8 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Franchise franchise = (Franchise) preEmsClient.callPreEmsEntity(selectParams, "franchise", id, Franchise.class);
+        EmsClient emsClient = new EmsClient(emsConfig);
+        Franchise franchise = (Franchise) emsClient.callEmsEntity(selectParams, "franchise", id, Franchise.class);
         return franchise;
     }
 

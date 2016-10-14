@@ -3,8 +3,6 @@ package com.rottentomatoes.movieapi.domain.repository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.model.Movie;
-import com.rottentomatoes.movieapi.domain.model.Person;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import com.rottentomatoes.movieapi.search.SearchQuery;
 import io.katharsis.queryParams.RequestParams;
@@ -38,9 +36,14 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
     @Override
     public TvSeries findOne(String tvSeriesId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        TvSeries tvSeries = (TvSeries) preEmsClient.callPreEmsEntity(selectParams, "tv-series", tvSeriesId, TvSeries.class);
-        return tvSeries;
+        EmsClient emsClient = new EmsClient(emsConfig);
+        List<TvSeries> tvSeries = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv/series", tvSeriesId,
+                TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
+
+        if (tvSeries != null && tvSeries.size() > 0) {
+            return tvSeries.get(0);
+        }
+        return null;
     }
 
     @Override
