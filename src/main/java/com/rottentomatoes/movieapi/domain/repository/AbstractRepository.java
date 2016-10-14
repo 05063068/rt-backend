@@ -1,7 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import com.rottentomatoes.movieapi.enums.Country;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,9 @@ import io.katharsis.queryParams.RequestParams;
 public class AbstractRepository implements Serializable {
 
     @Autowired
+    protected EmsConfig emsConfig;
+    @Autowired
     protected PreEmsConfig preEmsConfig;
-
 
     String LIMIT = "Limit";
     Integer DEFAULT_LIMIT = 10;

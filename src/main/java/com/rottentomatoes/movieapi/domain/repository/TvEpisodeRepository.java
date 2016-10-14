@@ -1,6 +1,7 @@
 
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.ResourceRepository;
@@ -8,6 +9,7 @@ import io.katharsis.response.MetaInformation;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -30,10 +32,16 @@ public class TvEpisodeRepository extends AbstractRepository implements
     @Override
     public TvEpisode findOne(String tvEpisodeId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        TvEpisode tvEpisode = (TvEpisode) preEmsClient.callPreEmsEntity(selectParams, "tv-episode", tvEpisodeId, TvEpisode.class);
+        EmsClient emsClient = new EmsClient<List<TvEpisode>>(emsConfig);
 
-        return tvEpisode;
+        // Retrieves a list of 1 object, due to how EMS is set up
+        List<TvEpisode> tvEpisodes = (List<TvEpisode>) emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId,
+                TypeFactory.defaultInstance().constructCollectionType(List.class, TvEpisode.class));
+
+        if (tvEpisodes != null && tvEpisodes.size() > 0) {
+            return tvEpisodes.get(0);
+        }
+        return null;
     }
 
     @Override
