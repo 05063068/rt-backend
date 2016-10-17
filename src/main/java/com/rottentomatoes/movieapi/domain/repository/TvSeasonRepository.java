@@ -33,6 +33,7 @@ public class TvSeasonRepository extends AbstractRepository implements ResourceRe
         Map<String, Object> selectParams = new HashMap<>();
         PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
         TvSeason tvSeason = (TvSeason) preEmsClient.callPreEmsEntity(selectParams, "tv-season", tvSeasonId, TvSeason.class);
+        tvSeason.setVanity(getSeasonVanity(tvSeason));
         return tvSeason;
     }
 
