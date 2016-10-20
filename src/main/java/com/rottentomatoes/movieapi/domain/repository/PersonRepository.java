@@ -32,8 +32,8 @@ public class PersonRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Person findOne(String personId, RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Person person = (Person) preEmsClient.callPreEmsEntity(new HashMap<String,Object>(), "person", personId, Person.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("person");
+        Person person = (Person) emsClient.callEmsEntity(new HashMap<String,Object>(), "person", personId, Person.class);
         return person;
     }
 

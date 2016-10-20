@@ -22,8 +22,8 @@ public class MediaListItemRepository extends AbstractRepository implements Resou
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        MediaListItem mediaListItem = (MediaListItem)preEmsClient.callPreEmsEntity(selectParams, "media-item", itemId, MediaListItem.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("media-item");
+        MediaListItem mediaListItem = (MediaListItem)emsClient.callEmsEntity(selectParams, "media-item", itemId, MediaListItem.class);
 
         return mediaListItem;
     }

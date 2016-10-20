@@ -46,8 +46,8 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
     public Movie findOne(String movieId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         RepositoryUtils.setMovieParams(selectParams, requestParams);
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Movie movie = (Movie) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId, Movie.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        Movie movie = (Movie) emsClient.callEmsEntity(selectParams, "movie", movieId, Movie.class);
         return movie;
     }
 

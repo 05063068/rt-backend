@@ -48,8 +48,8 @@ public class ImageRepository extends AbstractRepository implements ResourceRepos
         selectParams.put("type", imageType);
         selectParams.put("imageTable", imageTable);
 
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Image image = (Image) preEmsClient.callPreEmsEntity(selectParams, "image", imageId, Image.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("image");
+        Image image = (Image) emsClient.callEmsEntity(selectParams, "image", imageId, Image.class);
         return image;
     }
 

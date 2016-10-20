@@ -48,8 +48,8 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        PreEmsClient preEmsClient = new PreEmsClient<Affiliate>(preEmsConfig);
-        Affiliate affiliate = (Affiliate)preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/affiliate/" + affiliateId, Affiliate.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        Affiliate affiliate = (Affiliate)emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + affiliateId, Affiliate.class);
 
 
         return affiliate;
@@ -59,8 +59,8 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
     public Iterable<Affiliate> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        PreEmsClient preEmsClient = new PreEmsClient<List<Affiliate>>(preEmsConfig);
-        List<Affiliate> all_skus = (List<Affiliate>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/affiliate", TypeFactory.defaultInstance().constructCollectionType(List.class,  Affiliate.class));
+        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        List<Affiliate> all_skus = (List<Affiliate>)emsClient.callEmsList(selectParams, "movie", movieId + "/affiliate", TypeFactory.defaultInstance().constructCollectionType(List.class,  Affiliate.class));
 
         List<Affiliate> affiliates = new ArrayList<>();
         List<String> affiliateNames = new ArrayList<>();
@@ -82,8 +82,8 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
         String movieId = castedResourceId.toString();
         String id = "all";
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient<RootMetaDataInformation>(preEmsConfig);
-        metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;
     }

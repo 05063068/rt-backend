@@ -54,7 +54,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         RepositoryUtils.setMovieParams(selectParams, requestParams);
-        PreEmsClient preEmsClient = new PreEmsClient<List<Movie>>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClient(listId);
 
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
@@ -63,31 +63,31 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         switch (listId) {
             case "top-box-office":
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
-                List<Movie> movies = (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                List<Movie> movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
                 if (movies.isEmpty()) {
-                    movies = (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, "fallback", TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                    movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, "fallback", TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
                 }
                 return movies;
 
             case "upcoming":
                 selectParams = SqlParameterUtils.setUpcomingParams(selectParams);
-                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "opening":
                 selectParams = SqlParameterUtils.setOpeningParams(selectParams);
-                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "top-rentals":
                 selectParams = SqlParameterUtils.setTopRentalsParams(selectParams);
-                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "upcoming-dvds":
                 selectParams = SqlParameterUtils.setUpcomingDvdsParam(selectParams);
-                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "new-on-dvd":
                 selectParams = SqlParameterUtils.setNewOnDvdParams(selectParams);
-                return (List<Movie>) preEmsClient.callPreEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             default:
                 throw new ResourceNotFoundException("Invalid list type");
@@ -98,52 +98,58 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         RootMetaDataInformation metaData = null;
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
+        EmsClient emsClient;
 
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
         switch ((String) castedResourceId) {
             case "top-box-office":
+                emsClient = emsConfig.fetchEmsClient("top-box-office");
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
-                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "top-box-office", "meta", RootMetaDataInformation.class);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "meta", RootMetaDataInformation.class);
                 if (metaData.totalCount == 0) {
                     LocalDate now = getTodayPST();
 
                     //exclusive, so if today == Sunday, return last week (so it flips on Monday)
                     LocalDate mostRecentSunday = now.with(previous(DayOfWeek.SUNDAY));
                     selectParams.put("startDate", mostRecentSunday);
-                    metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "top-box-office", "fallback/meta", RootMetaDataInformation.class);
+                    metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "fallback/meta", RootMetaDataInformation.class);
                 }
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "upcoming":
+                emsClient = emsConfig.fetchEmsClient("upcoming");
                 selectParams = SqlParameterUtils.setUpcomingParams(selectParams);
-                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "upcoming", "meta", RootMetaDataInformation.class);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "upcoming", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "opening":
+                emsClient = emsConfig.fetchEmsClient("opening");
                 selectParams = SqlParameterUtils.setOpeningParams(selectParams);
-                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "opening", "meta", RootMetaDataInformation.class);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "opening", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "top-rentals":
+                emsClient = emsConfig.fetchEmsClient("top-rentals");
                 selectParams = SqlParameterUtils.setTopRentalsParams(selectParams);
-                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "top-rentals", "meta", RootMetaDataInformation.class);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-rentals", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "upcoming-dvds":
+                emsClient = emsConfig.fetchEmsClient("upcoming-dvds");
                 selectParams = SqlParameterUtils.setUpcomingDvdsParam(selectParams);
-                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "upcoming-dvds", "meta", RootMetaDataInformation.class);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "upcoming-dvds", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "new-on-dvd":
+                emsClient = emsConfig.fetchEmsClient("new-on-dvd");
                 selectParams = SqlParameterUtils.setNewOnDvdParams(selectParams);
-                metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "new-on-dvd", "meta", RootMetaDataInformation.class);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "new-on-dvd", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
 
         }

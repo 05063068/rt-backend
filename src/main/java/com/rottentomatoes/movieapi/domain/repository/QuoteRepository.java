@@ -27,8 +27,8 @@ public class QuoteRepository extends AbstractRepository implements ResourceRepos
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Quote quote = (Quote) preEmsClient.callPreEmsEntity(selectParams, "quote", id, Quote.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("quote");
+        Quote quote = (Quote) emsClient.callEmsEntity(selectParams, "quote", id, Quote.class);
         return quote;
     }
 

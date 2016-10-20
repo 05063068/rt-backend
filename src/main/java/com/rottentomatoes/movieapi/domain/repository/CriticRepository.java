@@ -39,8 +39,8 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        PreEmsClient preEmsClient = new PreEmsClient<Critic>(preEmsConfig);
-        Critic critic = (Critic)preEmsClient.callPreEmsEntity(selectParams, "critic", id, Critic.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        Critic critic = (Critic)emsClient.callEmsEntity(selectParams, "critic", id, Critic.class);
         return critic;
     }
 
@@ -48,7 +48,7 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
     public Iterable<Critic> findAll(RequestParams requestParams) {
         // Return list of all critics. Allow filter by last name
 
-        PreEmsClient preEmsClient = new PreEmsClient<List<Critic>>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
 
         Map<String, Object> selectParams = new HashMap<>();
         List<Critic> critics = null;
@@ -70,7 +70,7 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
                     throw new IllegalArgumentException("Invalid search query.");
                 }
 
-                critics =  (List<Critic>) preEmsClient.callPreEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
+                critics = (List<Critic>) emsClient.callEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
             }
             else {
                 if (requestParams.getFilters().containsKey("search")) {
@@ -91,11 +91,9 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
                 selectParams.put("limit", getLimit("", requestParams));
                 selectParams.put("offset", getOffset("", requestParams));
 
-                critics = (List<Critic>) preEmsClient.callPreEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
+                critics = (List<Critic>) emsClient.callEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
             }
         }
-
-
         return critics;
     }
 
@@ -128,8 +126,8 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
             }
         }
 
-        PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
-        metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "critic", "/meta", RelatedMetaDataInformation.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", "/meta", RelatedMetaDataInformation.class);
         return metaData;
     }
 

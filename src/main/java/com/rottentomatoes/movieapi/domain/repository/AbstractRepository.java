@@ -14,8 +14,6 @@ public class AbstractRepository implements Serializable {
 
     @Autowired
     protected EmsConfig emsConfig;
-    @Autowired
-    protected PreEmsConfig preEmsConfig;
 
     String LIMIT = "Limit";
     Integer DEFAULT_LIMIT = 10;

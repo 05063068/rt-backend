@@ -24,8 +24,8 @@ public class MovieCastRepository extends AbstractRepository implements ResourceR
     @Override
     public MovieCast findOne(String movieCastId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        MovieCast movieCast = (MovieCast) preEmsClient.callPreEmsEntity(selectParams, "movie-personnel", movieCastId, MovieCast.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("movie-personnel");
+        MovieCast movieCast = (MovieCast) emsClient.callEmsEntity(selectParams, "movie-personnel", movieCastId, MovieCast.class);
         return movieCast;
     }
 

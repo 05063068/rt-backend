@@ -30,8 +30,8 @@ public class ReviewRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Review findOne(String reviewId, RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Review review = (Review) preEmsClient.callPreEmsEntity(new HashMap<String,Object>(), "review", reviewId, Review.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("review");
+        Review review = (Review) emsClient.callEmsEntity(new HashMap<String,Object>(), "review", reviewId, Review.class);
         return review;
     }
 
@@ -47,8 +47,8 @@ public class ReviewRepository extends AbstractRepository implements ResourceRepo
             selectParams.put("category", requestParams.getFilters().get("category"));
         }
 
-        PreEmsClient preEmsClient = new PreEmsClient<List<Review>>(preEmsConfig);
-        List<Review> reviews = (List<Review>)preEmsClient.callPreEmsList(selectParams, "review", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
+        EmsClient emsClient = emsConfig.fetchEmsClient("review");
+        List<Review> reviews = (List<Review>)emsClient.callEmsList(selectParams, "review", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
 
         return reviews;
     }

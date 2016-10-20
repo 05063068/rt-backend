@@ -7,6 +7,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.Console;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class EmsConfig {
@@ -15,14 +18,27 @@ public class EmsConfig {
     @Getter
     @Setter
     Environment env;
-    
-    protected String EMS_BASE_URL = null; // "http://ems-staging.aws.prod.flixster.com/";
 
-    public String getHostUrl() {
-        if (EMS_BASE_URL == null) {
-            EMS_BASE_URL = env.getProperty("datasource.ems.url");
+    private static final String PRE_EMS_DATASOURCE_PROPERTY = "datasource.pre-ems.url";
+    private static final String TV_EMS_DATASOURCE_PROPERTY = "datasource.tv-ems.url";
+    
+    protected static final String EMS_BASE_URL = null; // "http://ems-staging.aws.prod.flixster.com/"; //"http://pre-ems.aws.prod.flixster.com"
+    protected String tvEmsHost;
+    protected String preEmsHost;
+
+    public String getHost(String property) {
+        if (property.equals(PRE_EMS_DATASOURCE_PROPERTY)) {
+            if (preEmsHost == null) {
+                preEmsHost = env.getProperty(PRE_EMS_DATASOURCE_PROPERTY);
+            }
+            return preEmsHost;
+        } else if (property.equals(TV_EMS_DATASOURCE_PROPERTY)) {
+            if (tvEmsHost == null) {
+                tvEmsHost = env.getProperty(TV_EMS_DATASOURCE_PROPERTY);
+            }
+            return tvEmsHost;
         }
-        return EMS_BASE_URL;
+        return "";
     }
     
     public void log(String s, Throwable e) {
@@ -34,5 +50,15 @@ public class EmsConfig {
         if (con != null) {
            con.printf("Ems error: %1s", exceptionMessage);
         }
+    }
+
+    // Temporary list until we can get the endpoint routes fed to us from the backend
+    protected static List<String> TV_EMS_PATHS = Arrays.asList("tv/episode", "tv/season", "tv/series", "franchise");
+
+    public EmsClient fetchEmsClient(String basePath) {
+        if (TV_EMS_PATHS.contains(basePath)) {
+            return new TvEmsClient(this, getHost(TV_EMS_DATASOURCE_PROPERTY));
+        }
+        return new PreEmsClient(this, getHost(PRE_EMS_DATASOURCE_PROPERTY));
     }
 }

@@ -56,8 +56,8 @@ public class IdListRepository extends AbstractRepository implements ResourceRepo
                 selectParams.put("offset", getOffset(fieldName, requestParams));
                 selectParams.put("minReviews", minReviews);
                 selectParams.put("minRatings", minRatings);
-                PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-                IdList idList = (IdList) preEmsClient.callPreEmsEntity(selectParams, "site-map", "movie-ids", IdList.class);
+                EmsClient emsClient = emsConfig.fetchEmsClient("site-map");
+                IdList idList = (IdList) emsClient.callEmsEntity(selectParams, "site-map", "movie-ids", IdList.class);
                 return idList;
 
 

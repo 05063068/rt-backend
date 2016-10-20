@@ -41,10 +41,11 @@ public class FranchiseToMovieRepository extends AbstractRepository implements Re
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
-        EmsClient emsClient = new EmsClient<List<TvEpisode>>(emsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClient("franchise");
         List<String> movieIds = (List<String>) emsClient.callEmsList(selectParams, "franchise", franchiseId + "/movie",
                 TypeFactory.defaultInstance().constructCollectionType(List.class,  String.class));
 
+        emsClient = emsConfig.fetchEmsClient("movie");
         if (movieIds != null && movieIds.size() > 0) {
             String ids = String.join(",", movieIds);
             List<Movie> movieList = (List<Movie>) emsClient.callEmsList(selectParams, "movie", ids,

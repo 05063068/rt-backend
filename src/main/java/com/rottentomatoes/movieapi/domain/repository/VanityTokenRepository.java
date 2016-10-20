@@ -25,8 +25,8 @@ public class VanityTokenRepository extends AbstractRepository implements Resourc
     @Override
     public VanityToken findOne(String vanityToken, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        VanityToken token = (VanityToken) preEmsClient.callPreEmsEntity(selectParams, "vanity-token", vanityToken, VanityToken.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("vanity-token");
+        VanityToken token = (VanityToken) emsClient.callEmsEntity(selectParams, "vanity-token", vanityToken, VanityToken.class);
         return token;
     }
 

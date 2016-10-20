@@ -55,8 +55,8 @@ public class MovieToAudienceReviewRepository extends AbstractRepository implemen
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-          PreEmsClient preEmsClient = new PreEmsClient<List<AudienceReview>>(preEmsConfig);
-          List<AudienceReview> rawReviewList = (List<AudienceReview>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/audience-review", TypeFactory.defaultInstance().constructCollectionType(List.class,  AudienceReview.class));
+          EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+          List<AudienceReview> rawReviewList = (List<AudienceReview>)emsClient.callEmsList(selectParams, "movie", movieId + "/audience-review", TypeFactory.defaultInstance().constructCollectionType(List.class,  AudienceReview.class));
           reviewList = new MetaDataEnabledList(rawReviewList);
 
           return reviewList;

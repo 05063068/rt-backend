@@ -27,19 +27,19 @@ public class CriticGroupRepository extends AbstractRepository implements Resourc
     public CriticGroup findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient<CriticGroup>(preEmsConfig);
-        CriticGroup criticGroup = (CriticGroup)preEmsClient.callPreEmsEntity(selectParams, "critic-group", id, CriticGroup.class);
+        EmsClient emsClient = emsConfig.fetchEmsClient("critic-group");
+        CriticGroup criticGroup = (CriticGroup)emsClient.callEmsEntity(selectParams, "critic-group", id, CriticGroup.class);
         return criticGroup;
     }
 
     @Override
     public Iterable<CriticGroup> findAll(RequestParams requestParams) {
 
-        PreEmsClient preEmsClient = new PreEmsClient<List<CriticGroup>>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClient("critic-group");
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
-        List<CriticGroup> criticGroups = (List<CriticGroup>) preEmsClient.callPreEmsList(selectParams, "critic-group", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  CriticGroup.class));
+        List<CriticGroup> criticGroups = (List<CriticGroup>) emsClient.callEmsList(selectParams, "critic-group", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  CriticGroup.class));
         return criticGroups;
 
     }

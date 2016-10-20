@@ -45,13 +45,13 @@ public class MovieToMoviePersonnelRepository extends AbstractRepository implemen
 
     @Override
     public MoviePersonnel findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient<List<MovieCast>>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
         Map<String, Object> selectParams = new HashMap<>();
         Integer limit = getActorsLimit(requestParams);
         if (limit != null) {
             selectParams.put("actorsLimit", limit);
         }
-        List<MovieCast> personList = (List<MovieCast>) preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/personnel", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieCast.class));
+        List<MovieCast> personList = (List<MovieCast>) emsClient.callEmsList(selectParams, "movie", movieId + "/personnel", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieCast.class));
 
         // Load MoviePersonnel object manually;
         MoviePersonnel moviePersonnel = new MoviePersonnel();

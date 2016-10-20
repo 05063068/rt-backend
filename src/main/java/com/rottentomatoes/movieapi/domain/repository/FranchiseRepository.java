@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
+@SuppressWarnings("rawtypes")
 @Component
 public class FranchiseRepository extends AbstractRepository implements ResourceRepository<Franchise, String> {
 
@@ -36,9 +37,8 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = new EmsClient(emsConfig);
-        Franchise franchise = (Franchise) emsClient.callEmsEntity(selectParams, "franchise", id, Franchise.class);
-        return franchise;
+        EmsClient emsClient = emsConfig.fetchEmsClient("franchise");
+        return (Franchise) emsClient.callEmsEntity(selectParams, "franchise", id, Franchise.class);
     }
 
     @Override

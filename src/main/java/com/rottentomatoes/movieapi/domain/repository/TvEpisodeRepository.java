@@ -32,14 +32,13 @@ public class TvEpisodeRepository extends AbstractRepository implements
     @Override
     public TvEpisode findOne(String tvEpisodeId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = new EmsClient<List<TvEpisode>>(emsConfig);
-
-        // Retrieves a list of 1 object, due to how EMS is set up
-        List<TvEpisode> tvEpisodes = (List<TvEpisode>) emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId,
+        EmsClient emsClient = emsConfig.fetchEmsClient("tv/episode");
+        List<TvEpisode> episodes = (List<TvEpisode>) emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId,
                 TypeFactory.defaultInstance().constructCollectionType(List.class, TvEpisode.class));
 
-        if (tvEpisodes != null && tvEpisodes.size() > 0) {
-            return tvEpisodes.get(0);
+        // Necessary because endpoint returns a list of 1 element
+        if (episodes != null && episodes.size() > 0) {
+            return episodes.get(0);
         }
         return null;
     }

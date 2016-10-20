@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Franchise extends AbstractModel {
 
     protected String name;
-    protected String vanitUrl;
+    protected String vanityUrl;
 
     protected String description;
 
