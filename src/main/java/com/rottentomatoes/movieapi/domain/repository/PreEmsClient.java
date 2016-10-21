@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,7 +25,7 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
 public class PreEmsClient<T> {
-    
+    @Autowired
     private PreEmsConfig preEmsConfig;
     
     public PreEmsClient(PreEmsConfig context) {

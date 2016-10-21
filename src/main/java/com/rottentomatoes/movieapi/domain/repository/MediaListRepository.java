@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+
 @Component
 public class MediaListRepository extends AbstractRepository implements ResourceRepository<MediaList, String> {
 

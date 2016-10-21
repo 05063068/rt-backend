@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
+import com.rottentomatoes.movieapi.utils.SqlParameterUtils;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
@@ -20,7 +22,8 @@ import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.resource.exception.ResourceNotFoundException;
 import io.katharsis.response.MetaInformation;
 
-import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getTodayPST;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getTodayPST;
 import static java.time.temporal.TemporalAdjusters.previous;
 
 @Component
@@ -50,7 +53,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     @Override
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        MovieRepository.setMovieParams(selectParams, requestParams);
+        RepositoryUtils.setMovieParams(selectParams, requestParams);
         PreEmsClient preEmsClient = new PreEmsClient<List<Movie>>(preEmsConfig);
 
         selectParams.put("limit", getLimit("", requestParams));

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+
 @Component
 public class MediaListItemRepository extends AbstractRepository implements ResourceRepository<MediaListItem, String> {
     @Override

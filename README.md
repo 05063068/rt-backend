@@ -43,6 +43,9 @@
 * Person (e.g. actors) have PersonSupplementaryInfo and also Filmography via movieFilmography. (TV not implemented yet)
 * Latest theatrical, dvd and quick reviews can be retrieved like so `/review?filter={"category":"dvd"}` (other categories are `theatrical` and `quick`)
 
+## Subpages
+[Search Endpoints](docs/search.md)
+
 ## Setup and Build Notes
 
 ### Configuring JRE

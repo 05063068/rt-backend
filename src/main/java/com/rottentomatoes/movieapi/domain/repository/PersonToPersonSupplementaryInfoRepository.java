@@ -6,14 +6,8 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getMostRecentFriday;
-import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getTodayPST;
-import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
 @SuppressWarnings("rawtypes")
 @Component

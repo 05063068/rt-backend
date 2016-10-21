@@ -2,6 +2,7 @@ package com.rottentomatoes.movieapi.domain.repository;
 
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieSupplementaryInfo;
+import com.rottentomatoes.movieapi.utils.SqlParameterUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
@@ -11,8 +12,9 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getMostRecentFriday;
-import static com.rottentomatoes.movieapi.domain.repository.SqlParameterUtils.getTodayPST;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getMostRecentFriday;
+import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getTodayPST;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
 @SuppressWarnings("rawtypes")

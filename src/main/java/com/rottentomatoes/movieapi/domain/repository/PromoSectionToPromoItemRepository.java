@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+
 @Component
 public class PromoSectionToPromoItemRepository extends AbstractRepository implements RelationshipRepository<PromoSection, String, PromoItem, String> {
 
