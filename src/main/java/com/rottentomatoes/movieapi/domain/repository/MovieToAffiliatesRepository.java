@@ -13,7 +13,6 @@ import io.katharsis.response.MetaInformation;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +47,7 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         Affiliate affiliate = (Affiliate)emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + affiliateId, Affiliate.class);
 
 
@@ -59,7 +58,7 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
     public Iterable<Affiliate> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         List<Affiliate> all_skus = (List<Affiliate>)emsClient.callEmsList(selectParams, "movie", movieId + "/affiliate", TypeFactory.defaultInstance().constructCollectionType(List.class,  Affiliate.class));
 
         List<Affiliate> affiliates = new ArrayList<>();
@@ -82,7 +81,7 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
         String movieId = castedResourceId.toString();
         String id = "all";
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;

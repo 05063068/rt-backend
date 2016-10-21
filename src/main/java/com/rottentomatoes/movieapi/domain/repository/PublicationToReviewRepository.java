@@ -50,7 +50,7 @@ public class PublicationToReviewRepository extends AbstractRepository implements
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("publication");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("publication");
         List<Review> reviewList = (List<Review>)emsClient.callEmsList(selectParams, "publication", publicationId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Review.class));
         return reviewList;
 
@@ -60,7 +60,7 @@ public class PublicationToReviewRepository extends AbstractRepository implements
     public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable publicationId) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("publication");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("publication");
         RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "publication", publicationId + "/review/meta", RelatedMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;

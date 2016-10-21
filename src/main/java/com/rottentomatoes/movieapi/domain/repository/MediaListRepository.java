@@ -23,7 +23,7 @@ public class MediaListRepository extends AbstractRepository implements ResourceR
 
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("media-list");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-list");
         MediaList mediaList = (MediaList)emsClient.callEmsEntity(selectParams, "media-list", id, MediaList.class);
         return mediaList;
     }
@@ -36,7 +36,7 @@ public class MediaListRepository extends AbstractRepository implements ResourceR
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("media-list");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-list");
         List<MediaList> mediaLists = (List<MediaList>)emsClient.callEmsList(selectParams, "media-list", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  MediaList.class));
   
         return mediaLists;

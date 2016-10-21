@@ -40,7 +40,7 @@ public class MediaListCategoryToMediaListRepository extends AbstractRepository i
     public MediaList findOneTarget(String sourceId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("media-list-category");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-list-category");
         MediaList activeMediaList = (MediaList)emsClient.callEmsEntity(selectParams, "media-list-category", sourceId + "/list", MediaList.class);
 
         return activeMediaList;

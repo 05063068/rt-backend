@@ -36,7 +36,7 @@ public class PersonToPersonSupplementaryInfoRepository extends AbstractRepositor
     @Override
     public PersonSupplementaryInfo findOneTarget(String personId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClient("person");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("person");
         PersonSupplementaryInfo personSupplementaryInfo = (PersonSupplementaryInfo) emsClient.callEmsEntity(selectParams, "person", personId + "/supplement", PersonSupplementaryInfo.class);
 
         return personSupplementaryInfo;

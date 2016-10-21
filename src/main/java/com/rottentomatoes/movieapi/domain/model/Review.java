@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToOne;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import java.time.ZonedDateTime;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonApiResource(type = "review")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 public class Review extends AbstractModel {

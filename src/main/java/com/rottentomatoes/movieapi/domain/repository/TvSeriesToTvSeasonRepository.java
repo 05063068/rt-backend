@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.rottentomatoes.movieapi.domain.model.TvEpisode;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.TvSeason;
@@ -44,7 +43,7 @@ public class TvSeriesToTvSeasonRepository extends AbstractRepository implements 
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("tv/series");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/series");
         List<String> tvSeasonIds = (List<String>) emsClient.callEmsList(selectParams, "tv/series", tvSeriesId + "/season",
                 TypeFactory.defaultInstance().constructCollectionType(List.class,  String.class));
 

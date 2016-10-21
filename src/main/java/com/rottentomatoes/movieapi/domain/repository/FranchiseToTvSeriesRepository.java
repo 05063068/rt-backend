@@ -2,8 +2,6 @@ package com.rottentomatoes.movieapi.domain.repository;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Franchise;
-import com.rottentomatoes.movieapi.domain.model.TvEpisode;
-import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
@@ -42,11 +40,11 @@ public class FranchiseToTvSeriesRepository extends AbstractRepository implements
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("franchise");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("franchise");
         List<String> tvSeriesIds = (List<String>) emsClient.callEmsList(selectParams, "franchise", franchiseId + "/series",
                 TypeFactory.defaultInstance().constructCollectionType(List.class,  String.class));
 
-        emsClient = emsConfig.fetchEmsClient("tv/series");
+        emsClient = emsConfig.fetchEmsClientForEndpoint("tv/series");
         if (tvSeriesIds != null && tvSeriesIds.size() > 0) {
             String ids = String.join(",", tvSeriesIds);
             List<TvSeries> tvSeriesList = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv/series", ids,

@@ -40,6 +40,13 @@ public class EmsConfig {
         }
         return "";
     }
+
+    public void log(String s) {
+        Console con = System.console();
+        if (con != null) {
+            con.printf(s);
+        }
+    }
     
     public void log(String s, Throwable e) {
         String exceptionMessage = e.getMessage();
@@ -53,9 +60,9 @@ public class EmsConfig {
     }
 
     // Temporary list until we can get the endpoint routes fed to us from the backend
-    protected static List<String> TV_EMS_PATHS = Arrays.asList("tv/episode", "tv/season", "tv/series", "franchise");
+    private static final List<String> TV_EMS_PATHS = Arrays.asList("tv/episode", "tv/season", "tv/series", "franchise");
 
-    public EmsClient fetchEmsClient(String basePath) {
+    public EmsClient fetchEmsClientForEndpoint(String basePath) {
         if (TV_EMS_PATHS.contains(basePath)) {
             return new TvEmsClient(this, getHost(TV_EMS_DATASOURCE_PROPERTY));
         }

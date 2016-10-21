@@ -48,7 +48,7 @@ public class TvSeriesToImageRepository extends AbstractRepository implements Rel
     @Override
     public Image findOneTarget(String tvSeriesId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClient("tv/series");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/series");
         Image tvImage = (Image)emsClient.callEmsEntity(selectParams, "tv/series", tvSeriesId + "/main-image", Image.class);
         return tvImage;
     }

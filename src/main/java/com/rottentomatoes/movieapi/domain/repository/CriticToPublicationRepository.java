@@ -42,7 +42,7 @@ public class CriticToPublicationRepository extends AbstractRepository implements
 
     @Override
     public Iterable<Publication> findManyTargets(String criticId, String fieldName, RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
         Map<String, Object> selectParams = new HashMap<>();
         return (Iterable<Publication>) emsClient.callEmsList(selectParams, "critic", criticId + "/publication", TypeFactory.defaultInstance().constructCollectionType(List.class,  Publication.class));
     }

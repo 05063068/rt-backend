@@ -48,7 +48,7 @@ public class ImageRepository extends AbstractRepository implements ResourceRepos
         selectParams.put("type", imageType);
         selectParams.put("imageTable", imageTable);
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("image");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("image");
         Image image = (Image) emsClient.callEmsEntity(selectParams, "image", imageId, Image.class);
         return image;
     }

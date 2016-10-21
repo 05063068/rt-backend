@@ -14,7 +14,6 @@ import io.katharsis.response.MetaInformation;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class MovieToMoviePersonnelRepository extends AbstractRepository implemen
 
     @Override
     public MoviePersonnel findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         Map<String, Object> selectParams = new HashMap<>();
         Integer limit = getActorsLimit(requestParams);
         if (limit != null) {

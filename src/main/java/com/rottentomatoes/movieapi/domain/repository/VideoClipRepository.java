@@ -20,7 +20,7 @@ public class VideoClipRepository extends AbstractRepository implements ResourceR
 
     @Override
     public VideoClip findOne(String videoClipId, RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClient("videoclip");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("videoclip");
         VideoClip videoClip = (VideoClip) emsClient.callEmsEntity(new HashMap<String,Object>(), "videoclip", videoClipId, VideoClip.class);
         return videoClip;
     }

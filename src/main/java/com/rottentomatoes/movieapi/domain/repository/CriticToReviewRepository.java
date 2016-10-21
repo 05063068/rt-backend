@@ -66,7 +66,7 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
         return (Iterable<Review>) emsClient.callEmsList(selectParams, "critic", criticId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
     }
 
@@ -84,7 +84,7 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
                 selectParams.put("score", requestParams.getFilters().get("score"));
             }
         }
-        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
         metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", criticId.toString() + "/review/meta", RelatedMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;

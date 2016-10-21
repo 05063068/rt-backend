@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "critic")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 public class Critic extends AbstractModel {

@@ -1,7 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import com.rottentomatoes.movieapi.domain.model.Quote;
-import com.rottentomatoes.movieapi.domain.model.Character;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
@@ -27,7 +26,7 @@ public class QuoteRepository extends AbstractRepository implements ResourceRepos
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("quote");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("quote");
         Quote quote = (Quote) emsClient.callEmsEntity(selectParams, "quote", id, Quote.class);
         return quote;
     }

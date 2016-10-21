@@ -36,7 +36,7 @@ public class CriticToCriticSupplementaryInfoRepository extends AbstractRepositor
     @Override
     public CriticSupplementaryInfo findOneTarget(String criticId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
         CriticSupplementaryInfo criticSupplementaryInfo = (CriticSupplementaryInfo)emsClient.callEmsEntity(selectParams, "critic", criticId + "/supplementary-info", CriticSupplementaryInfo.class);
 
         return criticSupplementaryInfo;

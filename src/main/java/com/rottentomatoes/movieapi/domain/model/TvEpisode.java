@@ -38,12 +38,12 @@ public class TvEpisode extends AbstractModel {
     @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MoviePersonnel tvPersonnel;
+    protected ReviewInfo reviewInfo;
 
-    @JsonApiToMany
+    @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MetaDataEnabledList<VideoClip> videoClips;
+    protected MoviePersonnel tvPersonnel;
 
     @JsonApiToMany
     @JsonApiLazy
@@ -53,5 +53,6 @@ public class TvEpisode extends AbstractModel {
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected Iterable<Review> reviews;
+    protected MetaDataEnabledList<VideoClip> videoClips;
+
 }

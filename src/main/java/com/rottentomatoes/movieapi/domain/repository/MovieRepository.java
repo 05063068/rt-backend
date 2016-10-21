@@ -46,14 +46,14 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
     public Movie findOne(String movieId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         RepositoryUtils.setMovieParams(selectParams, requestParams);
-        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         Movie movie = (Movie) emsClient.callEmsEntity(selectParams, "movie", movieId, Movie.class);
         return movie;
     }
 
     @Override
     public Iterable<Movie> findAll(RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient<Movie>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         Map<String, Object> selectParams = new HashMap<>();
         List<Movie> movies;
         List<Long> movieIds = new ArrayList<>();
@@ -76,7 +76,7 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
         //  Hydrate results
         selectParams.put("country", getCountry(requestParams).getCountryCode());
         if(movieIds.size() > 0) {
-            movies = (List<Movie>) preEmsClient.callPreEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+            movies = (List<Movie>) emsClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
             return movies;
         } else {
             return null;

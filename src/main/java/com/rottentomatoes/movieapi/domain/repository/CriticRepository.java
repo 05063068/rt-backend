@@ -39,7 +39,7 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
         Critic critic = (Critic)emsClient.callEmsEntity(selectParams, "critic", id, Critic.class);
         return critic;
     }
@@ -48,7 +48,7 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
     public Iterable<Critic> findAll(RequestParams requestParams) {
         // Return list of all critics. Allow filter by last name
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
 
         Map<String, Object> selectParams = new HashMap<>();
         List<Critic> critics = null;
@@ -126,7 +126,7 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
             }
         }
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("critic");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
         metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", "/meta", RelatedMetaDataInformation.class);
         return metaData;
     }

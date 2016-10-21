@@ -42,7 +42,7 @@ public class MovieToGenreRepository extends AbstractRepository implements Relati
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         List<Genre> genreList = (List<Genre>)emsClient.callEmsList(selectParams, "movie", movieId + "/genre", TypeFactory.defaultInstance().constructCollectionType(List.class,  Genre.class));
 
         return genreList;

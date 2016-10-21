@@ -32,7 +32,7 @@ public class PersonRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Person findOne(String personId, RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClient("person");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("person");
         Person person = (Person) emsClient.callEmsEntity(new HashMap<String,Object>(), "person", personId, Person.class);
         return person;
     }

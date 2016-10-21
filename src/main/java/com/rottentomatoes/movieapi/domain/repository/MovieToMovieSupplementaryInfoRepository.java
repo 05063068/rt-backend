@@ -45,7 +45,7 @@ public class MovieToMovieSupplementaryInfoRepository extends AbstractRepository 
     public MovieSupplementaryInfo findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         setMovieParams(selectParams, requestParams);
-        EmsClient emsClient = emsConfig.fetchEmsClient("movie");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         MovieSupplementaryInfo movieSupplementaryInfo = (MovieSupplementaryInfo) emsClient.callEmsEntity(selectParams, "movie", movieId + "/supplementary-info", MovieSupplementaryInfo.class);
 
 

@@ -37,7 +37,7 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClient("franchise");
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("franchise");
         return (Franchise) emsClient.callEmsEntity(selectParams, "franchise", id, Franchise.class);
     }
 
