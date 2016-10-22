@@ -49,7 +49,7 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
 
     @Override
     public Iterable<TvSeries> findAll(RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient<TvSeries>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv-series");
 
         Map<String, Object> selectParams = new HashMap<>();
         List<TvSeries> tvSeries;
@@ -73,7 +73,7 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
         }
 
         if(tvSeriesIds.size() > 0) {
-            tvSeries = (List<TvSeries>) preEmsClient.callPreEmsList(selectParams, "tv-series", null, TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
+            tvSeries = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv-series", null, TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
         }
         else{
             tvSeries = new ArrayList<>();

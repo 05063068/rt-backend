@@ -43,7 +43,7 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
     @Override
     public Iterable<Franchise> findAll(RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient<Franchise>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("franchise");
         Map<String, Object> selectParams = new HashMap<>();
         List<Franchise> franchises;
         List<Long> franchiseIds = new ArrayList<>();
@@ -69,7 +69,7 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
         //  Hydrate results
         if(franchiseIds.size() > 0) {
-            franchises = (List<Franchise>) preEmsClient.callPreEmsList(selectParams, "franchise", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class));
+            franchises = (List<Franchise>) emsClient.callEmsList(selectParams, "franchise", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class));
         }
         else{
             franchises = new ArrayList<>();
