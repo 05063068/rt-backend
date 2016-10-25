@@ -35,11 +35,11 @@ public class SearchQuery {
             if(entry.getValue() instanceof List)
             {
                 for(Object listItem : (List)entry.getValue()) {
-                    uriBuilder.addParameter(entry.getKey(), (String)listItem);
+                    uriBuilder.addParameter(entry.getKey(), String.valueOf(listItem));
                 }
             }
             else{
-                uriBuilder.addParameter(entry.getKey(), (String)entry.getValue());
+                uriBuilder.addParameter(entry.getKey(), String.valueOf(entry.getValue()));
             }
 
         }
