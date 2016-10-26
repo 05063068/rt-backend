@@ -16,6 +16,8 @@ import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 
 import com.rottentomatoes.movieapi.search.SearchQuery;
 import io.katharsis.repository.MetaRepository;
+import io.katharsis.response.BaseMetaDataInformation;
+import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,12 +57,13 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
     public Iterable<Movie> findAll(RequestParams requestParams) {
         PreEmsClient preEmsClient = new PreEmsClient<Movie>(preEmsConfig);
         Map<String, Object> selectParams = new HashMap<>();
-        List<Movie> movies;
+        MetaDataEnabledList<Movie> movies;
         List<Long> movieIds = new ArrayList<>();
 
         if (requestParams.getFilters() != null && requestParams.getFilters().get("search") != null) {
+            JsonNode json;
             if(requestParams.getFilters().get("search") instanceof Map){
-                JsonNode json = callSearchService(requestParams);
+                json = callSearchService(requestParams);
                 ArrayNode resultArr = (ArrayNode) json.path("results");
                 movieIds = new ArrayList<>();
                 for (JsonNode movie : resultArr) {
@@ -71,15 +74,27 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
             else{
                 throw new IllegalArgumentException("Invalid search query.");
             }
-        }
 
-        //  Hydrate results
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
-        if(movieIds.size() > 0) {
-            movies = (List<Movie>) preEmsClient.callPreEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
-            return movies;
+
+            //  Hydrate results
+            selectParams.put("country", getCountry(requestParams).getCountryCode());
+            if(movieIds.size() > 0) {
+                movies = new MetaDataEnabledList<>((List<Movie>) preEmsClient.callPreEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class)));
+
+                // Load metadata
+                BaseMetaDataInformation mdi = new BaseMetaDataInformation();
+                mdi.count = json.path("found").intValue();
+                mdi.offset = getOffset("", requestParams);
+                mdi.limit = getLimit("", requestParams);
+                movies.setMetaInformation(mdi);
+
+                return movies;
+            }
+            else {
+                return null; // No search results
+            }
         } else {
-            return null;
+            return null; // No search filter
         }
     }
 
@@ -90,17 +105,7 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
-        RootMetaDataInformation metaData = new RootMetaDataInformation();
-        metaData.setRequestParams(requestParams);
-
-        if (requestParams.getFilters() != null && requestParams.getFilters().get("search") != null) {
-            if(requestParams.getFilters().get("search") instanceof Map){
-                JsonNode json = callSearchService(requestParams);
-                IntNode found = (IntNode) json.path("found");
-                metaData.setTotalCount(Integer.parseInt(found.toString()));
-            }
-        }
-        return metaData;
+        return null;
     }
 
     private JsonNode callSearchService(RequestParams requestParams) {
