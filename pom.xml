@@ -38,7 +38,7 @@
     <repositories>
         <repository>
             <id>flixster-mvn-repo</id>
-            <url>https://raw.githubusercontent.com/flixster/mvn-repo/</url>
+            <url>https://raw.githubusercontent.com/flixster/mvn-repo/master</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
