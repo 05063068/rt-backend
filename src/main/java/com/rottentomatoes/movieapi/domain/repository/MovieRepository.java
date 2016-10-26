@@ -110,7 +110,7 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
 
     private JsonNode callSearchService(RequestParams requestParams) {
         Map<String, Object> searchObj = (Map<String, Object>) requestParams.getFilters().get("search");
-        if (!requestParams.getPagination().isEmpty()) {
+        if (requestParams.getPagination() != null && !requestParams.getPagination().isEmpty()) {
             searchObj.put("limit", getLimit("", requestParams));
             searchObj.put("offset", getOffset("", requestParams));
         }
