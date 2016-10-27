@@ -108,27 +108,20 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
                 
             case "top-for-year":
-                // set parameters specific to this top list
-                if (requestParams.getFilters() != null && requestParams.getFilters().containsKey("year")) {
-                    selectParams.put("year", requestParams.getFilters().get("year"));
-                } else {
-                    Integer year = SqlParameterUtils.getMostRecentFriday().getYear();
-                    selectParams.put("year", year);
-                }
+                selectParams = SqlParameterUtils.setTopForYearParams(selectParams, requestParams);
                 return hydrateIdList(emsClient, emsHydrationClient, selectParams);
             case "top-for-theater":
+                // Pass the epoch seconds for the most recent Theater release date (nearest Friday) dates within 90 days of this are "in theaters"
                 Long inTheaterDateTime = SqlParameterUtils.getMostRecentFriday().toEpochDay() * (24*60*60);
                 selectParams.put("in-theater-date", inTheaterDateTime);
                 return hydrateIdList(emsClient, emsHydrationClient, selectParams);
             case "top-for-dvd":
+                // Pass the epoch seconds for the most recent Theater release date (nearest Friday) dates earlier than this are "on DVD"
                 Long onDvdDateTime = SqlParameterUtils.getMostRecentFriday().toEpochDay() * (24*60*60);
                 selectParams.put("on-dvd-date", onDvdDateTime);
                 return hydrateIdList(emsClient, emsHydrationClient, selectParams);
             case "top-for-genre":
-                // set parameters specific to this top list
-                if (requestParams.getFilters() != null && requestParams.getFilters().containsKey("genre")) {
-                    selectParams.put("genre-name", requestParams.getFilters().get("genre"));
-                } 
+                selectParams = SqlParameterUtils.setTopForGenreParams(selectParams, requestParams);
                 return hydrateIdList(emsClient, emsHydrationClient, selectParams);
             case "top-ever":
                 return hydrateIdList(emsClient, emsHydrationClient, selectParams);

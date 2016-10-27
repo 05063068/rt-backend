@@ -1,5 +1,7 @@
 package com.rottentomatoes.movieapi.utils;
 
+import io.katharsis.queryParams.RequestParams;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -93,4 +95,24 @@ public class SqlParameterUtils {
 
         return selectParams;
     }
+    
+    public static Map<String, Object> setTopForYearParams(Map<String, Object> selectParams, RequestParams requestParams) {
+        // set parameters specific to this top list
+        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey("year")) {
+            selectParams.put("year", requestParams.getFilters().get("year"));
+        } else {
+            Integer year = SqlParameterUtils.getMostRecentFriday().getYear();
+            selectParams.put("year", year);
+        }
+        return selectParams;
+    }
+    
+    public static Map<String, Object> setTopForGenreParams(Map<String, Object> selectParams, RequestParams requestParams) {
+        // set parameters specific to this top list
+        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey("genre")) {
+            selectParams.put("genre-name", requestParams.getFilters().get("genre"));
+        } 
+        return selectParams;
+    }
+
 }
