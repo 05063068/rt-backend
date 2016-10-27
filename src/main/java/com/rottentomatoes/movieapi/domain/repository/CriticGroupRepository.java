@@ -30,7 +30,7 @@ public class CriticGroupRepository extends AbstractRepository implements Resourc
     public CriticGroup findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic-group");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         CriticGroup criticGroup = (CriticGroup)emsClient.callEmsEntity(selectParams, "critic-group", id, CriticGroup.class);
         return criticGroup;
     }
@@ -38,7 +38,7 @@ public class CriticGroupRepository extends AbstractRepository implements Resourc
     @Override
     public Iterable<CriticGroup> findAll(RequestParams requestParams) {
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic-group");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));

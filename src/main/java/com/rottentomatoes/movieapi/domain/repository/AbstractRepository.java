@@ -13,7 +13,7 @@ import io.katharsis.queryParams.RequestParams;
 public class AbstractRepository implements Serializable {
 
     @Autowired
-    protected EmsConfig emsConfig;
+    protected EmsRouter emsRouter;
 
     String LIMIT = "Limit";
     Integer DEFAULT_LIMIT = 10;

@@ -18,7 +18,7 @@ public class PromoSectionRepository extends AbstractRepository implements Resour
     @Override
     public PromoSection findOne(String promo_section_id, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("promo-item");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         PromoSection promoSection = (PromoSection)emsClient.callEmsEntity(selectParams, "promo-item", promo_section_id, PromoSection.class);
         return promoSection;
     }
@@ -26,7 +26,7 @@ public class PromoSectionRepository extends AbstractRepository implements Resour
     @Override
     public Iterable<PromoSection> findAll(RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("promo-item");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<PromoSection> promoSections = (List<PromoSection>) emsClient.callEmsList(selectParams, "promo-item", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  PromoSection.class));
         return promoSections;
     }

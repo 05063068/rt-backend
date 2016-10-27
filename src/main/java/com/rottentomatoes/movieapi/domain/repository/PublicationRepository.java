@@ -31,7 +31,7 @@ public class PublicationRepository extends AbstractRepository implements Resourc
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("publication");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Publication publication = (Publication) emsClient.callEmsEntity(selectParams, "publication", id, Publication.class);
         return publication;
     }
@@ -52,7 +52,7 @@ public class PublicationRepository extends AbstractRepository implements Resourc
             selectParams.put("search","%"+requestParams.getFilters().get("search")+"%");
         }
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("publication");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<Publication> publications = (List<Publication>)emsClient.callEmsList(selectParams, "publication", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Publication.class));
 
         return publications;

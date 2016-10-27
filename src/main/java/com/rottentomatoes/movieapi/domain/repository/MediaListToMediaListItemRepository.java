@@ -49,7 +49,7 @@ public class MediaListToMediaListItemRepository extends AbstractRepository imple
     public Iterable<MediaListItem> findManyTargets(String sourceId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-list");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<MediaListItem> mediaListItems = (List<MediaListItem>) emsClient.callEmsList(selectParams, "media-list", sourceId + "/item", TypeFactory.defaultInstance().constructCollectionType(List.class,  MediaListItem.class));
 
         return mediaListItems;

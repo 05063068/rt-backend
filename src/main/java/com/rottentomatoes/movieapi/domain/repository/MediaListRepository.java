@@ -12,10 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
-
 @Component
 public class MediaListRepository extends AbstractRepository implements ResourceRepository<MediaList, String> {
 
@@ -25,7 +21,7 @@ public class MediaListRepository extends AbstractRepository implements ResourceR
 
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-list");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         MediaList mediaList = (MediaList)emsClient.callEmsEntity(selectParams, "media-list", id, MediaList.class);
         return mediaList;
     }
@@ -38,7 +34,7 @@ public class MediaListRepository extends AbstractRepository implements ResourceR
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-list");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<MediaList> mediaLists = (List<MediaList>)emsClient.callEmsList(selectParams, "media-list", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  MediaList.class));
   
         return mediaLists;

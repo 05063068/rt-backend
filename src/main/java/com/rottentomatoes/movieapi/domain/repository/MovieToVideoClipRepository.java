@@ -57,7 +57,7 @@ public class MovieToVideoClipRepository extends AbstractRepository implements Re
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<VideoClip> rawVideoClipList = (List<VideoClip>)emsClient.callEmsList(selectParams, "movie", movieId + "/videoclip", TypeFactory.defaultInstance().constructCollectionType(List.class,  VideoClip.class));
         return new MetaDataEnabledList(rawVideoClipList);
     }
@@ -66,7 +66,7 @@ public class MovieToVideoClipRepository extends AbstractRepository implements Re
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", castedResourceId + "/videoclip/meta", RelatedMetaDataInformation.class);
         if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);

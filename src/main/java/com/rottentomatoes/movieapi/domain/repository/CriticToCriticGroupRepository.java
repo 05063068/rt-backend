@@ -56,7 +56,7 @@ public class CriticToCriticGroupRepository extends AbstractRepository implements
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         return (Iterable<CriticGroup>) emsClient.callEmsList(selectParams, "critic", criticId + "/group", TypeFactory.defaultInstance().constructCollectionType(List.class,  CriticGroup.class));
     }
 
@@ -65,7 +65,7 @@ public class CriticToCriticGroupRepository extends AbstractRepository implements
         RelatedMetaDataInformation metaData;
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", criticId.toString() + "/group/meta", RelatedMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;

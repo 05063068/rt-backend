@@ -47,7 +47,7 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Affiliate affiliate = (Affiliate)emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + affiliateId, Affiliate.class);
 
 
@@ -58,7 +58,7 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
     public Iterable<Affiliate> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<Affiliate> all_skus = (List<Affiliate>)emsClient.callEmsList(selectParams, "movie", movieId + "/affiliate", TypeFactory.defaultInstance().constructCollectionType(List.class,  Affiliate.class));
 
         List<Affiliate> affiliates = new ArrayList<>();
@@ -81,7 +81,7 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
         String movieId = castedResourceId.toString();
         String id = "all";
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;

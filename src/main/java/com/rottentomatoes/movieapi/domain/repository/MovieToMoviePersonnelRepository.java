@@ -44,7 +44,7 @@ public class MovieToMoviePersonnelRepository extends AbstractRepository implemen
 
     @Override
     public MoviePersonnel findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map<String, Object> selectParams = new HashMap<>();
         Integer limit = getActorsLimit(requestParams);
         if (limit != null) {

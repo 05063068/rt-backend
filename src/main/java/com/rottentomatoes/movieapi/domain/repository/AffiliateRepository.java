@@ -34,7 +34,7 @@ public class AffiliateRepository extends AbstractRepository implements ResourceR
         Map<String, Object> selectParams = new HashMap<>();
         String movieId = id.substring(0, id.length() - 2);
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Affiliate affiliate = (Affiliate)emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id, Affiliate.class);
 
         return affiliate;
@@ -57,7 +57,7 @@ public class AffiliateRepository extends AbstractRepository implements ResourceR
         Map<String, Object> selectParams = new HashMap<>();
         String id = castedResourceId.toString();
         String movieId = id.substring(0, id.length() - 2);
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         RootMetaDataInformation metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;

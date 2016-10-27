@@ -31,7 +31,7 @@ public class TvSeasonRepository extends AbstractRepository implements ResourceRe
     @Override
     public TvSeason findOne(String tvSeasonId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/season");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<TvSeason> seasons = (List<TvSeason>)  emsClient.callEmsList(selectParams, "tv/season", tvSeasonId,
                 TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeason.class));
 

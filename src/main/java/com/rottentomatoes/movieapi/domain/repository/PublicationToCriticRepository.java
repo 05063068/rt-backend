@@ -50,7 +50,7 @@ public class PublicationToCriticRepository extends AbstractRepository implements
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("publication");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<Critic> criticList = (List<Critic>)emsClient.callEmsList(selectParams, "publication", publicationId + "/critic", TypeFactory.defaultInstance().constructCollectionType(List.class, Critic.class));
         return criticList;
 
