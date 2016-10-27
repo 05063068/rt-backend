@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
+@SuppressWarnings("rawtypes")
 @Component
 public class FranchiseRepository extends AbstractRepository implements ResourceRepository<Franchise, String> {
 
@@ -36,14 +37,13 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Franchise franchise = (Franchise) preEmsClient.callPreEmsEntity(selectParams, "franchise", id, Franchise.class);
-        return franchise;
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("franchise");
+        return (Franchise) emsClient.callEmsEntity(selectParams, "franchise", id, Franchise.class);
     }
 
     @Override
     public Iterable<Franchise> findAll(RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient<Franchise>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("franchise");
         Map<String, Object> selectParams = new HashMap<>();
         List<Franchise> franchises;
         List<Long> franchiseIds = new ArrayList<>();
@@ -69,7 +69,7 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
         //  Hydrate results
         if(franchiseIds.size() > 0) {
-            franchises = (List<Franchise>) preEmsClient.callPreEmsList(selectParams, "franchise", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class));
+            franchises = (List<Franchise>) emsClient.callEmsList(selectParams, "franchise", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class));
         }
         else{
             franchises = new ArrayList<>();

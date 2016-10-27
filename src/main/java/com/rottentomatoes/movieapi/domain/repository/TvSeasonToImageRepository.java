@@ -46,8 +46,8 @@ public class TvSeasonToImageRepository extends AbstractRepository implements Rel
     @Override
     public Image findOneTarget(String tvSeasonId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Image tvImage = (Image)preEmsClient.callPreEmsEntity(selectParams, "tv-season", tvSeasonId + "/main-image", Image.class);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/season");
+        Image tvImage = (Image)emsClient.callEmsEntity(selectParams, "tv/season", tvSeasonId + "/main-image", Image.class);
         return tvImage;
     }
 

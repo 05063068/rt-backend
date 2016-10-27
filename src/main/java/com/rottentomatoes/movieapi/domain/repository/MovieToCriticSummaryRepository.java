@@ -46,8 +46,8 @@ public class MovieToCriticSummaryRepository extends AbstractRepository implement
             selectParams.put(CRITIC_TYPE, TOP_CRITICS);
         }
 
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        CriticSummary criticSummary = (CriticSummary) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/critic-summary", CriticSummary.class);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        CriticSummary criticSummary = (CriticSummary) emsClient.callEmsEntity(selectParams, "movie", movieId + "/critic-summary", CriticSummary.class);
         return criticSummary;
     }
 

@@ -24,68 +24,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
-public class PreEmsClient<T> {
-    @Autowired
-    private PreEmsConfig preEmsConfig;
-    
-    public PreEmsClient(PreEmsConfig context) {
-        this.preEmsConfig = context;   
+public class PreEmsClient<T> extends EmsClient<T> {
+
+    private static final String ENV_DATASOURCE_PATH = "datasource.pre-ems.url";
+
+    public PreEmsClient(EmsConfig config, String hostUrl) {
+        super(config, hostUrl);
     }
-    
-    class JsonDecoder {
-        ObjectMapper objectMapper;
-        
-        public JsonDecoder() {
-            objectMapper = new ObjectMapper();
-        }
-        
-        public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-            return null;
-        }
-        
+
+    @Override
+    protected String constructUrl(String pathBase, String id) {
+        return this.hostUrl + "/" + pathBase + "/" + id;
     }
-    
-    public T callPreEmsList(Map<String, Object> selectParams, String pathBase, String id, CollectionType collectionType) {
-        return callPreEmsCommon(selectParams, pathBase, id, (new JsonDecoder() {
-            public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-                return (T) objectMapper.readValue(url, collectionType);
-            }
-        })
-                );
-    }
-    
-    public T callPreEmsEntity(Map<String, Object> selectParams, String pathBase, String id, Class c) {
-        return callPreEmsCommon(selectParams, pathBase, id, (new JsonDecoder() {
+
+    @Override
+    protected JsonDecoder constructJsonEntityDecoder(Class c) {
+        return new JsonDecoder() {
             public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
                 return (T) objectMapper.readValue(url, c);
             }
-        })
-                );
+        };
     }
-    
-    public T callPreEmsCommon(Map<String, Object> selectParams, String pathBase, String id, JsonDecoder jsonDecoder) {
-        T jsonResult = null;
-        id = (id == null)? "":id;
-        try {
-            String urlString = preEmsConfig.getHostUrl() + "/" + pathBase + "/" + id;
-            MultiValueMap<String,String> params = new LinkedMultiValueMap();
-            for (String p: selectParams.keySet()) {
-                if (selectParams.get(p) == null) {
-                    continue;
-                }
-                params.add(p, selectParams.get(p).toString().replaceAll("%", "%25"));
-            }
-            urlString = UriComponentsBuilder.fromUriString(urlString).queryParams(params).build(true).toString();
-            URL url = new URL(urlString);
-            jsonResult = jsonDecoder.doDecode(url);
-        } catch (MalformedURLException mue) {
-            preEmsConfig.log("Malformed URL: ", mue);
-        } catch (JsonMappingException | JsonParseException jme) {
-            preEmsConfig.log("Malformed URL: ", jme);
-        } catch (IOException ioe) {
-            preEmsConfig.log("Malformed URL: ", ioe);
-        }
-        return jsonResult;
 
+    @Override
+    protected JsonDecoder constructJsonListDecoder(CollectionType collectionType) {
+        return new JsonDecoder() {
+            public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
+                return (T) objectMapper.readValue(url, collectionType);
+            }
+        };
     }
 }

@@ -1,7 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.model.Character;
 import com.rottentomatoes.movieapi.domain.model.Quote;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import io.katharsis.queryParams.RequestParams;
@@ -40,8 +39,8 @@ public class MovieToQuoteRepository extends AbstractRepository implements Relati
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        PreEmsClient preEmsClient = new PreEmsClient<Iterable<Quote>>(preEmsConfig);
-        Iterable<Quote> quotes = (Iterable<Quote>) preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/quote", TypeFactory.defaultInstance().constructCollectionType(List.class,  Quote.class));
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        Iterable<Quote> quotes = (Iterable<Quote>) emsClient.callEmsList(selectParams, "movie", movieId + "/quote", TypeFactory.defaultInstance().constructCollectionType(List.class,  Quote.class));
 
         return quotes;
     }

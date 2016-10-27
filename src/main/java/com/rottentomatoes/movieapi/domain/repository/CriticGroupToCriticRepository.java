@@ -42,12 +42,12 @@ public class CriticGroupToCriticRepository extends AbstractRepository implements
 
     @Override
     public Iterable<Critic> findManyTargets(String criticGroupId, String fieldName, RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient<Iterable<Critic>>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic-group");
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        return (Iterable<Critic>) preEmsClient.callPreEmsList(selectParams, "critic-group", criticGroupId + "/critic", TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
+        return (Iterable<Critic>) emsClient.callEmsList(selectParams, "critic-group", criticGroupId + "/critic", TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
 
     }
 

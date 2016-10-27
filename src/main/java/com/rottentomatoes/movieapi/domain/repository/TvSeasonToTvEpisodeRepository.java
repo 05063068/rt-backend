@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
 import com.rottentomatoes.movieapi.domain.model.TvSeason;
 
+@SuppressWarnings("rawtypes")
 @Component
 public class TvSeasonToTvEpisodeRepository extends AbstractRepository implements
         RelationshipRepository<TvSeason, String, TvEpisode, String> {
@@ -41,8 +42,16 @@ public class TvSeasonToTvEpisodeRepository extends AbstractRepository implements
         Map<String, Object> selectParams = new HashMap<String, Object>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
-        PreEmsClient preEmsClient = new PreEmsClient<List<TvEpisode>>(preEmsConfig);
-        List<TvEpisode> tvEpisodeList = (List<TvEpisode>)preEmsClient.callPreEmsList(selectParams, "tv-season", tvSeasonId + "/episode", TypeFactory.defaultInstance().constructCollectionType(List.class,  TvEpisode.class));
-        return tvEpisodeList;
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/season");
+        List<String> tvEpisodeIds = (List<String>) emsClient.callEmsList(selectParams, "tv/season", tvSeasonId + "/episode",
+                TypeFactory.defaultInstance().constructCollectionType(List.class,  String.class));
+
+        if (tvEpisodeIds != null && tvEpisodeIds.size() > 0) {
+            String ids = String.join(",", tvEpisodeIds);
+            List<TvEpisode> tvEpisodeList = (List<TvEpisode>) emsClient.callEmsList(selectParams, "tv/episode", ids,
+                    TypeFactory.defaultInstance().constructCollectionType(List.class, TvEpisode.class));
+            return tvEpisodeList;
+        }
+        return null;
     }
 }

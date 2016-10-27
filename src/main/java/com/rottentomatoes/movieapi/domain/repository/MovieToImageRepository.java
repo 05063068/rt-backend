@@ -49,8 +49,8 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
-        PreEmsClient preEmsClient = new PreEmsClient<List<Image>>(preEmsConfig);
-        List<Image> rawImageList = (List<Image>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/image", TypeFactory.defaultInstance().constructCollectionType(List.class,  Image.class));
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        List<Image> rawImageList = (List<Image>)emsClient.callEmsList(selectParams, "movie", movieId + "/image", TypeFactory.defaultInstance().constructCollectionType(List.class,  Image.class));
         return new MetaDataEnabledList(rawImageList);
     }
 
@@ -58,8 +58,8 @@ public class MovieToImageRepository extends AbstractRepository implements Relati
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
-        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", castedResourceId + "/image/meta", RelatedMetaDataInformation.class);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", castedResourceId + "/image/meta", RelatedMetaDataInformation.class);
         if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }

@@ -27,8 +27,8 @@ public class MediaListCategoryRepository extends AbstractRepository implements R
         // At the point of creation "LIV" was only distinct status in the table so we default to live.
         selectParams.put("status", LIVE_STATUS);
 
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        MediaListCategory mediaListCategory = (MediaListCategory)preEmsClient.callPreEmsEntity(selectParams, "media-list-category", mediaCategoryId, MediaListCategory.class);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-list-category");
+        MediaListCategory mediaListCategory = (MediaListCategory)emsClient.callEmsEntity(selectParams, "media-list-category", mediaCategoryId, MediaListCategory.class);
 
         return mediaListCategory;
     }
@@ -43,8 +43,8 @@ public class MediaListCategoryRepository extends AbstractRepository implements R
         // At the point of creation "LIV" was only distinct status in the table so we default to live.
         selectParams.put("status", LIVE_STATUS);
 
-        PreEmsClient preEmsClient = new PreEmsClient<Iterable<MediaListCategory>>(preEmsConfig);
-        List<MediaListCategory> mediaListCategories = (List<MediaListCategory>) preEmsClient.callPreEmsList(selectParams, "media-list-category", "/", TypeFactory.defaultInstance().constructCollectionType(List.class,  MediaListCategory.class));
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-list-category");
+        List<MediaListCategory> mediaListCategories = (List<MediaListCategory>) emsClient.callEmsList(selectParams, "media-list-category", "/", TypeFactory.defaultInstance().constructCollectionType(List.class,  MediaListCategory.class));
 
         return mediaListCategories;
     }

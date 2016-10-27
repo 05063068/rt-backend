@@ -46,8 +46,8 @@ public class PromoSectionToPromoItemRepository extends AbstractRepository implem
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        PreEmsClient preEmsClient = new PreEmsClient<Iterable<PromoItem>>(preEmsConfig);
-        List<PromoItem> promoItems = (List<PromoItem>) preEmsClient.callPreEmsList(selectParams, "promo-item", promoSectionId + "/item/", TypeFactory.defaultInstance().constructCollectionType(List.class,  PromoItem.class));
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("promo-item");
+        List<PromoItem> promoItems = (List<PromoItem>) emsClient.callEmsList(selectParams, "promo-item", promoSectionId + "/item/", TypeFactory.defaultInstance().constructCollectionType(List.class,  PromoItem.class));
 
 
         HashMap<Integer, PromoItem> promoItemMap = getPromoItemsByStartTime(promoItems);

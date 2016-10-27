@@ -1,16 +1,12 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Publication;
 import com.rottentomatoes.movieapi.domain.model.Critic;
 import io.katharsis.queryParams.RequestParams;
-import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
-import io.katharsis.response.MetaInformation;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +47,8 @@ public class PublicationToCriticRepository extends AbstractRepository implements
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
-        PreEmsClient preEmsClient = new PreEmsClient<List<Critic>>(preEmsConfig);
-        List<Critic> criticList = (List<Critic>)preEmsClient.callPreEmsList(selectParams, "publication", publicationId + "/critic", TypeFactory.defaultInstance().constructCollectionType(List.class, Critic.class));
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("publication");
+        List<Critic> criticList = (List<Critic>)emsClient.callEmsList(selectParams, "publication", publicationId + "/critic", TypeFactory.defaultInstance().constructCollectionType(List.class, Critic.class));
         return criticList;
 
     }

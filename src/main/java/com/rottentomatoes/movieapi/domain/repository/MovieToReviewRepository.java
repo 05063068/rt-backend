@@ -63,8 +63,8 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE)) {
             selectParams.put(CRITIC_TYPE, requestParams.getFilters().get(CRITIC_TYPE));
         }
-        PreEmsClient preEmsClient = new PreEmsClient<List<Review>>(preEmsConfig);
-        List<Review> rawReviewList = (List<Review>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        List<Review> rawReviewList = (List<Review>)emsClient.callEmsList(selectParams, "movie", movieId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
         return new MetaDataEnabledList(rawReviewList);
     }
 
@@ -74,12 +74,12 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
 
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
         RelatedMetaDataInformation metaData = null;
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
-            metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", castedResourceId + "/top-critic-review/meta", RelatedMetaDataInformation.class);
+            metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", castedResourceId + "/top-critic-review/meta", RelatedMetaDataInformation.class);
         } else {
-            metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", castedResourceId + "/review/meta", RelatedMetaDataInformation.class);
+            metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", castedResourceId + "/review/meta", RelatedMetaDataInformation.class);
         }
 
         if (root instanceof RelationshipRepository) {

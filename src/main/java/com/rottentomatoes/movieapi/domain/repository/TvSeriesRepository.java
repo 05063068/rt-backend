@@ -3,8 +3,6 @@ package com.rottentomatoes.movieapi.domain.repository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.model.Movie;
-import com.rottentomatoes.movieapi.domain.model.Person;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import com.rottentomatoes.movieapi.search.SearchQuery;
 import io.katharsis.queryParams.RequestParams;
@@ -38,14 +36,20 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
     @Override
     public TvSeries findOne(String tvSeriesId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        TvSeries tvSeries = (TvSeries) preEmsClient.callPreEmsEntity(selectParams, "tv-series", tvSeriesId, TvSeries.class);
-        return tvSeries;
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/series");
+        List<TvSeries> series = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv/series", tvSeriesId,
+                TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
+
+        // Necessary because endpoint returns a list of 1 element
+        if (series != null && series.size() > 0) {
+            return series.get(0);
+        }
+        return null;
     }
 
     @Override
     public Iterable<TvSeries> findAll(RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient<TvSeries>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv-series");
 
         Map<String, Object> selectParams = new HashMap<>();
         List<TvSeries> tvSeries;
@@ -69,7 +73,7 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
         }
 
         if(tvSeriesIds.size() > 0) {
-            tvSeries = (List<TvSeries>) preEmsClient.callPreEmsList(selectParams, "tv-series", null, TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
+            tvSeries = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv-series", null, TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
         }
         else{
             tvSeries = new ArrayList<>();

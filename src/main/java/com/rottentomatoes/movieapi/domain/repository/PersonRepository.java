@@ -32,14 +32,14 @@ public class PersonRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Person findOne(String personId, RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Person person = (Person) preEmsClient.callPreEmsEntity(new HashMap<String,Object>(), "person", personId, Person.class);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("person");
+        Person person = (Person) emsClient.callEmsEntity(new HashMap<String,Object>(), "person", personId, Person.class);
         return person;
     }
 
     @Override
     public Iterable<Person> findAll(RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient<Person>(preEmsConfig);
+        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("person");
 
         Map<String, Object> selectParams = new HashMap<>();
         List<Person> persons;
@@ -66,7 +66,7 @@ public class PersonRepository extends AbstractRepository implements ResourceRepo
 
         //  Hydrate results
         if(personIds.size() > 0) {
-            persons = (List<Person>) preEmsClient.callPreEmsList(selectParams, "person", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Person.class));
+            persons = (List<Person>) emsClient.callEmsList(selectParams, "person", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Person.class));
         }
         else{
             persons = new ArrayList<>();
