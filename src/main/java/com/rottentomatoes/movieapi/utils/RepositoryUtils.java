@@ -61,9 +61,6 @@ public class RepositoryUtils {
         LocalDate onDvdDate = endOfWeek.minusYears(30);
         LocalDate boxOfficeStartDate =  SqlParameterUtils.getMostRecentFriday();
 
-         if (requestParams.getFilters().containsKey("videoSource")) {
-             selectParams.put("videoSource", requestParams.getFilters().get("videoSource"));
-         }
         selectParams.put("upcomingDate", upcomingDate);
         selectParams.put("boxOfficeStartDate", boxOfficeStartDate);
         selectParams.put("openingDate", openingDate);
