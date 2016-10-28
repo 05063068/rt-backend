@@ -60,7 +60,8 @@ public class EmsConfig {
     }
 
     // Temporary list until we can get the endpoint routes fed to us from the backend
-    private static final List<String> TV_EMS_PATHS = Arrays.asList("tv/episode", "tv/season", "tv/series", "franchise");
+    private static final List<String> TV_EMS_PATHS = Arrays.asList("tv/episode", "tv/season", "tv/series", "franchise", 
+            "top-for-year", "top-for-theater", "top-for-dvd", "top-for-genre", "top-ever");
 
     public EmsClient fetchEmsClientForEndpoint(String basePath) {
         if (TV_EMS_PATHS.contains(basePath)) {

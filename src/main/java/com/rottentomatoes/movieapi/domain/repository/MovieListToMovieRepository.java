@@ -3,13 +3,16 @@ package com.rottentomatoes.movieapi.domain.repository;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import com.rottentomatoes.movieapi.utils.SqlParameterUtils;
+
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
@@ -21,7 +24,6 @@ import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.resource.exception.ResourceNotFoundException;
 import io.katharsis.response.MetaInformation;
-
 import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
 import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getTodayPST;
 import static java.time.temporal.TemporalAdjusters.previous;
@@ -49,12 +51,25 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Movie findOneTarget(String id, String fieldName, RequestParams requestParams) {
         return null;
     }
+    
+    private Iterable<Movie> hydrateIdList(EmsClient emsClient, EmsClient emsHydrationClient, Map<String, Object> selectParams) {
+        // get Ids from (tv)ems endpoint
+        List<Integer> movieIds = (List<Integer>) emsClient.callEmsList(selectParams, "movie-list", "top", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
+        List<String> idList = movieIds.stream()
+                .map(elt -> elt.toString())
+                .collect(Collectors.toList()); 
+        selectParams.put("ids", String.join(",", idList));
+        // hydrate list using pre-ems endpoint
+        return (List<Movie>) emsHydrationClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+
+    }
 
     @Override
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         RepositoryUtils.setMovieParams(selectParams, requestParams);
         EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint(listId);
+        EmsClient emsHydrationClient = emsConfig.fetchEmsClientForEndpoint("movie");
 
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
@@ -68,6 +83,9 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                     movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, "fallback", TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
                 }
                 return movies;
+            case "expand-list":
+                List<Movie> expandedMovies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                return expandedMovies;      
 
             case "upcoming":
                 selectParams = SqlParameterUtils.setUpcomingParams(selectParams);
@@ -88,7 +106,25 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
             case "new-on-dvd":
                 selectParams = SqlParameterUtils.setNewOnDvdParams(selectParams);
                 return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
-
+                
+            case "top-for-year":
+                selectParams = SqlParameterUtils.setTopForYearParams(selectParams, requestParams);
+                return hydrateIdList(emsClient, emsHydrationClient, selectParams);
+            case "top-for-theater":
+                // Pass the epoch seconds for the most recent Theater release date (nearest Friday) dates within 90 days of this are "in theaters"
+                Long inTheaterDateTime = SqlParameterUtils.getMostRecentFriday().toEpochDay() * (24*60*60);
+                selectParams.put("in-theater-date", inTheaterDateTime);
+                return hydrateIdList(emsClient, emsHydrationClient, selectParams);
+            case "top-for-dvd":
+                // Pass the epoch seconds for the most recent Theater release date (nearest Friday) dates earlier than this are "on DVD"
+                Long onDvdDateTime = SqlParameterUtils.getMostRecentFriday().toEpochDay() * (24*60*60);
+                selectParams.put("on-dvd-date", onDvdDateTime);
+                return hydrateIdList(emsClient, emsHydrationClient, selectParams);
+            case "top-for-genre":
+                selectParams = SqlParameterUtils.setTopForGenreParams(selectParams, requestParams);
+                return hydrateIdList(emsClient, emsHydrationClient, selectParams);
+            case "top-ever":
+                return hydrateIdList(emsClient, emsHydrationClient, selectParams);
             default:
                 throw new ResourceNotFoundException("Invalid list type");
         }
