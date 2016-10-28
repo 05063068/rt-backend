@@ -11,12 +11,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.databind.node.IntNode;
-import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
-
-import com.rottentomatoes.movieapi.search.SearchQuery;
+import com.rottentomatoes.movieapi.utils.SearchUtils;
 import io.katharsis.repository.MetaRepository;
-import io.katharsis.response.BaseMetaDataInformation;
 import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
 
@@ -29,6 +25,9 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
+
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+import static com.rottentomatoes.movieapi.utils.SearchUtils.loadSearchMeta;
 
 @SuppressWarnings("rawtypes")
 @Component
@@ -57,13 +56,14 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
     public Iterable<Movie> findAll(RequestParams requestParams) {
         PreEmsClient preEmsClient = new PreEmsClient<Movie>(preEmsConfig);
         Map<String, Object> selectParams = new HashMap<>();
-        MetaDataEnabledList<Movie> movies;
-        List<Long> movieIds = new ArrayList<>();
+        MetaDataEnabledList<Movie> movies = null;
 
         if (requestParams.getFilters() != null && requestParams.getFilters().get("search") != null) {
+            List<Long> movieIds = new ArrayList<>();
             JsonNode json;
+
             if(requestParams.getFilters().get("search") instanceof Map){
-                json = callSearchService(requestParams);
+                json = SearchUtils.callSearchService("movies", requestParams);
                 ArrayNode resultArr = (ArrayNode) json.path("results");
                 movieIds = new ArrayList<>();
                 for (JsonNode movie : resultArr) {
@@ -75,27 +75,14 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
                 throw new IllegalArgumentException("Invalid search query.");
             }
 
-
             //  Hydrate results
             selectParams.put("country", getCountry(requestParams).getCountryCode());
             if(movieIds.size() > 0) {
                 movies = new MetaDataEnabledList<>((List<Movie>) preEmsClient.callPreEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class)));
-
-                // Load metadata
-                BaseMetaDataInformation mdi = new BaseMetaDataInformation();
-                mdi.count = json.path("found").intValue();
-                mdi.offset = getOffset("", requestParams);
-                mdi.limit = getLimit("", requestParams);
-                movies.setMetaInformation(mdi);
-
-                return movies;
+                movies.setMetaInformation(loadSearchMeta(json, requestParams));
             }
-            else {
-                return null; // No search results
-            }
-        } else {
-            return null; // No search filter
         }
+        return movies;
     }
 
     @Override
@@ -108,15 +95,5 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
         return null;
     }
 
-    private JsonNode callSearchService(RequestParams requestParams) {
-        Map<String, Object> searchObj = (Map<String, Object>) requestParams.getFilters().get("search");
-        if (requestParams.getPagination() != null && !requestParams.getPagination().isEmpty()) {
-            searchObj.put("limit", getLimit("", requestParams));
-            searchObj.put("offset", getOffset("", requestParams));
-        }
-        SearchQuery q = new SearchQuery("movies", searchObj);
-        JsonNode json = q.execute();
 
-        return json;
-    }
 }

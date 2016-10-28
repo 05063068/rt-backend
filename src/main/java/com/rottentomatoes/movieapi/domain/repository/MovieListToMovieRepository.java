@@ -23,6 +23,8 @@ import io.katharsis.resource.exception.ResourceNotFoundException;
 import io.katharsis.response.MetaInformation;
 
 import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getTodayPST;
 import static java.time.temporal.TemporalAdjusters.previous;
 

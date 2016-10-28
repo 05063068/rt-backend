@@ -1,6 +1,7 @@
 package com.rottentomatoes.movieapi.utils;
 
 import com.rottentomatoes.movieapi.enums.Country;
+import io.katharsis.queryParams.PaginationKeys;
 import io.katharsis.queryParams.RequestParams;
 
 import java.time.DayOfWeek;
@@ -12,6 +13,10 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
 
 public class RepositoryUtils {
+
+    private static final String LIMIT = "Limit";
+    private static final Integer DEFAULT_LIMIT = 10;
+    private static final Integer DEFAULT_OFFSET = 0;
 
     /**
      * setMovieParams sets the parameters used to calculate movie release windows.
@@ -79,4 +84,27 @@ public class RepositoryUtils {
             return Country.getDefault();
         }
     }
+
+
+    public static Integer getLimit(String fieldName, RequestParams requestParams) {
+        if (requestParams != null) {
+            if (requestParams.getPagination() != null && requestParams.getPagination().containsKey(PaginationKeys.limit)) {
+                return requestParams.getPagination().get(PaginationKeys.limit);
+            } else if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(fieldName + LIMIT)) {
+                return (Integer) requestParams.getFilters().get(fieldName + LIMIT);
+            }
+        }
+        return DEFAULT_LIMIT;
+    }
+
+    public static Integer getOffset(String fieldName, RequestParams requestParams) {
+        if (requestParams != null) {
+            if (requestParams.getPagination() != null && requestParams.getPagination().containsKey(PaginationKeys.offset)) {
+                return requestParams.getPagination().get(PaginationKeys.offset);
+            }
+        }
+        return DEFAULT_OFFSET;
+
+    }
+
 }

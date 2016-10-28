@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
+
 @Component
 public class MediaListCategoryRepository extends AbstractRepository implements ResourceRepository<MediaListCategory, String> {
     private static String LIVE_STATUS = "LIV";

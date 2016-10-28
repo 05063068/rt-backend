@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
+
 @Component
 public class MovieToQuoteRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Quote, String> {
 
