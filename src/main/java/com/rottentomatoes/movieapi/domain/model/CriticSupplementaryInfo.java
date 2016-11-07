@@ -12,6 +12,7 @@ public class CriticSupplementaryInfo extends AbstractModel {
     protected String location;
     protected String officialUrl;
     protected String bio;
+    protected String details;
     protected String favorites;
     protected String quotes;
 }

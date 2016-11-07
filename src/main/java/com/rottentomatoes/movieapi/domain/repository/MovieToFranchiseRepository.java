@@ -36,6 +36,9 @@ public class MovieToFranchiseRepository extends AbstractRepository implements Re
 
         PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
         Franchise franchise = (Franchise) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/franchise", Franchise.class);
+        if (franchise != null && franchise.getId() == null) {
+            franchise = null;
+        }
         return franchise;
     }
 

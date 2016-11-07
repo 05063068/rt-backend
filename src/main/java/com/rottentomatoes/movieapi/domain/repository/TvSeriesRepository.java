@@ -1,15 +1,25 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;
+import com.rottentomatoes.movieapi.utils.SearchUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.ResourceRepository;
+import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.rottentomatoes.movieapi.utils.SearchUtils.loadSearchMeta;
 
 @SuppressWarnings("rawtypes")
 @Component
@@ -36,7 +46,35 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
 
     @Override
     public Iterable<TvSeries> findAll(RequestParams requestParams) {
-        return null;
+        PreEmsClient preEmsClient = new PreEmsClient<TvSeries>(preEmsConfig);
+        Map<String, Object> selectParams = new HashMap<>();
+        MetaDataEnabledList<TvSeries> tvSeries = null;
+
+        if (requestParams.getFilters() != null && requestParams.getFilters().get("search") != null) {
+            List<Long> tvSeriesIds = new ArrayList<>();
+            JsonNode json;
+
+            if (requestParams.getFilters().get("search") instanceof Map) {
+                json = SearchUtils.callSearchService("tv-series", requestParams);
+
+                ArrayNode resultArr = (ArrayNode) json.path("results");
+                tvSeriesIds = new ArrayList<>();
+                for (JsonNode movie : resultArr) {
+                    tvSeriesIds.add(Long.parseLong(movie.path("id").textValue()));
+                }
+                selectParams.put("ids", StringUtils.join(tvSeriesIds,","));
+            }
+            else {
+                throw new IllegalArgumentException("Invalid search query.");
+            }
+
+            if(tvSeriesIds.size() > 0) {
+                tvSeries = new MetaDataEnabledList<>((List<TvSeries>) preEmsClient.callPreEmsList(selectParams, "tv-series", null, TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class)));
+                tvSeries.setMetaInformation(loadSearchMeta(json, requestParams));
+            }
+        }
+
+        return tvSeries;
     }
 
     @Override

@@ -15,9 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
+
 @SuppressWarnings("rawtypes")
 @Component
-public class CriticToReviewRepository extends AbstractRepository implements RelationshipRepository<Critic, String, Review, String>,MetaRepository {
+public class CriticToReviewRepository extends AbstractRepository implements RelationshipRepository<Critic, String, Review, String>, MetaRepository {
 
     @Override
     public void setRelation(Critic critic, String s, String s2) {
@@ -47,6 +50,22 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
     @Override
     public Iterable<Review> findManyTargets(String criticId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
+
+        if(requestParams.getFilters() != null) {
+            // order of the reviews, can be one of "best" or "worst"
+            if (requestParams.getFilters().containsKey("order")) {
+                selectParams.put("order", requestParams.getFilters().get("order"));
+            }
+            // Accepted category filter values are "movie", "dvd", or "quick"
+            if (requestParams.getFilters().containsKey("category")) {
+                selectParams.put("category", requestParams.getFilters().get("category"));
+            }
+            // Accepted category filter values are "fresh" or "rotten"
+            if (requestParams.getFilters().containsKey("score")) {
+                selectParams.put("score", requestParams.getFilters().get("score"));
+            }
+        }
+
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
@@ -60,6 +79,14 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
         RelatedMetaDataInformation metaData;
         Map<String, Object> selectParams = new HashMap<>();
 
+        if (requestParams.getFilters() != null) {
+            if (requestParams.getFilters().containsKey("category")) {
+                selectParams.put("category", requestParams.getFilters().get("category"));
+            }
+            if (requestParams.getFilters().containsKey("score")) {
+                selectParams.put("score", requestParams.getFilters().get("score"));
+            }
+        }
         PreEmsClient preEmsClient = new PreEmsClient<RelatedMetaDataInformation>(preEmsConfig);
         metaData = (RelatedMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "critic", criticId.toString() + "/review/meta", RelatedMetaDataInformation.class);
         metaData.setRequestParams(requestParams);

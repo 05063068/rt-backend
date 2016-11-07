@@ -1,16 +1,13 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import java.io.Console;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
-import com.sun.media.jfxmedia.logging.Logger;
 
 @Component
 public class PreEmsConfig {
@@ -30,6 +27,13 @@ public class PreEmsConfig {
     }
     
     public void log(String s, Throwable e) {
-        Logger.logMsg(10,s + e.getMessage());
+        String exceptionMessage = e.getMessage();
+        if (exceptionMessage == null) {
+            exceptionMessage = s;
+        }
+        Console con = System.console();
+        if (con != null) {
+           con.printf("Pre ems error: %1s", exceptionMessage);
+        }
     }
 }
