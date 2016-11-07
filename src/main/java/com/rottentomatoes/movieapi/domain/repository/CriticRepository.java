@@ -5,11 +5,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Critic;
-import com.rottentomatoes.movieapi.search.SearchQuery;
 
+import com.rottentomatoes.movieapi.utils.SearchUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.ResourceRepository;
+import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.rottentomatoes.movieapi.utils.SearchUtils.loadSearchMeta;
 
 @Component
 public class CriticRepository extends AbstractRepository implements ResourceRepository<Critic, String>, MetaRepository {
@@ -51,26 +54,29 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
         EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
 
         Map<String, Object> selectParams = new HashMap<>();
-        List<Critic> critics = null;
+        MetaDataEnabledList<Critic> critics = null;
 
         if(requestParams.getFilters() != null) {
             if (requestParams.getFilters().containsKey("index-search")) {
-                if (requestParams.getFilters().get("index-search") instanceof Map) {
-                    Map<String, Object> searchObj = (Map<String, Object>) requestParams.getFilters().get("index-search");
+                List<Long> criticIds = new ArrayList<>();
+                JsonNode json;
 
-                    SearchQuery q = new SearchQuery("critics", searchObj);
-                    JsonNode json = q.execute();
+                if (requestParams.getFilters().get("index-search") instanceof Map) {
+                    json = SearchUtils.callSearchService("critics", requestParams, "index-search");
+
                     ArrayNode resultArr = (ArrayNode) json.path("results");
-                    List<Long> criticIds = new ArrayList<>();
                     for (JsonNode movie : resultArr) {
                         criticIds.add(Long.parseLong(movie.path("id").textValue()));
                     }
                     selectParams.put("ids", StringUtils.join(criticIds,","));
-                } else {
+                }
+                else {
                     throw new IllegalArgumentException("Invalid search query.");
                 }
-
-                critics = (List<Critic>) emsClient.callEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
+                if(criticIds.size() > 0){
+                    critics = new MetaDataEnabledList<>((List<Critic>) emsClient.callEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Critic.class)));
+                    critics.setMetaInformation(loadSearchMeta(json, requestParams));
+                }
             }
             else {
                 if (requestParams.getFilters().containsKey("search")) {
@@ -91,44 +97,22 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
                 selectParams.put("limit", getLimit("", requestParams));
                 selectParams.put("offset", getOffset("", requestParams));
 
-                critics = (List<Critic>) emsClient.callEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class));
+                critics = new MetaDataEnabledList<>((List<Critic>) emsClient.callEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class)));
+                critics.setMetaInformation((RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", "/meta", RelatedMetaDataInformation.class));
             }
         }
+
         return critics;
     }
 
     @Override
     public Iterable<Critic> findAll(Iterable<String> ids, RequestParams requestParams) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable s) {
-        RelatedMetaDataInformation metaData;
-        Map<String, Object> selectParams = new HashMap<>();
-
-        if(requestParams.getFilters() != null) {
-            if(requestParams.getFilters().containsKey("search")) {
-                selectParams.put("search", "%" + requestParams.getFilters().get("search") + "%");
-            }
-            if(requestParams.getFilters().containsKey("initial")) {
-                selectParams.put("initial", requestParams.getFilters().get("initial") + "%");
-            }
-            if(requestParams.getFilters().containsKey("lastInitial")){
-                selectParams.put("lastInitial", requestParams.getFilters().get("lastInitial") + "%");
-            }
-            if(requestParams.getFilters().containsKey("legacy")){
-                selectParams.put("legacy", requestParams.getFilters().get("legacy"));
-            }
-            if(requestParams.getFilters().containsKey("tmApproved")){
-                selectParams.put("tmApproved", requestParams.getFilters().get("tmApproved"));
-            }
-        }
-
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic");
-        metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", "/meta", RelatedMetaDataInformation.class);
-        return metaData;
+        return null;
     }
 
 }

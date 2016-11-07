@@ -18,6 +18,9 @@ import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
+
 @SuppressWarnings("rawtypes")
 @Component
 public class MovieToImageRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Image, String>, MetaRepository {

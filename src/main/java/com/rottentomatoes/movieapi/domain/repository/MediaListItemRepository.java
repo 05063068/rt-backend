@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 
 @Component
 public class MediaListItemRepository extends AbstractRepository implements ResourceRepository<MediaListItem, String> {
@@ -17,7 +19,6 @@ public class MediaListItemRepository extends AbstractRepository implements Resou
         Map<String, Object> selectParams = new HashMap<>();
 
         selectParams.put("id", itemId);
-        selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());

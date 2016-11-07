@@ -19,6 +19,8 @@ import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
 
 import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 
 @SuppressWarnings("rawtypes")
 @Component

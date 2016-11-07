@@ -8,15 +8,15 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.model.Critic;
 import com.rottentomatoes.movieapi.domain.model.Franchise;
-import com.rottentomatoes.movieapi.domain.model.Movie;
-import com.rottentomatoes.movieapi.search.SearchQuery;
+import com.rottentomatoes.movieapi.utils.SearchUtils;
+import io.katharsis.response.MetaDataEnabledList;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
+import static com.rottentomatoes.movieapi.utils.SearchUtils.loadSearchMeta;
 
 @SuppressWarnings("rawtypes")
 @Component
@@ -45,35 +45,35 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
     public Iterable<Franchise> findAll(RequestParams requestParams) {
         EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("franchise");
         Map<String, Object> selectParams = new HashMap<>();
-        List<Franchise> franchises;
-        List<Long> franchiseIds = new ArrayList<>();
+        MetaDataEnabledList<Franchise> franchises = null;
 
         if (requestParams.getFilters() != null && requestParams.getFilters().get("search") != null) {
+            List<Long> franchiseIds = new ArrayList<>();
+            JsonNode json;
 
-            if(requestParams.getFilters().get("search") instanceof Map){
-                Map<String, Object> searchObj = (Map<String, Object>) requestParams.getFilters().get("search");
+            if (requestParams.getFilters().get("search") instanceof Map) {
+                json = SearchUtils.callSearchService("franchises", requestParams);
 
-                SearchQuery q = new SearchQuery("franchises", searchObj);
-                JsonNode json = q.execute();
                 ArrayNode resultArr = (ArrayNode) json.path("results");
                 franchiseIds = new ArrayList<>();
                 for (JsonNode movie : resultArr) {
                     franchiseIds.add(Long.parseLong(movie.path("id").textValue()));
                 }
-                selectParams.put("ids", StringUtils.join(franchiseIds,","));
-            }
-            else{
+                selectParams.put("ids", StringUtils.join(franchiseIds, ","));
+            } else {
                 throw new IllegalArgumentException("Invalid search query.");
             }
+
+            //  Hydrate results
+            if (franchiseIds.size() > 0) {
+                franchises = new MetaDataEnabledList<>((List<Franchise>) emsClient.callEmsList(selectParams, "franchise", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class)));
+                franchises.setMetaInformation(loadSearchMeta(json, requestParams));
+            }
+        }
+        else {
+            franchises = new MetaDataEnabledList<>(new ArrayList<>());
         }
 
-        //  Hydrate results
-        if(franchiseIds.size() > 0) {
-            franchises = (List<Franchise>) emsClient.callEmsList(selectParams, "franchise", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class));
-        }
-        else{
-            franchises = new ArrayList<>();
-        }
         return franchises;
     }
 
