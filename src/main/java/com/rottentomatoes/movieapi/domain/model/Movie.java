@@ -58,7 +58,7 @@ public class Movie extends AbstractModel {
     @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MovieSupplementaryInfo movieSupplemantaryInfo;
+    protected MovieSupplementaryInfo movieSupplementaryInfo;
 
     @JsonApiToOne
     @JsonApiLazy
