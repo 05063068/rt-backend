@@ -1,4 +1,28 @@
 # Catalog API/RT Backend
+## V2.1 Release Notes
+* Placeholder note. V2.1 is the Pre-EMS port of V1.2.
+
+## V1.2.1 Release Notes
+* TODO: Integrate Real-EMS (No client-visible API changes)
+
+## V1.2 Release Notes
+* [RT-7925] added image attribute to promoItem object
+* [RT-8020] add "details" field to critic object
+* [RT-8029] add count in critic list metadata, is affected by legacy `?filter={"legacy":true}` and tomatometer approved `?filter={"tmApproved":true}` filters.
+* [RT-7980] add "best" and "worst" ordering for critic reviews `?filter={"order":"best"}`, new "agreePercent" field in critic object, groups affiliated with a critic `?include=["affiliatedGroups"]`, and finding critics via vanity url `/critic/john-smith`
+* [RT-7744] Do not include reviews from non-tomatometer approved critics.
+* [RT-7925] Added media lists support. The end points are `/mediaListCategory`, `/mediaList`, and `/mediaListItem`
+* [RT-7925] Added promo item support. `/promoSection`, `/promoItem`
+* [RT-7925] TvSeason now has vanity and tomatometer data. 
+* Tomatometer approved filter added to `/critic`.`filter={"tmApproved":[true/false]}`
+* [RT-8020] add "details" field to critic object
+* [RT-8029] add count in critic list metadata, is affected by legacy `?filter={"legacy":true}` and tomatometer approved `?filter={"tmApproved":true}` filters.
+* [RT-7980] add "best" and "worst" ordering for critic reviews `?filter={"order":"best"}`, new "agreePercent" field in critic object, groups affiliated with a critic `?include=["affiliatedGroups"]`, and finding critics via vanity url `/critic/john-smith`
+* [RT-7977] Critic name search via `filter={"search":"bob"}`
+* [RT-7987] ability to filter critic's reviews `?filter={"category":"movie"}`. Valid options are "movie", "dvd", "quick", "fresh", and "rotten".
+* [RT-7744] Do not include reviews from non-tomatometer approved critics.
+* [RT-8066] Publication name search via `filter={"search":"bob"}`
+* Bug fix - Do not include non-approved quotes
 
 ## V1.1 Release Notes
 * Refactored movie object with separated out supplementary info. The baseline movie object is now lighter weight (and faster). Additional information is delivered through the movieSupplementaryInfo relationship.
@@ -9,7 +33,7 @@
 * EMS-349 Built in expander (&expand=true)
 * Publication and Critic now a full-featured endpoints that can by retrieved directly
 * CriticSupplementaryInfo, Critic reviews and Critic affiliated Publications available as relationships of the `critic` object
-* Critics list (at the /critic endpoint), supports initial `?filter={"initial":"p"}` and status `?filter={"status":"current"}` filtering. (status can be `current` or `legacy`)  
+* Critics list (at the /critic endpoint), supports initial `?filter={"initial":"p"}` and status `?filter={"status":"current"}` filtering. (status can be `current` or `legacy`)
 * Publication and Critic lists can be retrieved by accessing respective object endpoints without an id (`/critic`, `/publication`)
 * Publication and Critic lists can be filtered alphabetically `?filter={"initial":"p"}`
 * Critic has relationship of affiliated Publications (and vice versa)
@@ -18,6 +42,9 @@
 * Critic groups `/criticGroup`, `/criticGroup/18?include=["critics"]`
 * Person (e.g. actors) have PersonSupplementaryInfo and also Filmography via movieFilmography. (TV not implemented yet)
 * Latest theatrical, dvd and quick reviews can be retrieved like so `/review?filter={"category":"dvd"}` (other categories are `theatrical` and `quick`)
+
+## Subpages
+[Search Endpoints](docs/search.md)
 
 ## Setup and Build Notes
 

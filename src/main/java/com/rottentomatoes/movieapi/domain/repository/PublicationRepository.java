@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
+
 @Component
 public class PublicationRepository extends AbstractRepository implements ResourceRepository<Publication, String> {
 
@@ -44,6 +47,9 @@ public class PublicationRepository extends AbstractRepository implements Resourc
 
         if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("initial")){
             selectParams.put("initial",requestParams.getFilters().get("initial")+"%");
+        }
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("search")){
+            selectParams.put("search","%"+requestParams.getFilters().get("search")+"%");
         }
 
         PreEmsClient preEmsClient = new PreEmsClient<List<Publication>>(preEmsConfig);

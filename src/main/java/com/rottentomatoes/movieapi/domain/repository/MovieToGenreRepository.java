@@ -13,6 +13,8 @@ import com.rottentomatoes.movieapi.domain.model.Movie;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+
 @Component
 public class MovieToGenreRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Genre, String> {
 

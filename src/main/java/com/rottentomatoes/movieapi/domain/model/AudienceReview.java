@@ -3,6 +3,8 @@ package com.rottentomatoes.movieapi.domain.model;
 import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -25,4 +27,10 @@ public class AudienceReview extends AbstractModel {
     protected ZonedDateTime ratingDate;
     protected Map<String, Object> userImage;
 
+    public static void sanitizeCommentHtml(AudienceReview r) {
+        if (r != null && r.comment != null) {
+            // remove all HTML tags
+            r.comment = Jsoup.clean(r.comment, Whitelist.none());
+        }
+    }
 }

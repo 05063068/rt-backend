@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
 import com.rottentomatoes.movieapi.domain.model.TvSeason;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+
 @Component
 public class TvSeasonToTvEpisodeRepository extends AbstractRepository implements
         RelationshipRepository<TvSeason, String, TvEpisode, String> {

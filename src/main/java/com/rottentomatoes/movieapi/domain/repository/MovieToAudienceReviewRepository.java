@@ -1,8 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +11,15 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.AudienceReview;
 import com.rottentomatoes.movieapi.domain.model.Movie;
-import com.rottentomatoes.movieapi.domain.model.Review;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
+
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 
 @SuppressWarnings("rawtypes")
 @Component
@@ -50,12 +50,12 @@ public class MovieToAudienceReviewRepository extends AbstractRepository implemen
 
     @Override
     public MetaDataEnabledList<AudienceReview> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
-    	  Map<String, Object> selectParams = new HashMap<>();
-          MetaDataEnabledList<AudienceReview> reviewList = null;
+        Map<String, Object> selectParams = new HashMap<>();
+        MetaDataEnabledList<AudienceReview> reviewList = null;
 
-          selectParams.put("movie_id", movieId);
-          selectParams.put("limit", getLimit(fieldName, requestParams));
-          selectParams.put("offset", getOffset(fieldName, requestParams));
+        selectParams.put("movie_id", movieId);
+        selectParams.put("limit", getLimit(fieldName, requestParams));
+        selectParams.put("offset", getOffset(fieldName, requestParams));
 
           PreEmsClient preEmsClient = new PreEmsClient<List<AudienceReview>>(preEmsConfig);
           List<AudienceReview> rawReviewList = (List<AudienceReview>)preEmsClient.callPreEmsList(selectParams, "movie", movieId + "/audience-review", TypeFactory.defaultInstance().constructCollectionType(List.class,  AudienceReview.class));

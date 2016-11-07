@@ -1,4 +1,4 @@
-package com.rottentomatoes.movieapi.domain.repository;
+package com.rottentomatoes.movieapi.utils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -14,12 +14,12 @@ public class SqlParameterUtils {
     private static DayOfWeek[] weekendDays = {DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
     private static ZoneId PST_ZONE_ID = ZoneId.of("America/Los_Angeles");
 
-    static LocalDate getTodayPST() {
+    public static LocalDate getTodayPST() {
         LocalDate nowPst = LocalDate.now(PST_ZONE_ID);
         return nowPst;
     }
 
-    static LocalDate getMostRecentFriday() {
+    public static LocalDate getMostRecentFriday() {
         LocalDate now = getTodayPST();
         LocalDate mostRecentFriday = now.with(previous(DayOfWeek.FRIDAY));
 
@@ -36,7 +36,7 @@ public class SqlParameterUtils {
      * All box office dates are stored keyed to the Friday, so grab most recent Friday.
      * if curDate is a friday, we use last week's friday date
      */
-    static Map<String, Object>  setTopBoxOfficeParams(Map<String, Object> selectParams) {
+    public static Map<String, Object>  setTopBoxOfficeParams(Map<String, Object> selectParams) {
 
         selectParams.put("startDate", getMostRecentFriday());
         selectParams.put("endDate", getMostRecentFriday().plusDays(5));
@@ -44,7 +44,7 @@ public class SqlParameterUtils {
         return selectParams;
     }
 
-    static Map<String, Object> setUpcomingParams(Map<String, Object> selectParams) {
+    public static Map<String, Object> setUpcomingParams(Map<String, Object> selectParams) {
         LocalDate now = getTodayPST();
         LocalDate start = now.with(next(DayOfWeek.MONDAY));
         LocalDate end = start.plusMonths(3);
@@ -54,7 +54,7 @@ public class SqlParameterUtils {
         return selectParams;
     }
 
-    static Map<String, Object> setOpeningParams(Map<String, Object> selectParams) {
+    public static Map<String, Object> setOpeningParams(Map<String, Object> selectParams) {
         LocalDate now = getTodayPST();
         LocalDate start = now.with(previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = now.with(nextOrSame(DayOfWeek.SUNDAY));
@@ -64,7 +64,7 @@ public class SqlParameterUtils {
         return selectParams;
     }
 
-    static Map<String, Object> setTopRentalsParams(Map<String, Object> selectParams) {
+    public static Map<String, Object> setTopRentalsParams(Map<String, Object> selectParams) {
         LocalDate now = getTodayPST();
         LocalDate end = now.with(previousOrSame(DayOfWeek.SUNDAY));
         LocalDate start = now.minusMonths(2);
@@ -74,7 +74,7 @@ public class SqlParameterUtils {
         return selectParams;
     }
 
-    static Map<String, Object> setUpcomingDvdsParam(Map<String, Object> selectParams) {
+    public static Map<String, Object> setUpcomingDvdsParam(Map<String, Object> selectParams) {
         LocalDate now = getTodayPST();
         LocalDate start = now.with(next(DayOfWeek.MONDAY));
         LocalDate end = start.plusMonths(3);
@@ -84,7 +84,7 @@ public class SqlParameterUtils {
         return selectParams;
     }
 
-    static Map<String, Object> setNewOnDvdParams(Map<String, Object> selectParams) {
+    public static Map<String, Object> setNewOnDvdParams(Map<String, Object> selectParams) {
         LocalDate now = getTodayPST();
         LocalDate start = now.with(previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = now.with(next(DayOfWeek.SUNDAY));
