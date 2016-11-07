@@ -14,6 +14,8 @@ import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+
 @Component
 public class TvSeriesToTvSeasonRepository extends AbstractRepository implements RelationshipRepository<TvSeries, String, TvSeason, String> {
 

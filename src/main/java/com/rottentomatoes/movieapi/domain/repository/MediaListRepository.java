@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 
 @Component
 public class MediaListRepository extends AbstractRepository implements ResourceRepository<MediaList, String> {

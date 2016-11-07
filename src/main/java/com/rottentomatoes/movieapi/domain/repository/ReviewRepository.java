@@ -14,6 +14,9 @@ import io.katharsis.repository.ResourceRepository;
 import java.util.List;
 import java.util.Map;
 
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
+
 @Component
 public class ReviewRepository extends AbstractRepository implements ResourceRepository<Review, String> {
 

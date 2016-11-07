@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
@@ -18,6 +17,9 @@ import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
+
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
+import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 
 @SuppressWarnings("rawtypes")
 @Component

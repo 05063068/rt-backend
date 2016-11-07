@@ -38,7 +38,7 @@
     <repositories>
         <repository>
             <id>flixster-mvn-repo</id>
-            <url>https://raw.githubusercontent.com/flixster/mvn-repo/1.0.2-FLIXSTER/</url>
+            <url>https://raw.githubusercontent.com/flixster/mvn-repo/master</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -58,6 +58,16 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>io.katharsis</groupId>
+            <artifactId>katharsis-core</artifactId>
+            <version>1.0.4-FLIXSTER</version>
+        </dependency>
+        <dependency>
+            <groupId>io.katharsis</groupId>
+            <artifactId>katharsis-servlet</artifactId>
+            <version>1.0.1-FLIXSTER</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
@@ -102,16 +112,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.katharsis</groupId>
-            <artifactId>katharsis-core</artifactId>
-            <version>1.0.2-FLIXSTER</version>
-        </dependency>
-        <dependency>
-            <groupId>io.katharsis</groupId>
-            <artifactId>katharsis-servlet</artifactId>
-            <version>1.0.1-FLIXSTER</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
