@@ -1,6 +1,7 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.flixster.image.Environment;
 import com.flixster.image.IdGenerator;
 import com.flixster.image.IdGenerator.IdGeneratorBuilder;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.util.Date;
 
 @JsonApiResource(type = "image")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Image extends AbstractModel {
     protected String thumborId;
     protected Integer height;
