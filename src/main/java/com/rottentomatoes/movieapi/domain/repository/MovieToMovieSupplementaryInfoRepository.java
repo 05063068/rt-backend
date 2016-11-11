@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
 import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getMostRecentFriday;
 import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getTodayPST;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
@@ -45,7 +44,7 @@ public class MovieToMovieSupplementaryInfoRepository extends AbstractRepository 
     public MovieSupplementaryInfo findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         setMovieParams(selectParams, requestParams);
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         MovieSupplementaryInfo movieSupplementaryInfo = (MovieSupplementaryInfo) emsClient.callEmsEntity(selectParams, "movie", movieId + "/supplementary-info", MovieSupplementaryInfo.class);
 
 

@@ -1,26 +1,17 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
 public class PreEmsClient<T> extends EmsClient<T> {
 
-    private static final String ENV_DATASOURCE_PATH = "datasource.pre-ems.url";
-
-    public PreEmsClient(EmsConfig config, String hostUrl) {
+    public PreEmsClient(EmsRouter config, String hostUrl) {
         super(config, hostUrl);
     }
 
@@ -45,5 +36,22 @@ public class PreEmsClient<T> extends EmsClient<T> {
                 return (T) objectMapper.readValue(url, collectionType);
             }
         };
+    }
+
+    @Override
+    protected PropertyNamingStrategy getNamingStrategy() {
+        return new PreEmsNamingStrategy();
+    }
+
+    protected class PreEmsNamingStrategy extends DefaultEmsNamingStrategy {
+
+        private static final String PRE_EMS_NAMING_CONFIG = "";
+
+        @Override
+        public String translateName(AnnotatedField modelField, String jsonFieldName)
+        {
+            String name = translateName(PRE_EMS_NAMING_CONFIG, modelField, jsonFieldName);
+            return (name != null ? name : super.translateName(modelField, jsonFieldName));
+        }
     }
 }

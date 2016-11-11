@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
-
 @Component
 public class MovieToCriticSummaryRepository extends AbstractRepository implements RelationshipRepository<Movie, String, CriticSummary, String> {
 
@@ -46,7 +44,7 @@ public class MovieToCriticSummaryRepository extends AbstractRepository implement
             selectParams.put(CRITIC_TYPE, TOP_CRITICS);
         }
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         CriticSummary criticSummary = (CriticSummary) emsClient.callEmsEntity(selectParams, "movie", movieId + "/critic-summary", CriticSummary.class);
         return criticSummary;
     }

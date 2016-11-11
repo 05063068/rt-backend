@@ -23,7 +23,7 @@ public class CriticVanityTokenRepository extends AbstractRepository implements R
     @Override
     public CriticVanityToken findOne(String criticVanityToken, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("critic-vanity-token");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         CriticVanityToken token = (CriticVanityToken) emsClient.callEmsEntity(selectParams, "critic-vanity-token", criticVanityToken, CriticVanityToken.class);
         return token;
     }

@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
-
 @Component
 public class PromoSectionToPromoItemRepository extends AbstractRepository implements RelationshipRepository<PromoSection, String, PromoItem, String> {
 
@@ -46,7 +44,7 @@ public class PromoSectionToPromoItemRepository extends AbstractRepository implem
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("promo-item");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<PromoItem> promoItems = (List<PromoItem>) emsClient.callEmsList(selectParams, "promo-item", promoSectionId + "/item/", TypeFactory.defaultInstance().constructCollectionType(List.class,  PromoItem.class));
 
 

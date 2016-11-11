@@ -3,7 +3,6 @@ package com.rottentomatoes.movieapi.domain.repository;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +23,6 @@ import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.resource.exception.ResourceNotFoundException;
 import io.katharsis.response.MetaInformation;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getTodayPST;
 import static java.time.temporal.TemporalAdjusters.previous;
 
@@ -70,8 +66,8 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         RepositoryUtils.setMovieParams(selectParams, requestParams);
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint(listId);
-        EmsClient emsHydrationClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        EmsClient emsHydrationClient = emsRouter.fetchEmsClientForEndpoint(MovieRepository.class);
 
         selectParams.put("limit", getLimit("", requestParams));
         selectParams.put("offset", getOffset("", requestParams));
@@ -142,7 +138,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
         switch ((String) castedResourceId) {
             case "top-box-office":
-                emsClient = emsConfig.fetchEmsClientForEndpoint("top-box-office");
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
                 metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "meta", RootMetaDataInformation.class);
                 if (metaData.totalCount == 0) {
@@ -157,35 +153,35 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 break;
 
             case "upcoming":
-                emsClient = emsConfig.fetchEmsClientForEndpoint("upcoming");
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
                 selectParams = SqlParameterUtils.setUpcomingParams(selectParams);
                 metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "upcoming", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "opening":
-                emsClient = emsConfig.fetchEmsClientForEndpoint("opening");
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
                 selectParams = SqlParameterUtils.setOpeningParams(selectParams);
                 metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "opening", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "top-rentals":
-                emsClient = emsConfig.fetchEmsClientForEndpoint("top-rentals");
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
                 selectParams = SqlParameterUtils.setTopRentalsParams(selectParams);
                 metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-rentals", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "upcoming-dvds":
-                emsClient = emsConfig.fetchEmsClientForEndpoint("upcoming-dvds");
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
                 selectParams = SqlParameterUtils.setUpcomingDvdsParam(selectParams);
                 metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "upcoming-dvds", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
                 break;
 
             case "new-on-dvd":
-                emsClient = emsConfig.fetchEmsClientForEndpoint("new-on-dvd");
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
                 selectParams = SqlParameterUtils.setNewOnDvdParams(selectParams);
                 metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "new-on-dvd", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);

@@ -37,13 +37,13 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("franchise");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         return (Franchise) emsClient.callEmsEntity(selectParams, "franchise", id, Franchise.class);
     }
 
     @Override
     public Iterable<Franchise> findAll(RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("franchise");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map<String, Object> selectParams = new HashMap<>();
         MetaDataEnabledList<Franchise> franchises = null;
 

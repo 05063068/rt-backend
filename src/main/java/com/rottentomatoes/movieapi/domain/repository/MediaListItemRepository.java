@@ -8,10 +8,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
-
 @Component
 public class MediaListItemRepository extends AbstractRepository implements ResourceRepository<MediaListItem, String> {
     @Override
@@ -23,7 +19,7 @@ public class MediaListItemRepository extends AbstractRepository implements Resou
         selectParams.put("offset", getOffset("", requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("media-item");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         MediaListItem mediaListItem = (MediaListItem)emsClient.callEmsEntity(selectParams, "media-item", itemId, MediaListItem.class);
 
         return mediaListItem;

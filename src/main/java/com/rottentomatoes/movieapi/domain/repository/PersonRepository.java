@@ -33,14 +33,14 @@ public class PersonRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Person findOne(String personId, RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("person");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Person person = (Person) emsClient.callEmsEntity(new HashMap<String,Object>(), "person", personId, Person.class);
         return person;
     }
 
     @Override
     public Iterable<Person> findAll(RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("person");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
 
         Map<String, Object> selectParams = new HashMap<>();
         MetaDataEnabledList<Person> persons = null;

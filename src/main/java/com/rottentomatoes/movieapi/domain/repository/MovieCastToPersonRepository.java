@@ -31,7 +31,7 @@ public class MovieCastToPersonRepository extends AbstractRepository implements R
 
     @Override
     public Person findOneTarget(String movieCastId, String fieldName, RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie-personnel");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Person person = (Person) emsClient.callEmsEntity(new HashMap<String,Object>(), "movie-personnel", movieCastId + "/person", Person.class);
         return person;
     }

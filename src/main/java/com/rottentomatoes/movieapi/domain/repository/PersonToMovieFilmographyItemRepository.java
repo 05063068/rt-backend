@@ -44,7 +44,7 @@ public class PersonToMovieFilmographyItemRepository extends AbstractRepository i
     public Iterable<MovieFilmographyItem> findManyTargets(String s, String s2, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("person");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<MovieFilmographyItem> filmography = (List<MovieFilmographyItem>)emsClient.callEmsList(selectParams, "person", s + "/filmography", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieFilmographyItem.class));
         return filmography;
 

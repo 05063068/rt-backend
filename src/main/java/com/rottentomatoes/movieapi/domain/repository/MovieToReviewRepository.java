@@ -18,10 +18,6 @@ import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
 
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getCountry;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
-
 @SuppressWarnings("rawtypes")
 @Component
 public class MovieToReviewRepository extends AbstractRepository implements RelationshipRepository<Movie, String, Review, String>, MetaRepository {
@@ -65,7 +61,7 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE)) {
             selectParams.put(CRITIC_TYPE, requestParams.getFilters().get(CRITIC_TYPE));
         }
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<Review> rawReviewList = (List<Review>)emsClient.callEmsList(selectParams, "movie", movieId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
         return new MetaDataEnabledList(rawReviewList);
     }
@@ -76,7 +72,7 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
 
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         RelatedMetaDataInformation metaData = null;
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
             metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", castedResourceId + "/top-critic-review/meta", RelatedMetaDataInformation.class);

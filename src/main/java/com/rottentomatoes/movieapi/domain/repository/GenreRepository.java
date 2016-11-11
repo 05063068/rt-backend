@@ -28,7 +28,7 @@ public class GenreRepository extends AbstractRepository implements ResourceRepos
 
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("genre");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Genre genre = (Genre) emsClient.callEmsEntity(selectParams, "genre", id, Genre.class);
         return genre;
     }

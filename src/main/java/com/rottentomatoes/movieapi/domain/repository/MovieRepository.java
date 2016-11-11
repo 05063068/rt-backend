@@ -47,14 +47,14 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
     public Movie findOne(String movieId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         RepositoryUtils.setMovieParams(selectParams, requestParams);
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Movie movie = (Movie) emsClient.callEmsEntity(selectParams, "movie", movieId, Movie.class);
         return movie;
     }
 
     @Override
     public Iterable<Movie> findAll(RequestParams requestParams) {
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map<String, Object> selectParams = new HashMap<>();
         MetaDataEnabledList<Movie> movies = null;
 

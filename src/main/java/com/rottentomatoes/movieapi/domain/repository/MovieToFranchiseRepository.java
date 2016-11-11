@@ -34,7 +34,7 @@ public class MovieToFranchiseRepository extends AbstractRepository implements Re
     public Franchise findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Franchise franchise = (Franchise) emsClient.callEmsEntity(selectParams, "movie", movieId + "/franchise", Franchise.class);
         if (franchise != null && franchise.getId() == null) {
             franchise = null;

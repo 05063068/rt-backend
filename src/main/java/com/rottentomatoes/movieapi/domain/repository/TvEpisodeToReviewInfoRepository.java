@@ -44,7 +44,7 @@ public class TvEpisodeToReviewInfoRepository extends AbstractRepository implemen
         selectParams.put("offset", getOffset(fieldName, requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/episode");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map jsonResponse = (Map) emsClient.callEmsEntity(selectParams, "tv/episode", tvEpisodeId + "/review", Map.class);
 
         if (jsonResponse != null && jsonResponse.keySet().size() > 0) {

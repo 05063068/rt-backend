@@ -36,7 +36,7 @@ public class MovieToAudienceSummaryRepository extends AbstractRepository impleme
     public AudienceSummary findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("movie");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         AudienceSummary audienceSummary = (AudienceSummary) emsClient.callEmsEntity(selectParams, "movie", movieId + "/audience-summary", AudienceSummary.class);
         return audienceSummary;
     }
