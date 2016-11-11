@@ -6,8 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.cfg.MapperConfig;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 public abstract class EmsClient<T> {
@@ -33,6 +37,15 @@ public abstract class EmsClient<T> {
 
     public T callEmsList(Map<String, Object> selectParams, String pathBase, String id, CollectionType collectionType) {
         return callEmsCommon(selectParams, pathBase, id, constructJsonListDecoder(collectionType));
+    }
+
+    public T callEmsIdList(Map<String, Object> selectParams, String idPathBase, String id, String collectionPathBase, CollectionType collectionType) {
+        List<String> idList = (List<String>) callEmsList(selectParams, idPathBase, id, TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+        if (idList != null && idList.size() > 0) {
+            String ids = StringUtils.join(idList.subList(0, 5), ",");
+            return callEmsCommon(selectParams, collectionPathBase, ids, constructJsonListDecoder(collectionType));
+        }
+        return null;
     }
 
     protected T callEmsCommon(Map<String, Object> selectParams, String pathBase, String id, JsonDecoder jsonDecoder) {
@@ -86,15 +99,28 @@ public abstract class EmsClient<T> {
 
         @Override
         public String nameForField(MapperConfig config, AnnotatedField modelField, String jsonFieldName) {
-            String name = translateName(DEFAULT_EMS_NAMING_CONFIG, modelField, jsonFieldName);
+            String name = translateName(modelField.getDeclaringClass().getSimpleName(), jsonFieldName);
             return (name != null ? name : super.nameForField(config, modelField, jsonFieldName));
         }
 
-        protected String translateName(AnnotatedField modelField, String jsonFieldName) {
-            return translateName(DEFAULT_EMS_NAMING_CONFIG, modelField, jsonFieldName);
+        @Override
+        public String nameForGetterMethod(MapperConfig config, AnnotatedMethod method, String defaultName) {
+            String name = translateName(method.getDeclaringClass().getSimpleName(), defaultName);
+            return (name != null ? name : super.nameForGetterMethod(config, method, defaultName));
         }
 
-        protected String translateName(String configFile, AnnotatedField modelField, String jsonFieldName) {
+        @Override
+        public String nameForSetterMethod(MapperConfig config, AnnotatedMethod method, String defaultName) {
+            String name = translateName(method.getDeclaringClass().getSimpleName(), defaultName);
+            return (name != null ? name : super.nameForSetterMethod(config, method, defaultName));
+        }
+
+
+        protected String translateName(String modelName, String fieldName) {
+            return translateName(DEFAULT_EMS_NAMING_CONFIG, modelName, fieldName);
+        }
+
+        protected String translateName(String configFile, String modelName, String fieldName) {
             return null;
         }
     }

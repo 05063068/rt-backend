@@ -52,27 +52,24 @@ public class TvEpisodeToMoviePersonnelRepository extends AbstractRepository impl
             selectParams.put("actorsLimit", limit);
         }
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/episode");
-        List<Integer> idList = (List<Integer>) emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId + "/cast", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        List<MovieCast> castList = (List<MovieCast>) emsClient.callEmsIdList(selectParams, "tv/episode", tvEpisodeId + "/cast", "tv/cast", TypeFactory.defaultInstance().constructCollectionType(List.class, MovieCast.class));
 
-        if (idList != null && idList.size() > 0) {
-            String castIds = StringUtils.join(idList, ",");
-            List<MovieCast> castList = (List<MovieCast>) emsClient.callEmsList(selectParams, "tv/cast", castIds, TypeFactory.defaultInstance().constructCollectionType(List.class, MovieCast.class));
-
+        if (castList != null && castList.size() > 0) {
             // Load MoviePersonnel object manually;
             MoviePersonnel moviePersonnel = new MoviePersonnel();
             moviePersonnel.setId(tvEpisodeId);
 
             for (MovieCast item : castList) {
-                if (item.getRole().equals(MovieCastRole.ACTORS.getCode())) {
+                if (item.getRole().equals("Actor")) {
                     moviePersonnel.getActors().add(item);
-                } else if (item.getRole().equals(MovieCastRole.DIRECTORS.getCode())) {
+                } else if (item.getRole().equals("Director")) {
                     moviePersonnel.getDirectors().add(item);
-                } else if (item.getRole().equals(MovieCastRole.SCREENWRITERS.getCode())) {
+                } else if (item.getRole().equals("Screenwriter")) {
                     moviePersonnel.getScreenwriters().add(item);
-                } else if (item.getRole().equals(MovieCastRole.PRODUCERS.getCode())) {
+                } else if (item.getRole().equals("Producer")) {
                     moviePersonnel.getProducers().add(item);
-                } else if (item.getRole().equals(MovieCastRole.EXECUTIVE_PRODUCERS.getCode())) {
+                } else if (item.getRole().equals("Executive Producer")) {
                     moviePersonnel.getExecutiveProducers().add(item);
                 }
             }

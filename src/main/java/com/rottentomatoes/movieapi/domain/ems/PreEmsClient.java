@@ -2,6 +2,7 @@ package com.rottentomatoes.movieapi.domain.ems;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -49,10 +50,10 @@ public class PreEmsClient<T> extends EmsClient<T> {
         private static final String PRE_EMS_NAMING_CONFIG = "";
 
         @Override
-        public String translateName(AnnotatedField modelField, String jsonFieldName)
+        public String translateName(String modelName, String fieldName)
         {
-            String name = translateName(PRE_EMS_NAMING_CONFIG, modelField, jsonFieldName);
-            return (name != null ? name : super.translateName(modelField, jsonFieldName));
+            String name = translateName(PRE_EMS_NAMING_CONFIG, modelName, fieldName);
+            return (name != null ? name : super.translateName(modelName, fieldName));
         }
     }
 }

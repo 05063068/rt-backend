@@ -47,8 +47,8 @@ public class TvEpisodeToImageRepository extends AbstractRepository implements Re
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/episode");
-        List<Image> rawImageList = (List<Image>)emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId + "/images", TypeFactory.defaultInstance().constructCollectionType(List.class,  Image.class));
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        List<Image> rawImageList = (List<Image>) emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId + "/images", TypeFactory.defaultInstance().constructCollectionType(List.class,  Image.class));
         return new MetaDataEnabledList(rawImageList);
     }
 
@@ -56,7 +56,7 @@ public class TvEpisodeToImageRepository extends AbstractRepository implements Re
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        EmsClient emsClient = emsConfig.fetchEmsClientForEndpoint("tv/episode");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/episode", castedResourceId + "/images/meta", RelatedMetaDataInformation.class);
         if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);

@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.katharsis.resource.annotations.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonApiResource(type = "moviePersonnel")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 public class MoviePersonnel extends AbstractModel {
