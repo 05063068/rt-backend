@@ -50,7 +50,7 @@ public class TvEpisodeToReviewInfoRepository extends AbstractRepository implemen
         if (jsonResponse != null && jsonResponse.keySet().size() > 0) {
             List<Review> reviewList = null;
             List<Integer> idList = (List) jsonResponse.get("review");
-            Map<String, Object> counts = (Map) jsonResponse.get("counts");
+            HashMap<String, Object> counts = (HashMap) jsonResponse.get("counts");
             if (idList != null && idList instanceof List && idList.size() > 0) {
                 String reviewIds = StringUtils.join(idList, ",");
                 reviewList = (List<Review>) emsClient.callEmsList(selectParams, "tv/review", reviewIds,
