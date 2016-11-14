@@ -53,12 +53,15 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     private Iterable<Movie> hydrateIdList(EmsClient emsClient, EmsClient emsHydrationClient, Map<String, Object> selectParams) {
         // get Ids from (tv)ems endpoint
         List<Integer> movieIds = (List<Integer>) emsClient.callEmsList(selectParams, "movie-list", "top", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
-        List<String> idList = movieIds.stream()
-                .map(elt -> elt.toString())
-                .collect(Collectors.toList()); 
-        selectParams.put("ids", String.join(",", idList));
-        // hydrate list using pre-ems endpoint
-        return (List<Movie>) emsHydrationClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+        if (movieIds != null && movieIds.size() > 0) {
+            List<String> idList = movieIds.stream()
+                    .map(elt -> elt.toString())
+                    .collect(Collectors.toList());
+            selectParams.put("ids", String.join(",", idList));
+            // hydrate list using pre-ems endpoint
+            return (List<Movie>) emsHydrationClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+        }
+        return null;
 
     }
 
@@ -66,7 +69,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         RepositoryUtils.setMovieParams(selectParams, requestParams);
-        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        EmsClient emsClient = emsRouter.fetchEmsClientForPath(listId);
         EmsClient emsHydrationClient = emsRouter.fetchEmsClientForEndpoint(MovieRepository.class);
 
         selectParams.put("limit", getLimit("", requestParams));
