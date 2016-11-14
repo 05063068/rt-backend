@@ -69,7 +69,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     public Iterable<Movie> findManyTargets(String listId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         RepositoryUtils.setMovieParams(selectParams, requestParams);
-        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        EmsClient emsClient = emsRouter.fetchEmsClientForPath(listId);
         EmsClient emsHydrationClient = emsRouter.fetchEmsClientForEndpoint(MovieRepository.class);
 
         selectParams.put("limit", getLimit("", requestParams));

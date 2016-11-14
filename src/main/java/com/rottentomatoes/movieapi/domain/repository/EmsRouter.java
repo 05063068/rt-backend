@@ -25,9 +25,22 @@ public class EmsRouter {
     // Temporary list until we can get the endpoint routes fed to us from the backend
     private static final List<String> TV_EMS_REPOSITORIES = Arrays.asList("TvEpisodeRepository", "TvEpisodeToReviewInfoRepository",
             "TvSeasonToTvEpisodeRepository","TvSeasonRepository", "TvSeriesRepository", "FranchiseRepository");
+    private static final List<String> TV_EMS_PATHS = Arrays.asList(
+            "top-for-year",
+            "top-for-theater",
+            "top-for-dvd",
+            "top-for-genre",
+            "top-ever");
 
     protected String tvEmsHost;
     protected String preEmsHost;
+
+    public EmsClient fetchEmsClientForPath(String path) {
+        if (TV_EMS_PATHS.contains(path)) {
+            return new TvEmsClient(this, getHost(TV_EMS_DATASOURCE_PROPERTY));
+        }
+        return new PreEmsClient(this, getHost(PRE_EMS_DATASOURCE_PROPERTY));
+    }
 
     public EmsClient fetchEmsClientForEndpoint(Class repository) {
         if (TV_EMS_REPOSITORIES.contains(repository.getSimpleName())) {
