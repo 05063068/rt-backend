@@ -43,7 +43,7 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
     @Override
     public Iterable<Franchise> findAll(RequestParams requestParams) {
-        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        EmsClient emsClient = emsRouter.fetchEmsClientForPath("franchise/search");
         Map<String, Object> selectParams = new HashMap<>();
         MetaDataEnabledList<Franchise> franchises = null;
 
