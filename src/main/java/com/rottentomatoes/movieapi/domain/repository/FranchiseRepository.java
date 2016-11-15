@@ -43,7 +43,7 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
     @Override
     public Iterable<Franchise> findAll(RequestParams requestParams) {
-        EmsClient emsClient = emsRouter.fetchEmsClientForPath("franchise/search");
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map<String, Object> selectParams = new HashMap<>();
         MetaDataEnabledList<Franchise> franchises = null;
 
@@ -59,14 +59,13 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
                 for (JsonNode movie : resultArr) {
                     franchiseIds.add(Long.parseLong(movie.path("id").textValue()));
                 }
-                selectParams.put("ids", StringUtils.join(franchiseIds, ","));
             } else {
                 throw new IllegalArgumentException("Invalid search query.");
             }
 
             //  Hydrate results
             if (franchiseIds.size() > 0) {
-                franchises = new MetaDataEnabledList<>((List<Franchise>) emsClient.callEmsList(selectParams, "franchise", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class)));
+                franchises = new MetaDataEnabledList<>((List<Franchise>) emsClient.callEmsList(selectParams, "franchise", StringUtils.join(franchiseIds, ","), TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class)));
                 franchises.setMetaInformation(loadSearchMeta(json, requestParams));
             }
         }
