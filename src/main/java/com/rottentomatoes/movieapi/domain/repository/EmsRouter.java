@@ -1,5 +1,8 @@
-package com.rottentomatoes.movieapi.domain.repository.ems;
+package com.rottentomatoes.movieapi.domain.repository;
 
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.ems.PreEmsClient;
+import com.rottentomatoes.movieapi.domain.ems.TvEmsClient;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

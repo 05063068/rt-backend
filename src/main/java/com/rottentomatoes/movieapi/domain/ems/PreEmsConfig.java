@@ -1,4 +1,4 @@
-package com.rottentomatoes.movieapi.domain.repository.ems;
+package com.rottentomatoes.movieapi.domain.ems;
 
 import java.io.Console;
 

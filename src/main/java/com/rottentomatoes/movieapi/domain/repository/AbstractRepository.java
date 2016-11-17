@@ -2,7 +2,6 @@ package com.rottentomatoes.movieapi.domain.repository;
 
 import java.io.Serializable;
 
-import com.rottentomatoes.movieapi.domain.repository.ems.EmsRouter;
 import com.rottentomatoes.movieapi.enums.Country;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

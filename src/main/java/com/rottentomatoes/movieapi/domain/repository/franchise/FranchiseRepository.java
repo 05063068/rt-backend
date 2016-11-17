@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Franchise;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.repository.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.utils.SearchUtils;
 import io.katharsis.response.MetaDataEnabledList;
 import org.apache.commons.lang3.StringUtils;

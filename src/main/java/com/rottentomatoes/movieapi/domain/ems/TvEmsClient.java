@@ -1,10 +1,11 @@
-package com.rottentomatoes.movieapi.domain.repository.ems;
+package com.rottentomatoes.movieapi.domain.ems;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
 
 import java.io.IOException;
 import java.io.InputStream;

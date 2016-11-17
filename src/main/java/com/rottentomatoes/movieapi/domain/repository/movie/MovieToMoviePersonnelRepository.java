@@ -5,7 +5,7 @@ import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
 import com.rottentomatoes.movieapi.domain.model.MoviePersonnel;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.repository.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.enums.MovieCastRole;
 
 import io.katharsis.queryParams.RequestParams;

@@ -5,7 +5,7 @@ import com.rottentomatoes.movieapi.domain.model.Review;
 import com.rottentomatoes.movieapi.domain.model.ReviewInfo;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.repository.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import org.apache.commons.lang3.StringUtils;

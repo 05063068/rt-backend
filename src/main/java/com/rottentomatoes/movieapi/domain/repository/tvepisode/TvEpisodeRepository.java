@@ -3,7 +3,7 @@ package com.rottentomatoes.movieapi.domain.repository.tvepisode;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.repository.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.ResourceRepository;

@@ -7,7 +7,7 @@ import java.util.Map;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Affiliate;
 
-import com.rottentomatoes.movieapi.domain.repository.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import org.springframework.stereotype.Component;
 
 import io.katharsis.queryParams.RequestParams;

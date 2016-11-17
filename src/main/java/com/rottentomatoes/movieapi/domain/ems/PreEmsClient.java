@@ -1,4 +1,4 @@
-package com.rottentomatoes.movieapi.domain.repository.ems;
+package com.rottentomatoes.movieapi.domain.ems;
 
 import java.io.IOException;
 import java.net.URL;
@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
 
 public class PreEmsClient<T> extends EmsClient<T> {
 

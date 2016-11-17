@@ -3,7 +3,7 @@ package com.rottentomatoes.movieapi.domain.repository.movie;
 import com.rottentomatoes.movieapi.domain.model.CriticSummary;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.repository.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
