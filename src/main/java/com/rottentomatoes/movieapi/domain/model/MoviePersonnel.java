@@ -1,13 +1,13 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rottentomatoes.movieapi.enums.MovieCastRole;
 import io.katharsis.resource.annotations.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @JsonApiResource(type = "moviePersonnel")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -22,6 +22,31 @@ public class MoviePersonnel extends AbstractModel {
         directors =  new ArrayList<MovieCast>();
         executiveProducers = new ArrayList<MovieCast>();
         screenwriters = new ArrayList<MovieCast>();
+        creators = new ArrayList<MovieCast>();
+    }
+
+    public MoviePersonnel(String id, List<MovieCast> castList) {
+        this();
+        this.setId(id);
+
+        // Load MoviePersonnel object manually;
+        if (castList != null && castList.size() > 0) {
+            for (MovieCast item : castList) {
+                if (MovieCastRole.isPerformer(item)) {
+                    actors.add(item);
+                } else if (MovieCastRole.isProducer(item)) {
+                    producers.add(item);
+                } else if (MovieCastRole.isDirector(item)) {
+                    directors.add(item);
+                } else if (MovieCastRole.isExecutiveProducer(item)) {
+                    executiveProducers.add(item);
+                } else if (MovieCastRole.isScreenwriter(item)) {
+                    screenwriters.add(item);
+                } else if (MovieCastRole.isCreator(item)) {
+                    creators.add(item);
+                }
+            }
+        }
     }
 
     @JsonApiToMany
@@ -38,5 +63,8 @@ public class MoviePersonnel extends AbstractModel {
 
     @JsonApiToMany
     protected List<MovieCast> screenwriters;
+
+    @JsonApiToMany
+    protected List<MovieCast> creators;
 
 }

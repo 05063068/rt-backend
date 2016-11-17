@@ -42,7 +42,7 @@ public abstract class EmsClient<T> {
     public T callEmsIdList(Map<String, Object> selectParams, String idPathBase, String id, String collectionPathBase, CollectionType collectionType) {
         List<String> idList = (List<String>) callEmsList(selectParams, idPathBase, id, TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
         if (idList != null && idList.size() > 0) {
-            String ids = StringUtils.join(idList.subList(0, 5), ",");
+            String ids = StringUtils.join(idList, ",");
             return callEmsCommon(selectParams, collectionPathBase, ids, constructJsonListDecoder(collectionType));
         }
         return null;

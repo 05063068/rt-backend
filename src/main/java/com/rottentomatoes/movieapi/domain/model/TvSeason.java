@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.katharsis.resource.annotations.*;
+import io.katharsis.response.MetaDataEnabledList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,4 +38,24 @@ public class TvSeason extends AbstractModel {
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected Iterable<TvEpisode> tvEpisodes;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected ReviewInfo reviewInfo;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected MoviePersonnel tvPersonnel;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Image> images;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected MetaDataEnabledList<VideoClip> videoClips;
 }

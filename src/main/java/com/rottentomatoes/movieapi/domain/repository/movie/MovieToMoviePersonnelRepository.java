@@ -24,10 +24,6 @@ import java.util.Map;
 @Component
 public class MovieToMoviePersonnelRepository extends AbstractRepository implements RelationshipRepository<Movie, String, MoviePersonnel, String>, MetaRepository {
 
-    private static final String CRITIC_TYPE = "criticType";
-    private static final String TOP_CRITICS = "top";
-
-
     @Override
     public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
     }
@@ -46,35 +42,15 @@ public class MovieToMoviePersonnelRepository extends AbstractRepository implemen
 
     @Override
     public MoviePersonnel findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
-        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map<String, Object> selectParams = new HashMap<>();
         Integer limit = getActorsLimit(requestParams);
         if (limit != null) {
             selectParams.put("actorsLimit", limit);
         }
+
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<MovieCast> personList = (List<MovieCast>) emsClient.callEmsList(selectParams, "movie", movieId + "/personnel", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieCast.class));
-
-        // Load MoviePersonnel object manually;
-        MoviePersonnel moviePersonnel = new MoviePersonnel();
-        moviePersonnel.setId(movieId);
-
-        for(MovieCast item : personList){
-            if(item.getRole().equals(MovieCastRole.ACTORS.getCode())){
-                moviePersonnel.getActors().add(item);
-            }
-            else if(item.getRole().equals(MovieCastRole.DIRECTORS.getCode())){
-                moviePersonnel.getDirectors().add(item);
-            }
-            else if(item.getRole().equals(MovieCastRole.SCREENWRITERS.getCode())){
-                moviePersonnel.getScreenwriters().add(item);
-            }
-            else if(item.getRole().equals(MovieCastRole.PRODUCERS.getCode())){
-                moviePersonnel.getProducers().add(item);
-            }
-            else if(item.getRole().equals(MovieCastRole.EXECUTIVE_PRODUCERS.getCode())){
-                moviePersonnel.getExecutiveProducers().add(item);
-            }
-        }
+        MoviePersonnel moviePersonnel = new MoviePersonnel(movieId, personList);
 
         return moviePersonnel;
     }

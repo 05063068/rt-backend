@@ -13,6 +13,7 @@ public class Person extends AbstractModel {
     protected String vanity;
     protected String name;
     protected Image mainImage;
+    protected String bio;
 
 
     @JsonApiToOne

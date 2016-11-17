@@ -62,7 +62,7 @@ public class TvEpisodeToVideoClipRepository extends AbstractRepository implement
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/episode", castedResourceId + "/videos/meta", RelatedMetaDataInformation.class);
-        if (root instanceof RelationshipRepository) {
+        if (metaData != null && root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }
 

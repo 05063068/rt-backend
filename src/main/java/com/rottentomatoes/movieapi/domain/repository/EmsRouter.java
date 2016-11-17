@@ -25,10 +25,26 @@ public class EmsRouter {
     private static final String TV_EMS_DATASOURCE_PROPERTY = "datasource.tv-ems.url";
 
     // Temporary list until we can get the endpoint routes fed to us from the backend
-    private static final List<String> TV_EMS_REPOSITORIES = Arrays.asList("TvEpisodeRepository", "TvEpisodeToReviewInfoRepository",
-            "TvEpisodeToImageRepository", "TvEpisodeToVideoClipRepository", "TvEpisodeToMoviePersonnelRepository",
-            "TvSeasonToTvEpisodeRepository","TvSeasonRepository", "TvSeriesRepository", "FranchiseRepository");
+    private static final List<String> TV_EMS_REPOSITORIES = Arrays.asList(
+            // TV Episodes
+            "TvEpisodeRepository",
+            "TvEpisodeToReviewInfoRepository",
+            "TvEpisodeToImageRepository",
+            "TvEpisodeToVideoClipRepository",
+            "TvEpisodeToMoviePersonnelRepository",
+            // TV Seasons
+            "TvSeasonRepository",
+            "TvSeasonToReviewInfoRepository",
+            "TvSeasonToImageRepository",
+            "TvSeasonToVideoClipRepository",
+            "TvSeasonToMoviePersonnelRepository",
+            "TvSeasonToTvEpisodeRepository",
+            // TV Series
+            "TvSeriesRepository",
+            // Franchise
+            "FranchiseRepository");
     private static final List<String> TV_EMS_PATHS = Arrays.asList(
+            // Top Lists
             "top-for-year",
             "top-for-theater",
             "top-for-dvd",

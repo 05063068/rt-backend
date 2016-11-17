@@ -65,10 +65,12 @@ public class TvEmsClient<T> extends EmsClient<T> {
 
         public TvEmsNamingStrategy() {
             namingMap = new HashMap<>();
+
+            // TV Personnel
             namingMap.put("MovieCast.characters", "characterName");
             namingMap.put("MovieCast.person", "moviePerson");
             namingMap.put("Person.name", "actorName");
-            namingMap.put("MovieCast.mainImage", "preferredImage");
+            namingMap.put("Person.mainImage", "preferredImage");
         }
 
         @Override
