@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.util.HashMap;
 
+import com.rottentomatoes.movieapi.domain.repository.ems.EmsClient;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Review;
@@ -13,9 +14,6 @@ import io.katharsis.repository.ResourceRepository;
 
 import java.util.List;
 import java.util.Map;
-
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 
 @Component
 public class ReviewRepository extends AbstractRepository implements ResourceRepository<Review, String> {

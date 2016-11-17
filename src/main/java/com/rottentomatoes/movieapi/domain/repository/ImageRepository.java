@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.flixster.image.ImageType;
+import com.rottentomatoes.movieapi.domain.repository.ems.EmsClient;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Image;
