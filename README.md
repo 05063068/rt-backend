@@ -1,4 +1,9 @@
 # Catalog API/RT Backend
+## V2.3 Release Notes
+* Added category filter for movie to reviews relationship.
+
+## V2.2 Release Notes
+
 ## V2.1 Release Notes
 * Placeholder note. V2.1 is the Pre-EMS port of V1.2.
 
