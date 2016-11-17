@@ -1,5 +1,8 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.ems.PreEmsClient;
+import com.rottentomatoes.movieapi.domain.ems.TvEmsClient;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +10,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.Console;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
