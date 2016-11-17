@@ -58,6 +58,11 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
         selectParams.put("offset", getOffset(fieldName, requestParams));
         selectParams.put("country", getCountry(requestParams).getCountryCode());
 
+        // Accepted category filter values are: 'theatrical', 'dvd' or 'quick'
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("category")) {
+            selectParams.put("category", requestParams.getFilters().get("category"));
+        }
+
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE)) {
             selectParams.put(CRITIC_TYPE, requestParams.getFilters().get(CRITIC_TYPE));
         }
