@@ -1,10 +1,11 @@
-package com.rottentomatoes.movieapi.domain.repository;
+package com.rottentomatoes.movieapi.domain.repository.tvepisode;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.model.MovieCast;
-import com.rottentomatoes.movieapi.domain.model.MoviePersonnel;
+import com.rottentomatoes.movieapi.domain.model.Personnel;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
-import com.rottentomatoes.movieapi.domain.model.TvSeason;
+import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
@@ -18,26 +19,30 @@ import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 @Component
-public class TvSeasonToMoviePersonnelRepository extends AbstractRepository implements RelationshipRepository<TvSeason, String, MoviePersonnel, String>, MetaRepository {
+public class TvEpisodeToPersonnelRepository extends AbstractRepository implements RelationshipRepository<TvEpisode, String, Personnel, String>, MetaRepository {
+
+    private static final String CRITIC_TYPE = "criticType";
+    private static final String TOP_CRITICS = "top";
+
 
     @Override
-    public void addRelations(TvSeason arg0, Iterable<String> arg1, String arg2) {
+    public void addRelations(TvEpisode arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public void removeRelations(TvSeason arg0, Iterable<String> arg1, String arg2) {
+    public void removeRelations(TvEpisode arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public void setRelation(TvSeason arg0, String arg1, String arg2) {
+    public void setRelation(TvEpisode arg0, String arg1, String arg2) {
     }
 
     @Override
-    public void setRelations(TvSeason arg0, Iterable<String> arg1, String arg2) {
+    public void setRelations(TvEpisode arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public MoviePersonnel findOneTarget(String tvSeasonId, String fieldName, RequestParams requestParams) {
+    public Personnel findOneTarget(String tvEpisodeId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         Integer limit = getActorsLimit(requestParams);
         if (limit != null) {
@@ -45,10 +50,10 @@ public class TvSeasonToMoviePersonnelRepository extends AbstractRepository imple
         }
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        List<MovieCast> castList = (List<MovieCast>) emsClient.callEmsIdList(selectParams, "tv/season", tvSeasonId + "/cast", "tv/cast", TypeFactory.defaultInstance().constructCollectionType(List.class, MovieCast.class));
-        MoviePersonnel moviePersonnel = new MoviePersonnel(tvSeasonId, castList);
+        List<MovieCast> castList = (List<MovieCast>) emsClient.callEmsIdList(selectParams, "tv/episode", tvEpisodeId + "/cast", "tv/cast", TypeFactory.defaultInstance().constructCollectionType(List.class, MovieCast.class));
+        Personnel personnel = new Personnel(tvEpisodeId, castList);
 
-        return moviePersonnel;
+        return personnel;
     }
 
 
@@ -65,7 +70,7 @@ public class TvSeasonToMoviePersonnelRepository extends AbstractRepository imple
 
 
     @Override
-    public Iterable<MoviePersonnel> findManyTargets(String s, String s2, RequestParams requestParams) {
+    public Iterable<Personnel> findManyTargets(String s, String s2, RequestParams requestParams) {
         return null;
     }
 

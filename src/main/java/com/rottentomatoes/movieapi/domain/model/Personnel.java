@@ -13,9 +13,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class MoviePersonnel extends AbstractModel {
+public class Personnel extends AbstractModel {
 
-    public MoviePersonnel(){
+    public Personnel(){
         // Preinitialize lists
         actors = new ArrayList<MovieCast>();
         producers = new ArrayList<MovieCast>();
@@ -25,11 +25,11 @@ public class MoviePersonnel extends AbstractModel {
         creators = new ArrayList<MovieCast>();
     }
 
-    public MoviePersonnel(String id, List<MovieCast> castList) {
+    public Personnel(String id, List<MovieCast> castList) {
         this();
         this.setId(id);
 
-        // Load MoviePersonnel object manually;
+        // Load Personnel object manually;
         if (castList != null && castList.size() > 0) {
             for (MovieCast item : castList) {
                 if (MovieCastRole.isPerformer(item)) {

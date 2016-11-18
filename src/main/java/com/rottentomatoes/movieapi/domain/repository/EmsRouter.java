@@ -31,13 +31,13 @@ public class EmsRouter {
             "TvEpisodeToReviewInfoRepository",
             "TvEpisodeToImageRepository",
             "TvEpisodeToVideoClipRepository",
-            "TvEpisodeToMoviePersonnelRepository",
+            "TvEpisodeToPersonnelRepository",
             // TV Seasons
             "TvSeasonRepository",
             "TvSeasonToReviewInfoRepository",
             "TvSeasonToImageRepository",
             "TvSeasonToVideoClipRepository",
-            "TvSeasonToMoviePersonnelRepository",
+            "TvSeasonToPersonnelRepository",
             "TvSeasonToTvEpisodeRepository",
             // TV Series
             "TvSeriesRepository",

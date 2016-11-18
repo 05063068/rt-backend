@@ -1,12 +1,14 @@
-package com.rottentomatoes.movieapi.domain.repository;
+package com.rottentomatoes.movieapi.domain.repository.tvseason;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Image;
 import com.rottentomatoes.movieapi.domain.model.Review;
 import com.rottentomatoes.movieapi.domain.model.ReviewInfo;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
 import com.rottentomatoes.movieapi.domain.model.TvSeason;
+import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaDataEnabledList;

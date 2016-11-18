@@ -1,18 +1,15 @@
-package com.rottentomatoes.movieapi.domain.repository.movie;
+package com.rottentomatoes.movieapi.domain.repository.tvseason;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.model.Movie;
-import com.rottentomatoes.movieapi.domain.model.MovieCast;
-import com.rottentomatoes.movieapi.domain.model.MoviePersonnel;
-import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
-import com.rottentomatoes.movieapi.enums.MovieCastRole;
-
+import com.rottentomatoes.movieapi.domain.model.MovieCast;
+import com.rottentomatoes.movieapi.domain.model.Personnel;
+import com.rottentomatoes.movieapi.domain.model.TvSeason;
+import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaInformation;
-
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -22,26 +19,26 @@ import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 @Component
-public class MovieToMoviePersonnelRepository extends AbstractRepository implements RelationshipRepository<Movie, String, MoviePersonnel, String>, MetaRepository {
+public class TvSeasonToPersonnelRepository extends AbstractRepository implements RelationshipRepository<TvSeason, String, Personnel, String>, MetaRepository {
 
     @Override
-    public void addRelations(Movie arg0, Iterable<String> arg1, String arg2) {
+    public void addRelations(TvSeason arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public void removeRelations(Movie arg0, Iterable<String> arg1, String arg2) {
+    public void removeRelations(TvSeason arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public void setRelation(Movie arg0, String arg1, String arg2) {
+    public void setRelation(TvSeason arg0, String arg1, String arg2) {
     }
 
     @Override
-    public void setRelations(Movie arg0, Iterable<String> arg1, String arg2) {
+    public void setRelations(TvSeason arg0, Iterable<String> arg1, String arg2) {
     }
 
     @Override
-    public MoviePersonnel findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
+    public Personnel findOneTarget(String tvSeasonId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         Integer limit = getActorsLimit(requestParams);
         if (limit != null) {
@@ -49,10 +46,10 @@ public class MovieToMoviePersonnelRepository extends AbstractRepository implemen
         }
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        List<MovieCast> personList = (List<MovieCast>) emsClient.callEmsList(selectParams, "movie", movieId + "/personnel", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieCast.class));
-        MoviePersonnel moviePersonnel = new MoviePersonnel(movieId, personList);
+        List<MovieCast> castList = (List<MovieCast>) emsClient.callEmsIdList(selectParams, "tv/season", tvSeasonId + "/cast", "tv/cast", TypeFactory.defaultInstance().constructCollectionType(List.class, MovieCast.class));
+        Personnel personnel = new Personnel(tvSeasonId, castList);
 
-        return moviePersonnel;
+        return personnel;
     }
 
 
@@ -69,7 +66,7 @@ public class MovieToMoviePersonnelRepository extends AbstractRepository implemen
 
 
     @Override
-    public Iterable<MoviePersonnel> findManyTargets(String s, String s2, RequestParams requestParams) {
+    public Iterable<Personnel> findManyTargets(String s, String s2, RequestParams requestParams) {
         return null;
     }
 

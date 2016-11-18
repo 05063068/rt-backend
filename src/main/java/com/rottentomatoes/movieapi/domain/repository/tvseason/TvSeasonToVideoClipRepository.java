@@ -1,9 +1,12 @@
-package com.rottentomatoes.movieapi.domain.repository;
+package com.rottentomatoes.movieapi.domain.repository.tvseason;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
+import com.rottentomatoes.movieapi.domain.model.TvSeason;
 import com.rottentomatoes.movieapi.domain.model.VideoClip;
+import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
@@ -18,25 +21,25 @@ import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 @Component
-public class TvEpisodeToVideoClipRepository extends AbstractRepository implements RelationshipRepository<TvEpisode, String, VideoClip, String>, MetaRepository {
+public class TvSeasonToVideoClipRepository extends AbstractRepository implements RelationshipRepository<TvSeason, String, VideoClip, String>, MetaRepository {
 
     @Override
-    public void setRelation(TvEpisode tvEpisode, String s, String s2) {
+    public void setRelation(TvSeason tvSeason, String s, String s2) {
 
     }
 
     @Override
-    public void setRelations(TvEpisode tvEpisode, Iterable<String> iterable, String s) {
+    public void setRelations(TvSeason tvSeason, Iterable<String> iterable, String s) {
 
     }
 
     @Override
-    public void addRelations(TvEpisode tvEpisode, Iterable<String> iterable, String s) {
+    public void addRelations(TvSeason tvSeason, Iterable<String> iterable, String s) {
 
     }
 
     @Override
-    public void removeRelations(TvEpisode tvEpisode, Iterable<String> iterable, String s) {
+    public void removeRelations(TvSeason tvSeason, Iterable<String> iterable, String s) {
 
     }
 
@@ -45,14 +48,15 @@ public class TvEpisodeToVideoClipRepository extends AbstractRepository implement
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public MetaDataEnabledList<VideoClip> findManyTargets(String tvEpisodeId, String fieldName, RequestParams requestParams) {
+    public MetaDataEnabledList<VideoClip> findManyTargets(String tvSeasonId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", getLimit(fieldName, requestParams));
         selectParams.put("offset", getOffset(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        List<VideoClip> rawVideoClipList = (List<VideoClip>)emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId + "/videos", TypeFactory.defaultInstance().constructCollectionType(List.class,  VideoClip.class));
+        List<VideoClip> rawVideoClipList = (List<VideoClip>)emsClient.callEmsList(selectParams, "tv/season", tvSeasonId + "/videos", TypeFactory.defaultInstance().constructCollectionType(List.class,  VideoClip.class));
         return new MetaDataEnabledList(rawVideoClipList);
     }
 
@@ -61,7 +65,7 @@ public class TvEpisodeToVideoClipRepository extends AbstractRepository implement
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/episode", castedResourceId + "/videos/meta", RelatedMetaDataInformation.class);
+        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/season", castedResourceId + "/videos/meta", RelatedMetaDataInformation.class);
         if (metaData != null && root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }

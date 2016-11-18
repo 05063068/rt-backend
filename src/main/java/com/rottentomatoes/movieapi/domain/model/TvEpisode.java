@@ -43,7 +43,7 @@ public class TvEpisode extends AbstractModel {
     @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MoviePersonnel tvPersonnel;
+    protected Personnel tvPersonnel;
 
     @JsonApiToMany
     @JsonApiLazy

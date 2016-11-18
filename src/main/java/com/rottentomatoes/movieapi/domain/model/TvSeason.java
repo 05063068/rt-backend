@@ -1,6 +1,5 @@
 package com.rottentomatoes.movieapi.domain.model;
 
-import java.util.Date;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -47,7 +46,7 @@ public class TvSeason extends AbstractModel {
     @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MoviePersonnel tvPersonnel;
+    protected Personnel tvPersonnel;
 
     @JsonApiToMany
     @JsonApiLazy
