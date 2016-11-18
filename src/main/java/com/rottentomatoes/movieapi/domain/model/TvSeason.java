@@ -1,8 +1,10 @@
 package com.rottentomatoes.movieapi.domain.model;
 
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.katharsis.resource.annotations.*;
 import io.katharsis.response.MetaDataEnabledList;
 import lombok.Getter;
@@ -22,8 +24,10 @@ public class TvSeason extends AbstractModel {
     protected String genre;
     protected String description;
 
-    protected String startDate;
-    protected String endDate;
+    @JsonDeserialize(using = DeSerializeZonedDateTime.class)
+    protected ZonedDateTime startDate;
+    @JsonDeserialize(using = DeSerializeZonedDateTime.class)
+    protected ZonedDateTime endDate;
     protected int startYear;
     protected int endYear;
 
