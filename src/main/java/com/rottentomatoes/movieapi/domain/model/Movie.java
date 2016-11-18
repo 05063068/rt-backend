@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.rottentomatoes.movieapi.enums.MpaaRating;
 
@@ -73,7 +71,7 @@ public class Movie extends AbstractModel {
     @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MoviePersonnel moviePersonnel;
+    protected Personnel moviePersonnel;
 
     @JsonApiToMany
     @JsonApiLazy

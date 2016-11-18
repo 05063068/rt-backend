@@ -2,14 +2,10 @@ package com.rottentomatoes.movieapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.katharsis.resource.annotations.JsonApiResource;
-import io.katharsis.resource.annotations.JsonApiToMany;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @JsonApiResource(type = "reviewInfo")
 @JsonIgnoreProperties(ignoreUnknown = true)

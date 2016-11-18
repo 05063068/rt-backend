@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 
 public class TvEmsClient<T> extends EmsClient<T> {
 
@@ -60,11 +61,28 @@ public class TvEmsClient<T> extends EmsClient<T> {
 
         private static final String TV_EMS_NAMING_CONFIG = "";
 
+        private HashMap<String, String> namingMap;
+
+        public TvEmsNamingStrategy() {
+            namingMap = new HashMap<>();
+
+            // TV Personnel
+            namingMap.put("MovieCast.characters", "characterName");
+            namingMap.put("MovieCast.person", "moviePerson");
+            namingMap.put("Person.name", "actorName");
+            namingMap.put("Person.mainImage", "preferredImage");
+        }
+
         @Override
-        public String translateName(AnnotatedField modelField, String jsonFieldName)
+        public String translateName(String modelName, String fieldName)
         {
-            String name = translateName(TV_EMS_NAMING_CONFIG, modelField, jsonFieldName);
-            return (name != null ? name : super.translateName(modelField, jsonFieldName));
+            String key = modelName + "." + fieldName;
+            if (namingMap.containsKey(key)) {
+                return namingMap.get(key);
+            }
+
+            String name = translateName(TV_EMS_NAMING_CONFIG, modelName, fieldName);
+            return (name != null ? name : super.translateName(modelName, fieldName));
         }
     }
 }

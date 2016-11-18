@@ -1,10 +1,12 @@
 package com.rottentomatoes.movieapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
 
 @JsonApiResource(type = "videoClip")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 public class VideoClip extends AbstractModel {

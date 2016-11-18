@@ -43,16 +43,16 @@ public class TvEpisode extends AbstractModel {
     @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MoviePersonnel tvPersonnel;
-
-    @JsonApiToMany
-    @JsonApiLazy
-    @JsonApiLookupIncludeAutomatically
-    protected Iterable<Image> images;
+    protected Personnel tvPersonnel;
 
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected MetaDataEnabledList<VideoClip> videoClips;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Image> images;
 
 }
