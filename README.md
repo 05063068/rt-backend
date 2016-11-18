@@ -2,6 +2,7 @@
 ## V2.3 Release Notes
 * Added category filter for movie to reviews relationship.
 * Reordered packaging in the repository directory to make it cleaner.
+* Added relationships for images, video, reviews, and cast for both tv episodes and seasons
 
 ## V2.2 Release Notes
 
