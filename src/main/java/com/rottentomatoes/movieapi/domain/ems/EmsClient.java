@@ -57,7 +57,7 @@ public abstract class EmsClient<T> {
                 if (selectParams.get(p) == null) {
                     continue;
                 }
-                params.add(p, selectParams.get(p).toString().replaceAll("%", "%25").replaceAll(" ", "%20"));
+                params.add(p, selectParams.get(p).toString().replaceAll("%", "%25").replaceAll(" ", "%20").replaceAll("&", "%26"));
             }
             String urlString = UriComponentsBuilder.fromUriString(constructUrl(pathBase, id)).queryParams(params).build(true).toString();
             URL url = new URL(urlString);
