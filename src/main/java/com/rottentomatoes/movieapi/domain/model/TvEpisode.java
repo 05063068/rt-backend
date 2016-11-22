@@ -2,6 +2,7 @@
 package com.rottentomatoes.movieapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
@@ -11,6 +12,7 @@ import io.katharsis.response.MetaDataEnabledList;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 @JsonApiResource(type = "tvEpisode")
@@ -26,7 +28,8 @@ public class TvEpisode extends AbstractModel {
     protected String network;
     protected String genre;
     protected String synopsis;
-    protected String airDate;
+    @JsonDeserialize(using = DeSerializeZonedDateTime.class)
+    protected ZonedDateTime airDate;
     protected int runningTime;
 
     // complex (nested) attributes
