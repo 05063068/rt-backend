@@ -15,10 +15,15 @@ import java.util.HashMap;
 
 public class TvEmsClient<T> extends EmsClient<T> {
 
-    private static final String AUTH_HEADER = "rt-backend:NVmf)LFdXYc8V8TqvtfHxbqm>36gvYza";
+    protected String authHeader;
 
     public TvEmsClient(EmsRouter config, String hostUrl) {
         super(config, hostUrl);
+    }
+
+    public TvEmsClient(EmsRouter config, String hostUrl, String authHeader) {
+        super(config, hostUrl);
+        this.authHeader = authHeader;
     }
 
     @Override
@@ -48,7 +53,7 @@ public class TvEmsClient<T> extends EmsClient<T> {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setDoOutput(true);
-        connection.setRequestProperty("Authorization", AUTH_HEADER);
+        connection.setRequestProperty("Authorization", authHeader);
         return connection.getInputStream();
     }
 
