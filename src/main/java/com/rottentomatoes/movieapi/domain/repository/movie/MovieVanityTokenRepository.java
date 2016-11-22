@@ -1,9 +1,10 @@
-package com.rottentomatoes.movieapi.domain.repository;
+package com.rottentomatoes.movieapi.domain.repository.movie;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.VanityToken;
@@ -12,7 +13,7 @@ import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class VanityTokenRepository extends AbstractRepository implements ResourceRepository<VanityToken, String> {
+public class MovieVanityTokenRepository extends AbstractRepository implements ResourceRepository<VanityToken, String> {
 
     @Override
     public <S extends VanityToken> S save(S entity) {
