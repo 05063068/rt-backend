@@ -3,6 +3,7 @@ package com.rottentomatoes.movieapi.domain.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.katharsis.resource.annotations.*;
+import io.katharsis.response.MetaDataEnabledList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,4 +42,19 @@ public class TvSeries extends AbstractModel {
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected Iterable<TvSeason> tvSeasons;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Personnel tvPersonnel;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Image> images;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected MetaDataEnabledList<VideoClip> videoClips;
 }
