@@ -26,6 +26,7 @@ public class EmsRouter {
 
     // Temporary list until we can get the endpoint routes fed to us from the backend
     private static final List<String> TV_EMS_REPOSITORIES = Arrays.asList(
+            "TvVanityTokenRepository",
             // TV Episodes
             "TvEpisodeRepository",
             "TvEpisodeToReviewInfoRepository",

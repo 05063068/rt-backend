@@ -1,6 +1,6 @@
-package com.rottentomatoes.movieapi.domain.repository.critic;
+package com.rottentomatoes.movieapi.domain.repository.vanity;
 
-import com.rottentomatoes.movieapi.domain.model.CriticVanityToken;
+import com.rottentomatoes.movieapi.domain.model.PersonVanityToken;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import io.katharsis.queryParams.RequestParams;
@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class CriticVanityTokenRepository extends AbstractRepository implements ResourceRepository<CriticVanityToken, String> {
+public class PersonVanityTokenRepository extends AbstractRepository implements ResourceRepository<PersonVanityToken, String> {
 
     @Override
-    public <S extends CriticVanityToken> S save(S entity) {
+    public <S extends PersonVanityToken> S save(S entity) {
         return null;
     }
 
@@ -23,21 +23,21 @@ public class CriticVanityTokenRepository extends AbstractRepository implements R
     }
 
     @Override
-    public CriticVanityToken findOne(String criticVanityToken, RequestParams requestParams) {
+    public PersonVanityToken findOne(String personVanityToken, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        CriticVanityToken token = (CriticVanityToken) emsClient.callEmsEntity(selectParams, "critic-vanity-token", criticVanityToken, CriticVanityToken.class);
+        PersonVanityToken token = (PersonVanityToken) emsClient.callEmsEntity(selectParams, "person-vanity-token", personVanityToken, PersonVanityToken.class);
         return token;
     }
 
     @Override
 
-    public Iterable<CriticVanityToken> findAll(RequestParams requestParams) {
+    public Iterable<PersonVanityToken> findAll(RequestParams requestParams) {
         return null;
     }
 
     @Override
-    public Iterable<CriticVanityToken> findAll(Iterable<String> ids, RequestParams requestParams) {
+    public Iterable<PersonVanityToken> findAll(Iterable<String> ids, RequestParams requestParams) {
         // TODO Auto-generated method stub
         return null;
     }
