@@ -32,6 +32,11 @@ public class TvSeries extends AbstractModel {
     protected Map<String, Object> heroImage;
     protected Map<String, Object> mainTrailer;
 
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Franchise franchise;
+
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically

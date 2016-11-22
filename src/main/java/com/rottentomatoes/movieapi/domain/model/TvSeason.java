@@ -3,6 +3,7 @@ package com.rottentomatoes.movieapi.domain.model;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.katharsis.resource.annotations.*;
@@ -41,6 +42,16 @@ public class TvSeason extends AbstractModel {
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected Iterable<TvEpisode> tvEpisodes;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected TvSeries tvSeries;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Franchise franchise;
 
     @JsonApiToOne
     @JsonApiLazy

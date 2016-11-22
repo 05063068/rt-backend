@@ -1,6 +1,7 @@
 
 package com.rottentomatoes.movieapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.katharsis.resource.annotations.JsonApiLazy;
@@ -37,6 +38,21 @@ public class TvEpisode extends AbstractModel {
     protected Map<String, Object> posterImage;
     protected Map<String, Object> heroImage;
     protected Map<String, Object> mainTrailer;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected TvSeason tvSeason;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected TvSeries tvSeries;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Franchise franchise;
 
     @JsonApiToOne
     @JsonApiLazy
