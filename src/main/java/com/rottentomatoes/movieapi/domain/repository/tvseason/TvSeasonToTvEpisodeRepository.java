@@ -45,15 +45,8 @@ public class TvSeasonToTvEpisodeRepository extends AbstractRepository implements
         selectParams.put("limit", getLimit(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        List<String> tvEpisodeIds = (List<String>) emsClient.callEmsList(selectParams, "tv/season", tvSeasonId + "/episode",
-                TypeFactory.defaultInstance().constructCollectionType(List.class,  String.class));
-
-        if (tvEpisodeIds != null && tvEpisodeIds.size() > 0) {
-            String ids = String.join(",", tvEpisodeIds);
-            List<TvEpisode> tvEpisodeList = (List<TvEpisode>) emsClient.callEmsList(selectParams, "tv/episode", ids,
-                    TypeFactory.defaultInstance().constructCollectionType(List.class, TvEpisode.class));
-            return tvEpisodeList;
-        }
-        return null;
+        List<TvEpisode> tvEpisodeList = (List<TvEpisode>) emsClient.callEmsIdList(selectParams, "tv/season", tvSeasonId + "/episode", "tv/episode",
+                TypeFactory.defaultInstance().constructCollectionType(List.class,  TvEpisode.class));
+        return tvEpisodeList;
     }
 }
