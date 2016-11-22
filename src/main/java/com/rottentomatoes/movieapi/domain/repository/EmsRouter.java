@@ -23,6 +23,7 @@ public class EmsRouter {
 
     private static final String PRE_EMS_DATASOURCE_PROPERTY = "datasource.pre-ems.url";
     private static final String TV_EMS_DATASOURCE_PROPERTY = "datasource.tv-ems.url";
+    private static final String TV_EMS_AUTH_HEADER = "datasource.tv-ems.auth";
 
     // Temporary list until we can get the endpoint routes fed to us from the backend
     private static final List<String> TV_EMS_REPOSITORIES = Arrays.asList(
@@ -56,31 +57,16 @@ public class EmsRouter {
 
     public EmsClient fetchEmsClientForPath(String path) {
         if (TV_EMS_PATHS.contains(path)) {
-            return new TvEmsClient(this, getHost(TV_EMS_DATASOURCE_PROPERTY));
+            return new TvEmsClient(this, env.getProperty(TV_EMS_DATASOURCE_PROPERTY), env.getProperty(TV_EMS_AUTH_HEADER));
         }
-        return new PreEmsClient(this, getHost(PRE_EMS_DATASOURCE_PROPERTY));
+        return new PreEmsClient(this, env.getProperty(PRE_EMS_DATASOURCE_PROPERTY));
     }
 
     public EmsClient fetchEmsClientForEndpoint(Class repository) {
         if (TV_EMS_REPOSITORIES.contains(repository.getSimpleName())) {
-            return new TvEmsClient(this, getHost(TV_EMS_DATASOURCE_PROPERTY));
+            return new TvEmsClient(this, env.getProperty(TV_EMS_DATASOURCE_PROPERTY), env.getProperty(TV_EMS_AUTH_HEADER));
         }
-        return new PreEmsClient(this, getHost(PRE_EMS_DATASOURCE_PROPERTY));
-    }
-
-    private String getHost(String property) {
-        if (property.equals(PRE_EMS_DATASOURCE_PROPERTY)) {
-            if (preEmsHost == null) {
-                preEmsHost = env.getProperty(PRE_EMS_DATASOURCE_PROPERTY);
-            }
-            return preEmsHost;
-        } else if (property.equals(TV_EMS_DATASOURCE_PROPERTY)) {
-            if (tvEmsHost == null) {
-                tvEmsHost = env.getProperty(TV_EMS_DATASOURCE_PROPERTY);
-            }
-            return tvEmsHost;
-        }
-        return "";
+        return new PreEmsClient(this, env.getProperty(PRE_EMS_DATASOURCE_PROPERTY));
     }
 
     public void log(String s) {
