@@ -1,4 +1,4 @@
-package com.rottentomatoes.movieapi.domain.repository.tvseries;
+package com.rottentomatoes.movieapi.domain.repository.vanity;
 
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.model.TvVanityToken;

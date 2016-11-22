@@ -1,4 +1,4 @@
-package com.rottentomatoes.movieapi.domain.repository.movie;
+package com.rottentomatoes.movieapi.domain.repository.vanity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,16 +7,16 @@ import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import org.springframework.stereotype.Component;
 
-import com.rottentomatoes.movieapi.domain.model.VanityToken;
+import com.rottentomatoes.movieapi.domain.model.MovieVanityToken;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
 @Component
-public class MovieVanityTokenRepository extends AbstractRepository implements ResourceRepository<VanityToken, String> {
+public class MovieVanityTokenRepository extends AbstractRepository implements ResourceRepository<MovieVanityToken, String> {
 
     @Override
-    public <S extends VanityToken> S save(S entity) {
+    public <S extends MovieVanityToken> S save(S entity) {
         return null;
     }
 
@@ -25,21 +25,21 @@ public class MovieVanityTokenRepository extends AbstractRepository implements Re
     }
 
     @Override
-    public VanityToken findOne(String vanityToken, RequestParams requestParams) {
+    public MovieVanityToken findOne(String vanityToken, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        VanityToken token = (VanityToken) emsClient.callEmsEntity(selectParams, "vanity-token", vanityToken, VanityToken.class);
+        MovieVanityToken token = (MovieVanityToken) emsClient.callEmsEntity(selectParams, "vanity-token", vanityToken, MovieVanityToken.class);
         return token;
     }
 
     @Override
 
-    public Iterable<VanityToken> findAll(RequestParams requestParams) {
+    public Iterable<MovieVanityToken> findAll(RequestParams requestParams) {
         return null;
     }
 
     @Override
-    public Iterable<VanityToken> findAll(Iterable<String> ids, RequestParams requestParams) {
+    public Iterable<MovieVanityToken> findAll(Iterable<String> ids, RequestParams requestParams) {
         // TODO Auto-generated method stub
         return null;
     }
