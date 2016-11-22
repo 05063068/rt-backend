@@ -3,6 +3,7 @@
 * Added category filter for movie to reviews relationship.
 * Reordered packaging in the repository directory to make it cleaner.
 * Added relationships for images, video, reviews, and cast for both tv episodes and seasons
+* Default to US internally for all requests for country code 'ca' (Canada) 
 
 ## V2.2 Release Notes
 
