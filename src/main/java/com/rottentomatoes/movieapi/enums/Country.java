@@ -22,13 +22,12 @@ public enum Country {
             case "uk":
                 return UNITED_KINGDOM;
             case "us":
+            case "ca": // Canada is using US data as of 11/22/2016 for all objects.
                 return UNITED_STATES;
             case "nz":
                 return NEW_ZEALAND;
             case "au":
                 return AUSTRALIA;
-            case "ca":
-                return CANADA;
             case "ie":
                 return IRELAND;
             default:
