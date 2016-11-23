@@ -9,6 +9,7 @@ import com.rottentomatoes.movieapi.domain.model.ReviewInfo;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
 import com.rottentomatoes.movieapi.domain.model.TvSeason;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.response.MetaDataEnabledList;
@@ -44,9 +45,9 @@ public class TvSeasonToReviewInfoRepository extends AbstractRepository implement
     @Override
     public ReviewInfo findOneTarget(String tvSeasonId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit(fieldName, requestParams));
-        selectParams.put("offset", getOffset(fieldName, requestParams));
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map jsonResponse = (Map) emsClient.callEmsEntity(selectParams, "tv/season", tvSeasonId + "/review", Map.class);

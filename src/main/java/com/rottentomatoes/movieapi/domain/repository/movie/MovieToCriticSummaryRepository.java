@@ -4,6 +4,7 @@ import com.rottentomatoes.movieapi.domain.model.CriticSummary;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,7 @@ public class MovieToCriticSummaryRepository extends AbstractRepository implement
     @Override
     public CriticSummary findOneTarget(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
             selectParams.put(CRITIC_TYPE, TOP_CRITICS);

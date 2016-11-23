@@ -74,9 +74,9 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         EmsClient emsClient = emsRouter.fetchEmsClientForPath(listId);
         EmsClient emsHydrationClient = emsRouter.fetchEmsClientForEndpoint(MovieRepository.class);
 
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         switch (listId) {
             case "top-box-office":
@@ -139,7 +139,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         Map<String, Object> selectParams = new HashMap<>();
         EmsClient emsClient;
 
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         switch ((String) castedResourceId) {
             case "top-box-office":

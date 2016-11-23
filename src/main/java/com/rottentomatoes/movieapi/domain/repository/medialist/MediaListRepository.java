@@ -5,6 +5,7 @@ import com.rottentomatoes.movieapi.domain.model.MediaList;
 
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
@@ -21,7 +22,7 @@ public class MediaListRepository extends AbstractRepository implements ResourceR
     public MediaList findOne(String id, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         MediaList mediaList = (MediaList)emsClient.callEmsEntity(selectParams, "media-list", id, MediaList.class);
@@ -32,9 +33,9 @@ public class MediaListRepository extends AbstractRepository implements ResourceR
     public Iterable<MediaList> findAll(RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<MediaList> mediaLists = (List<MediaList>)emsClient.callEmsList(selectParams, "media-list", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  MediaList.class));

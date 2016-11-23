@@ -8,6 +8,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
@@ -53,8 +54,8 @@ public class MovieToAudienceReviewRepository extends AbstractRepository implemen
         MetaDataEnabledList<AudienceReview> reviewList = null;
 
         selectParams.put("movie_id", movieId);
-        selectParams.put("limit", getLimit(fieldName, requestParams));
-        selectParams.put("offset", getOffset(fieldName, requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
           EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
           List<AudienceReview> rawReviewList = (List<AudienceReview>)emsClient.callEmsList(selectParams, "movie", movieId + "/audience-review", TypeFactory.defaultInstance().constructCollectionType(List.class,  AudienceReview.class));

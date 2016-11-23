@@ -4,6 +4,7 @@ import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieSupplementaryInfo;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import com.rottentomatoes.movieapi.utils.SqlParameterUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
@@ -79,7 +80,7 @@ public class MovieToMovieSupplementaryInfoRepository extends AbstractRepository 
         selectParams.put("upcomingDvdDate", upcomingDvdDate);
         selectParams.put("newDvdDate", newDvdDate);
         selectParams.put("onDvdDate", onDvdDate);
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
         SqlParameterUtils.setTopBoxOfficeParams(selectParams);
     }
 }

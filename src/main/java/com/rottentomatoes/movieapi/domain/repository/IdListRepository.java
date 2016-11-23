@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.IdList;
@@ -46,8 +47,8 @@ public class IdListRepository extends AbstractRepository implements ResourceRepo
                 }
 
                 String fieldName = "ids"; // Pass in idsLimit, idsOffset
-                selectParams.put("limit", getLimit(fieldName, requestParams));
-                selectParams.put("offset", getOffset(fieldName, requestParams));
+                selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+                selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
                 selectParams.put("minReviews", minReviews);
                 selectParams.put("minRatings", minRatings);
                 EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());

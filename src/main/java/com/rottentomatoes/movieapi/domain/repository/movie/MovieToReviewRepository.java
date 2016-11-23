@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -56,9 +57,9 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
         MetaDataEnabledList<Review> reviewList = null;
 
         selectParams.put("movie_id", movieId);
-        selectParams.put("limit", getLimit(fieldName, requestParams));
-        selectParams.put("offset", getOffset(fieldName, requestParams));
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         // Accepted category filter values are: 'theatrical', 'dvd' or 'quick'
         if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("category")) {
@@ -77,7 +78,7 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         RelatedMetaDataInformation metaData = null;

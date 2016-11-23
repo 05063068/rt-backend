@@ -6,6 +6,7 @@ import com.rottentomatoes.movieapi.domain.model.Critic;
 import com.rottentomatoes.movieapi.domain.model.Review;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
@@ -65,8 +66,8 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
             }
         }
 
-        selectParams.put("limit", getLimit(fieldName, requestParams));
-        selectParams.put("offset", getOffset(fieldName, requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         return (Iterable<Review>) emsClient.callEmsList(selectParams, "critic", criticId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));

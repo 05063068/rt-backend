@@ -6,6 +6,7 @@ import com.rottentomatoes.movieapi.domain.model.Publication;
 import com.rottentomatoes.movieapi.domain.model.Review;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
@@ -49,8 +50,8 @@ public class PublicationToReviewRepository extends AbstractRepository implements
     @Override
     public Iterable<Review> findManyTargets(String publicationId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit(fieldName, requestParams));
-        selectParams.put("offset", getOffset(fieldName, requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<Review> reviewList = (List<Review>)emsClient.callEmsList(selectParams, "publication", publicationId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Review.class));

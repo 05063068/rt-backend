@@ -6,6 +6,7 @@ import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
 import com.rottentomatoes.movieapi.domain.model.VideoClip;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
@@ -50,8 +51,8 @@ public class TvEpisodeToVideoClipRepository extends AbstractRepository implement
     @Override
     public MetaDataEnabledList<VideoClip> findManyTargets(String tvEpisodeId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit(fieldName, requestParams));
-        selectParams.put("offset", getOffset(fieldName, requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<VideoClip> rawVideoClipList = (List<VideoClip>)emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId + "/videos", TypeFactory.defaultInstance().constructCollectionType(List.class,  VideoClip.class));

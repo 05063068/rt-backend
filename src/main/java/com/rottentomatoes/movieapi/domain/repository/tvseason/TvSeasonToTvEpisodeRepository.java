@@ -4,6 +4,7 @@ package com.rottentomatoes.movieapi.domain.repository.tvseason;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
@@ -42,7 +43,8 @@ public class TvSeasonToTvEpisodeRepository extends AbstractRepository implements
     public Iterable<TvEpisode> findManyTargets(String tvSeasonId, String fieldName,
             RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<String, Object>();
-        selectParams.put("limit", getLimit(fieldName, requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<TvEpisode> tvEpisodeList = (List<TvEpisode>) emsClient.callEmsIdList(selectParams, "tv/season", tvSeasonId + "/episode", "tv/episode",

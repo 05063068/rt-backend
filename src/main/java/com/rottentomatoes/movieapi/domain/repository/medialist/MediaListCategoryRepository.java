@@ -5,6 +5,7 @@ import com.rottentomatoes.movieapi.domain.model.MediaListCategory;
 
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
@@ -22,8 +23,8 @@ public class MediaListCategoryRepository extends AbstractRepository implements R
     public MediaListCategory findOne(String mediaCategoryId, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
         selectParams.put("id", mediaCategoryId);
 
         // At the point of creation "LIV" was only distinct status in the table so we default to live.
@@ -39,8 +40,8 @@ public class MediaListCategoryRepository extends AbstractRepository implements R
     public Iterable<MediaListCategory> findAll(RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
 
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
 
         // At the point of creation "LIV" was only distinct status in the table so we default to live.
         selectParams.put("status", LIVE_STATUS);
