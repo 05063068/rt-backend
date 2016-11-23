@@ -3,6 +3,7 @@ package com.rottentomatoes.movieapi.domain.repository.medialist;
 import com.rottentomatoes.movieapi.domain.model.MediaListItem;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 import org.springframework.stereotype.Component;
@@ -17,9 +18,9 @@ public class MediaListItemRepository extends AbstractRepository implements Resou
         Map<String, Object> selectParams = new HashMap<>();
 
         selectParams.put("id", itemId);
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         MediaListItem mediaListItem = (MediaListItem)emsClient.callEmsEntity(selectParams, "media-item", itemId, MediaListItem.class);

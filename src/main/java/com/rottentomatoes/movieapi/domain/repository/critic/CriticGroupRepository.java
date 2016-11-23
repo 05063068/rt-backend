@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.CriticGroup;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 import org.springframework.stereotype.Component;
@@ -39,8 +40,8 @@ public class CriticGroupRepository extends AbstractRepository implements Resourc
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
         List<CriticGroup> criticGroups = (List<CriticGroup>) emsClient.callEmsList(selectParams, "critic-group", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  CriticGroup.class));
         return criticGroups;
 

@@ -5,6 +5,7 @@ import com.rottentomatoes.movieapi.domain.model.Quote;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
@@ -38,8 +39,8 @@ public class MovieToQuoteRepository extends AbstractRepository implements Relati
     @Override
     public Iterable<Quote> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit(fieldName, requestParams));
-        selectParams.put("offset", getOffset(fieldName, requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Iterable<Quote> quotes = (Iterable<Quote>) emsClient.callEmsList(selectParams, "movie", movieId + "/quote", TypeFactory.defaultInstance().constructCollectionType(List.class,  Quote.class));

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.TvSeason;
@@ -43,7 +44,8 @@ public class TvSeriesToTvSeasonRepository extends AbstractRepository implements 
     @Override
     public Iterable<TvSeason> findManyTargets(String tvSeriesId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit(fieldName, requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<String> tvSeasonIds = (List<String>) emsClient.callEmsList(selectParams, "tv/series", tvSeriesId + "/season",

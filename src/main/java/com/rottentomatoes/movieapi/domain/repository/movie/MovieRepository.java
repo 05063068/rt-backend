@@ -77,7 +77,7 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
             }
 
             //  Hydrate results
-            selectParams.put("country", getCountry(requestParams).getCountryCode());
+            selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
             if (movieIds.size() > 0) {
                 movies = new MetaDataEnabledList<>((List<Movie>) emsClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class)));
                 movies.setMetaInformation(loadSearchMeta(json, requestParams));

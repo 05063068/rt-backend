@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.util.HashMap;
 
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Review;
@@ -39,8 +40,8 @@ public class ReviewRepository extends AbstractRepository implements ResourceRepo
     public Iterable<Review> findAll(RequestParams requestParams) {
         // Return list of all reviews, latest first
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
 
         // Accepted category filter values are: 'theatrical', 'dvd' or 'quick'
         if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("category")) {

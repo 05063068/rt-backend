@@ -6,6 +6,7 @@ import com.rottentomatoes.movieapi.domain.model.PromoSection;
 
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 
@@ -44,7 +45,7 @@ public class PromoSectionToPromoItemRepository extends AbstractRepository implem
     @Override
     public Iterable<PromoItem> findManyTargets(String promoSectionId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("country", getCountry(requestParams).getCountryCode());
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<PromoItem> promoItems = (List<PromoItem>) emsClient.callEmsList(selectParams, "promo-item", promoSectionId + "/item/", TypeFactory.defaultInstance().constructCollectionType(List.class,  PromoItem.class));

@@ -7,6 +7,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Genre;
@@ -42,7 +43,7 @@ public class MovieToGenreRepository extends AbstractRepository implements Relati
     @Override
     public Iterable<Genre> findManyTargets(String movieId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit(fieldName, requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<Genre> genreList = (List<Genre>)emsClient.callEmsList(selectParams, "movie", movieId + "/genre", TypeFactory.defaultInstance().constructCollectionType(List.class,  Genre.class));

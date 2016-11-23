@@ -8,6 +8,7 @@ import com.rottentomatoes.movieapi.domain.model.Critic;
 
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import com.rottentomatoes.movieapi.utils.SearchUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
@@ -96,8 +97,8 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
                 if (requestParams.getFilters().containsKey("tmApproved")) {
                     selectParams.put("tmApproved", requestParams.getFilters().get("tmApproved"));
                 }
-                selectParams.put("limit", getLimit("", requestParams));
-                selectParams.put("offset", getOffset("", requestParams));
+                selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
+                selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
 
                 critics = new MetaDataEnabledList<>((List<Critic>) emsClient.callEmsList(selectParams, "critic", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Critic.class)));
                 critics.setMetaInformation((RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", "/meta", RelatedMetaDataInformation.class));
