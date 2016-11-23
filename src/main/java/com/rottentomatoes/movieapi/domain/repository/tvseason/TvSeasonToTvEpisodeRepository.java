@@ -48,7 +48,7 @@ public class TvSeasonToTvEpisodeRepository extends AbstractRepository implements
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<TvEpisode> tvEpisodeList = (List<TvEpisode>) emsClient.callEmsIdList(selectParams, "tv/season", tvSeasonId + "/episode", "tv/episode",
-                TypeFactory.defaultInstance().constructCollectionType(List.class,  TvEpisode.class));
+                TypeFactory.defaultInstance().constructCollectionType(List.class, TvEpisode.class));
         return tvEpisodeList;
     }
 }
