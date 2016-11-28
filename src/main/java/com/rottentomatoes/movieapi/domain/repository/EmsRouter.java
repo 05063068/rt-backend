@@ -51,6 +51,7 @@ public class EmsRouter {
             // TV Series
             "TvSeriesRepository",
             "TvSeriesToFranchiseRepository",
+            "TvSeriesToTvEpisodeRepository",
             "TvSeriesToImageRepository",
             "TvSeriesToVideoClipRepository",
             "TvSeriesToPersonnelRepository",

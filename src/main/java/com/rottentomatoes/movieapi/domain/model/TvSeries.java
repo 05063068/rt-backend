@@ -45,6 +45,21 @@ public class TvSeries extends AbstractModel {
     @JsonApiToOne
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
+    protected TvEpisode firstEpisode;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected TvEpisode lastEpisode;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected TvEpisode nextEpisode;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
     protected Personnel tvPersonnel;
 
     @JsonApiToMany
