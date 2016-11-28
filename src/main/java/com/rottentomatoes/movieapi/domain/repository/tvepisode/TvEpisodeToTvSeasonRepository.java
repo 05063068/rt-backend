@@ -42,7 +42,7 @@ public class TvEpisodeToTvSeasonRepository extends AbstractRepository implements
     public TvSeason findOneTarget(String tvEpisodeId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        List<TvSeason> seasonList = (List<TvSeason>) emsClient.callEmsIdList(selectParams, "tv/episode", tvEpisodeId + "/season", "tv/season",
+        List<TvSeason> seasonList = (List<TvSeason>) emsClient.callEmsIdList(selectParams, "tv/episode", tvEpisodeId + "/season", "tv/",
                 TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeason.class));
 
         // Necessary because endpoint returns a list of 1 element

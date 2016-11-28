@@ -78,4 +78,9 @@ public class TvSeason extends AbstractModel {
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected MetaDataEnabledList<VideoClip> videoClips;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected TopTomatometer topTomatometer;
 }
