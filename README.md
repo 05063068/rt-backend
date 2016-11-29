@@ -7,6 +7,7 @@
 * Added vanity endpoints for tv episodes, seasons, and series
 * Added relationships for images, video, and cast for tv series
 * TopTomatometer for tvSeries and tvSeasons
+* Added relationships for first, last, and  next episodes for tv series
 
 ## V2.2 Release Notes
 
