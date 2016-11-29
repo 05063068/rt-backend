@@ -10,9 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TopTomatometer extends AbstractModel {
-    protected String numReviews;
-    protected String freshCount;
-    protected String rottenCount;
+    protected Integer numReviews;
+    protected Integer freshCount;
+    protected Integer rottenCount;
     protected String tomatometer;
     protected String averageScore;
     protected String episodesWithScore;

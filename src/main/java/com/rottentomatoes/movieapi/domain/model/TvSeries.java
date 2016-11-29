@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Map;
 
 @JsonApiResource(type = "tvSeries")
@@ -57,4 +56,10 @@ public class TvSeries extends AbstractModel {
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected MetaDataEnabledList<VideoClip> videoClips;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected TopTomatometer topTomatometer;
 }
+

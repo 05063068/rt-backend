@@ -54,6 +54,7 @@ public class EmsRouter {
             "TvSeriesToImageRepository",
             "TvSeriesToVideoClipRepository",
             "TvSeriesToPersonnelRepository",
+            "TvSeriesToTopTomatometerRepository",
             // Franchise
             "FranchiseRepository");
     private static final List<String> TV_EMS_PATHS = Arrays.asList(

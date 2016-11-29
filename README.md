@@ -6,6 +6,7 @@
 * Default to US internally for all requests for country code 'ca' (Canada)
 * Added vanity endpoints for tv episodes, seasons, and series
 * Added relationships for images, video, and cast for tv series
+* TopTomatometer for tvSeries and tvSeasons
 
 ## V2.2 Release Notes
 
