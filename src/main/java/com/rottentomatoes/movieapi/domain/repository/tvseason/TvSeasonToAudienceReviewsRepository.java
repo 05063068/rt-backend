@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
+import com.rottentomatoes.movieapi.utils.StringSanitizationUtils;
 
 import org.springframework.stereotype.Component;
 
@@ -56,6 +57,7 @@ public class TvSeasonToAudienceReviewsRepository extends AbstractRepository impl
 
           EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
           List<TvAudienceReview> rawReviewList = (List<TvAudienceReview>)emsClient.callEmsList(selectParams, "tv/season", tvSeasonId + "/audience-reviews", TypeFactory.defaultInstance().constructCollectionType(List.class,  TvAudienceReview.class));
+          StringSanitizationUtils.sanitizeTvAudienceReviews(rawReviewList);
           reviewList = new MetaDataEnabledList(rawReviewList);
 
           return reviewList;

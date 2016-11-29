@@ -25,7 +25,7 @@ public class TvAudienceReview extends AbstractModel {
     public Boolean elite;
     public String mediaType;
     public Integer mediaId;
-    public Integer score;
+    public Double score;
     public String comment;
     public Integer commentLength;
     @JsonDeserialize(using = DeSerializeZonedDateTime.class)
