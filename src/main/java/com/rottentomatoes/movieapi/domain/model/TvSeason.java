@@ -37,11 +37,17 @@ public class TvSeason extends AbstractModel {
     protected Map<String, Object> posterImage;
     protected Map<String, Object> heroImage;
     protected Map<String, Object> mainTrailer;
+    protected Map<String, Object> tvRatingSummary;
 
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected Iterable<TvEpisode> tvEpisodes;
+    
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<TvAudienceReview> audienceReviews;
 
     @JsonApiToOne
     @JsonApiLazy
