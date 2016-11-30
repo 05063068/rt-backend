@@ -8,6 +8,7 @@
 * Added relationships for images, video, and cast for tv series
 * TopTomatometer for tvSeries and tvSeasons
 * Added relationships for first, last, and  next episodes for tv series
+* Added list of seasons for tv series
 
 ## V2.2 Release Notes
 
