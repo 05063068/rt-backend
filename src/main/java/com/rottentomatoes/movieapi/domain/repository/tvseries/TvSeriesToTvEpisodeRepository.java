@@ -40,13 +40,15 @@ public class TvSeriesToTvEpisodeRepository extends AbstractRepository implements
         Map tvEpisodes = (Map) emsClient.callEmsEntity(selectParams, "tv/series", id + "/episode-info", Map.class);
 
         if (tvEpisodes != null && tvEpisodes.containsKey(fieldName)) {
-            String tvEpisodeId = (String) tvEpisodes.get(fieldName);
-            List<TvEpisode> episodes = (List<TvEpisode>) emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId,
-                    TypeFactory.defaultInstance().constructCollectionType(List.class, TvEpisode.class));
+            String tvEpisodeId = Integer.toString((Integer) tvEpisodes.get(fieldName));
+            if (tvEpisodeId != null) {
+                List<TvEpisode> episodes = (List<TvEpisode>) emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId,
+                        TypeFactory.defaultInstance().constructCollectionType(List.class, TvEpisode.class));
 
-            // Necessary because endpoint returns a list of 1 element
-            if (episodes != null && episodes.size() > 0) {
-                return episodes.get(0);
+                // Necessary because endpoint returns a list of 1 element
+                if (episodes != null && episodes.size() > 0) {
+                    return episodes.get(0);
+                }
             }
         }
         return null;
