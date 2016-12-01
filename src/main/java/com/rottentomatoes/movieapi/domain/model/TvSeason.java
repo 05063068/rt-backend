@@ -19,8 +19,9 @@ public class TvSeason extends AbstractModel {
     protected String title;
     protected String vanityUrl;
 
-    protected String seasonNumber;
-    protected String tvSeriesId;
+    protected int seasonNumber;
+    protected int episodeCount;
+    protected Long tvSeriesId;
     protected String network;
     protected String genre;
     protected String description;
