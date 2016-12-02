@@ -65,9 +65,20 @@ public class TvSeriesToVideoClipRepository extends AbstractRepository implements
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/series", castedResourceId + "/videos/meta", RelatedMetaDataInformation.class);
-        if (metaData != null && root instanceof RelationshipRepository) {
-            metaData.setRequestParams(requestParams);
+
+//        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/series", castedResourceId + "/videos/meta", RelatedMetaDataInformation.class);
+//        if (metaData != null && root instanceof RelationshipRepository) {
+//            metaData.setRequestParams(requestParams);
+//        }
+
+        List<VideoClip> rawVideoClipList = (List<VideoClip>)emsClient.callEmsList(selectParams, "tv/series", castedResourceId + "/videos", TypeFactory.defaultInstance().constructCollectionType(List.class,  VideoClip.class));
+        RelatedMetaDataInformation metaData = null;
+        if (rawVideoClipList != null) {
+            metaData = new RelatedMetaDataInformation();
+            metaData.setTotalCount(rawVideoClipList.size());
+            if (root instanceof RelationshipRepository) {
+                metaData.setRequestParams(requestParams);
+            }
         }
 
         return metaData;

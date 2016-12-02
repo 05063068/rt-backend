@@ -70,10 +70,22 @@ public class TvSeasonToImageRepository extends AbstractRepository implements Rel
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/season", castedResourceId + "/images/meta", RelatedMetaDataInformation.class);
-        if (metaData != null && root instanceof RelationshipRepository) {
-            metaData.setRequestParams(requestParams);
+
+//        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/season", castedResourceId + "/images/meta", RelatedMetaDataInformation.class);
+//        if (metaData != null && root instanceof RelationshipRepository) {
+//            metaData.setRequestParams(requestParams);
+//        }
+
+        List<Image> rawImageList = (List<Image>)emsClient.callEmsList(selectParams, "tv/season", castedResourceId + "/images", TypeFactory.defaultInstance().constructCollectionType(List.class,  Image.class));
+        RelatedMetaDataInformation metaData = null;
+        if (rawImageList != null) {
+            metaData = new RelatedMetaDataInformation();
+            metaData.setTotalCount(rawImageList.size());
+            if (root instanceof RelationshipRepository) {
+                metaData.setRequestParams(requestParams);
+            }
         }
+
         return metaData;
     }
 }

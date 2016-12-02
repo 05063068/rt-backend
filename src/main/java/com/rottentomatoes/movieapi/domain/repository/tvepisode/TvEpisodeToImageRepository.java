@@ -5,6 +5,7 @@ import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Image;
 import com.rottentomatoes.movieapi.domain.model.TvEpisode;
+import com.rottentomatoes.movieapi.domain.model.VideoClip;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
@@ -60,10 +61,22 @@ public class TvEpisodeToImageRepository extends AbstractRepository implements Re
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/episode", castedResourceId + "/images/meta", RelatedMetaDataInformation.class);
-        if (metaData != null && root instanceof RelationshipRepository) {
-            metaData.setRequestParams(requestParams);
+
+//        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "tv/episode", castedResourceId + "/images/meta", RelatedMetaDataInformation.class);
+//        if (metaData != null && root instanceof RelationshipRepository) {
+//            metaData.setRequestParams(requestParams);
+//        }
+
+        List<Image> rawImageList = (List<Image>)emsClient.callEmsList(selectParams, "tv/episode", castedResourceId + "/images", TypeFactory.defaultInstance().constructCollectionType(List.class,  Image.class));
+        RelatedMetaDataInformation metaData = null;
+        if (rawImageList != null) {
+            metaData = new RelatedMetaDataInformation();
+            metaData.setTotalCount(rawImageList.size());
+            if (root instanceof RelationshipRepository) {
+                metaData.setRequestParams(requestParams);
+            }
         }
+
         return metaData;
     }
 }
