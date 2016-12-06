@@ -66,12 +66,13 @@ public class MovieRepository extends AbstractRepository implements ResourceRepos
 
             if (requestParams.getFilters().get("search") instanceof Map) {
                 json = SearchUtils.callSearchService("movies", requestParams);
-                ArrayNode resultArr = (ArrayNode) json.path("results");
-                movieIds = new ArrayList<>();
-                for (JsonNode movie : resultArr) {
-                    movieIds.add(Long.parseLong(movie.path("id").textValue()));
+                if (json != null) {
+                    ArrayNode resultArr = (ArrayNode) json.path("results");
+                    for (JsonNode movie : resultArr) {
+                        movieIds.add(Long.parseLong(movie.path("id").textValue()));
+                    }
+                    selectParams.put("ids", StringUtils.join(movieIds, ","));
                 }
-                selectParams.put("ids", StringUtils.join(movieIds, ","));
             } else {
                 throw new IllegalArgumentException("Invalid search query.");
             }

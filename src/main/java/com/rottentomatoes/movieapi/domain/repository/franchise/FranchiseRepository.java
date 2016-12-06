@@ -55,11 +55,11 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
 
             if (requestParams.getFilters().get("search") instanceof Map) {
                 json = SearchUtils.callSearchService("franchises", requestParams);
-
-                ArrayNode resultArr = (ArrayNode) json.path("results");
-                franchiseIds = new ArrayList<>();
-                for (JsonNode movie : resultArr) {
-                    franchiseIds.add(Long.parseLong(movie.path("id").textValue()));
+                if (json != null) {
+                    ArrayNode resultArr = (ArrayNode) json.path("results");
+                    for (JsonNode movie : resultArr) {
+                        franchiseIds.add(Long.parseLong(movie.path("id").textValue()));
+                    }
                 }
             } else {
                 throw new IllegalArgumentException("Invalid search query.");

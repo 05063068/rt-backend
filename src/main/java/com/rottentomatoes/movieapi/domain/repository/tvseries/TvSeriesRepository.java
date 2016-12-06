@@ -65,13 +65,14 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
 
             if (requestParams.getFilters().get("search") instanceof Map) {
                 json = SearchUtils.callSearchService("tv-series", requestParams);
-
-                ArrayNode resultArr = (ArrayNode) json.path("results");
                 tvSeriesIds = new ArrayList<>();
-                for (JsonNode movie : resultArr) {
-                    tvSeriesIds.add(Long.parseLong(movie.path("id").textValue()));
+                if (json != null) {
+                    ArrayNode resultArr = (ArrayNode) json.path("results");
+                    for (JsonNode movie : resultArr) {
+                        tvSeriesIds.add(Long.parseLong(movie.path("id").textValue()));
+                    }
+                    selectParams.put("ids", StringUtils.join(tvSeriesIds, ","));
                 }
-                selectParams.put("ids", StringUtils.join(tvSeriesIds,","));
             }
             else {
                 throw new IllegalArgumentException("Invalid search query.");

@@ -53,13 +53,14 @@ public class PersonRepository extends AbstractRepository implements ResourceRepo
 
             if(requestParams.getFilters().get("search") instanceof Map){
                 json = SearchUtils.callSearchService("actors", requestParams);
-
-                ArrayNode resultArr = (ArrayNode) json.path("results");
                 personIds = new ArrayList<>();
-                for (JsonNode movie : resultArr) {
-                    personIds.add(Long.parseLong(movie.path("id").textValue()));
+                if (json != null) {
+                    ArrayNode resultArr = (ArrayNode) json.path("results");
+                    for (JsonNode movie : resultArr) {
+                        personIds.add(Long.parseLong(movie.path("id").textValue()));
+                    }
+                    selectParams.put("ids", StringUtils.join(personIds, ","));
                 }
-                selectParams.put("ids", StringUtils.join(personIds,","));
             }
             else{
                 throw new IllegalArgumentException("Invalid search query.");
