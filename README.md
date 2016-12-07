@@ -1,4 +1,7 @@
 # Catalog API/RT Backend
+## V2.4 Release Notes
+* Fixed sorting of movie top lists.
+
 ## V2.3 Release Notes
 * Added category filter for movie to reviews relationship.
 * Reordered packaging in the repository directory to make it cleaner.
