@@ -3,9 +3,7 @@ package com.rottentomatoes.movieapi.domain.repository.movie;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -61,7 +59,13 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                     .collect(Collectors.toList());
             selectParams.put("ids", String.join(",", idList));
             // hydrate list using pre-ems endpoint
-            return (List<Movie>) emsHydrationClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+            List movies = (List<Movie>) emsHydrationClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+
+            // Assure the movie order is .
+            Collections.sort(movies,
+                    Comparator.comparing(item -> movieIds.indexOf(Integer.parseInt(((Movie)item).getId()))));
+
+            return movies;
         }
         return null;
 
