@@ -61,7 +61,7 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
             // hydrate list using pre-ems endpoint
             List movies = (List<Movie>) emsHydrationClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
-            // Assure the movie order is .
+            // Assure the movie order is returned to intended order which is set by the movie id list.
             Collections.sort(movies,
                     Comparator.comparing(item -> movieIds.indexOf(Integer.parseInt(((Movie)item).getId()))));
 
