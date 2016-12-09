@@ -1,5 +1,17 @@
 package com.rottentomatoes.movieapi.domain.ems;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,18 +20,10 @@ import com.fasterxml.jackson.databind.cfg.MapperConfig;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
 
 public abstract class EmsClient<T> {
 
@@ -30,6 +34,11 @@ public abstract class EmsClient<T> {
         this.emsRouter = config;
         this.hostUrl = hostUrl;
     }
+
+    private static final Cache<String, Object> localCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .maximumSize(1000)
+            .build();
 
     public T callEmsEntity(Map<String, Object> selectParams, String pathBase, String id, Class c) {
         return callEmsCommon(selectParams, pathBase, id, constructJsonEntityDecoder(c));
@@ -48,6 +57,7 @@ public abstract class EmsClient<T> {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     protected T callEmsCommon(Map<String, Object> selectParams, String pathBase, String id, JsonDecoder jsonDecoder) {
         T jsonResult = null;
         id = (id == null) ? "" : id;
@@ -60,8 +70,12 @@ public abstract class EmsClient<T> {
                 params.add(p, selectParams.get(p).toString().replaceAll("%", "%25").replaceAll(" ", "%20").replaceAll("&", "%26"));
             }
             String urlString = UriComponentsBuilder.fromUriString(constructUrl(pathBase, id)).queryParams(params).build(true).toString();
-            URL url = new URL(urlString);
-            jsonResult = jsonDecoder.doDecode(url);
+            jsonResult = (T) localCache.getIfPresent(urlString);
+            if (jsonResult == null) {
+                URL url = new URL(urlString);
+                jsonResult = jsonDecoder.doDecode(url);
+                localCache.put(urlString, jsonResult);
+            }
         } catch (MalformedURLException mue) {
             emsRouter.log("Malformed URL: ", mue);
         } catch (JsonMappingException | JsonParseException jme) {
