@@ -40,7 +40,15 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        return (Franchise) emsClient.callEmsEntity(selectParams, "franchise", id, Franchise.class);
+        List<Franchise> franchises = (List<Franchise>) emsClient.callEmsList(selectParams,
+                "franchise", id,
+                TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class));
+
+        // Necessary because endpoint returns a list of 1 element
+        if (franchises != null && franchises.size() > 0) {
+            return franchises.get(0);
+        }
+        return null;
     }
 
     @Override
