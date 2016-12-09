@@ -80,6 +80,11 @@ public class MovieToReviewRepository extends AbstractRepository implements Relat
 
         selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
+        // Accepted category filter values are: 'theatrical', 'dvd' or 'quick'
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("category")) {
+            selectParams.put("category", requestParams.getFilters().get("category"));
+        }
+
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         RelatedMetaDataInformation metaData = null;
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey(CRITIC_TYPE) && ((String) requestParams.getFilters().get(CRITIC_TYPE)).equalsIgnoreCase(TOP_CRITICS)) {
