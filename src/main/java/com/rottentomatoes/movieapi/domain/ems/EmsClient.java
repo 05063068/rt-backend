@@ -37,7 +37,7 @@ public abstract class EmsClient<T> {
 
     private static final Cache<String, Object> localCache = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
-            .maximumSize(1000)
+            .maximumSize(5000)
             .build();
 
     public T callEmsEntity(Map<String, Object> selectParams, String pathBase, String id, Class c) {
