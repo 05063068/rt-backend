@@ -30,4 +30,14 @@ public class Person extends AbstractModel {
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected Iterable<TvFilmographyItem> tvFilmography;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Image> images;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Quote> quotes;
 }
