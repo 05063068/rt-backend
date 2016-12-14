@@ -46,6 +46,9 @@ public class TvSeriesToTvSeasonRepository extends AbstractRepository implements 
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
         selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
+        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey("order")) {
+            selectParams.put("order", requestParams.getFilters().get("order"));
+        }
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         List<String> tvSeasonIds = (List<String>) emsClient.callEmsList(selectParams, "tv/series", tvSeriesId + "/season",
