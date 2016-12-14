@@ -29,6 +29,16 @@ public class Person extends AbstractModel {
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
+    protected Iterable<MovieFilmographyItem> highestRated;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<MovieFilmographyItem> lowestRated;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
     protected Iterable<TvFilmographyItem> tvFilmography;
 
     @JsonApiToMany

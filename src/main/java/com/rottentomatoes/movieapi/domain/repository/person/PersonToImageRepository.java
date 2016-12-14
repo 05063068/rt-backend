@@ -61,7 +61,7 @@ public class PersonToImageRepository extends AbstractRepository implements Relat
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", castedResourceId + "/image/meta", RelatedMetaDataInformation.class);
+        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "person", castedResourceId + "/image/meta", RelatedMetaDataInformation.class);
         if (root instanceof RelationshipRepository) {
             metaData.setRequestParams(requestParams);
         }
