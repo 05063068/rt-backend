@@ -5,6 +5,7 @@ import com.rottentomatoes.movieapi.domain.model.Person;
 import com.rottentomatoes.movieapi.domain.model.MovieFilmographyItem;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
 import org.springframework.stereotype.Component;
@@ -43,11 +44,18 @@ public class PersonToMovieFilmographyItemRepository extends AbstractRepository i
     }
 
     @Override
-    public Iterable<MovieFilmographyItem> findManyTargets(String s, String s2, RequestParams requestParams) {
+    public Iterable<MovieFilmographyItem> findManyTargets(String personId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
+        if (fieldName.equals("highestRated")) {
+            selectParams.put("sort", "highest");
+        } else if (fieldName.equals("lowestRated")) {
+            selectParams.put("sort", "lowest");
+        }
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        List<MovieFilmographyItem> filmography = (List<MovieFilmographyItem>)emsClient.callEmsList(selectParams, "person", s + "/filmography", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieFilmographyItem.class));
+        List<MovieFilmographyItem> filmography = (List<MovieFilmographyItem>)emsClient.callEmsList(selectParams, "person", personId + "/filmography", TypeFactory.defaultInstance().constructCollectionType(List.class,  MovieFilmographyItem.class));
         return filmography;
 
     }

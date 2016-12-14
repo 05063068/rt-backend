@@ -2,6 +2,7 @@
 ## V2.4 Release Notes
 * Fixed sorting of movie top lists.
 * Added quote and image relationships for person
+* Added movieFilmography, highestRated and lowestRated movies for celebrity
 
 ## V2.3 Release Notes
 * Added category filter for movie to reviews relationship.
