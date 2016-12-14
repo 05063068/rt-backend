@@ -20,6 +20,7 @@ public class Critic extends AbstractModel {
     protected String vanity;
     protected String status;
     protected boolean tmApproved;
+    protected boolean topCritic;
     protected Integer agreePercent;
 
     @JsonApiToOne
