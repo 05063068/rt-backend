@@ -89,6 +89,15 @@ public enum MovieCastRole {
         return null;
     }
 
+    public static String getNameByCode(String code) {
+        for (MovieCastRole movieCastRole : MovieCastRole.values()) {
+            if (movieCastRole.getCode().equalsIgnoreCase(code)) {
+                return movieCastRole.getName();
+            }
+        }
+        return null;
+    }
+
     public static boolean isExecutiveProducer(MovieCast cast) {
         return EXECUTIVE_PRODUCER.sameRole(cast);
     }

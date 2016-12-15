@@ -20,6 +20,7 @@ public class TvSeries extends AbstractModel {
     protected String vanityUrl;
 
     protected int startYear;
+    protected int endYear;
     protected Long franchiseId;
     protected String network;
     protected String genre;
