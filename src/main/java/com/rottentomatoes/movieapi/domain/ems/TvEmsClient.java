@@ -76,6 +76,7 @@ public class TvEmsClient<T> extends EmsClient<T> {
             namingMap.put("MovieCast.person", "moviePerson");
             namingMap.put("Person.name", "actorName");
             namingMap.put("Person.mainImage", "preferredImage");
+            namingMap.put("Critic.tmApproved", "approved");
             namingMap.put("Franchise.vanity", "vanityUrl");
         }
 

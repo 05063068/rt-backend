@@ -17,6 +17,7 @@ public class Publication extends AbstractModel {
     protected String name;
     protected String country;
     protected boolean tomatometerApproved;
+    protected boolean topPublication;
 
     // TODO: We should decide which of url or editorialUrl to use and abstract away the distinction so it is plug-and-play for the client
     protected String url;
