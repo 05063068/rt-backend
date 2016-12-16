@@ -27,6 +27,8 @@ import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
 
 public abstract class EmsClient<T> {
 
+    protected static int EMS_ID_LIST_LIMIT = 50;
+
     protected EmsRouter emsRouter;
     protected String hostUrl;
 
@@ -50,11 +52,23 @@ public abstract class EmsClient<T> {
 
     public T callEmsIdList(Map<String, Object> selectParams, String idPathBase, String id, String collectionPathBase, CollectionType collectionType) {
         List<String> idList = (List<String>) callEmsList(selectParams, idPathBase, id, TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+        T result = null;
         if (idList != null && idList.size() > 0) {
-            String ids = StringUtils.join(idList, ",");
-            return callEmsCommon(selectParams, collectionPathBase, ids, constructJsonListDecoder(collectionType));
+            String ids;
+            List tempList;
+            for (int page = 0; page < idList.size(); page += EMS_ID_LIST_LIMIT) {
+                ids = StringUtils.join(idList.subList(page, Math.min(page + EMS_ID_LIST_LIMIT, idList.size())), ",");
+                if (ids != null && !ids.isEmpty()) {
+                    tempList = (List) callEmsCommon(selectParams, collectionPathBase, ids, constructJsonListDecoder(collectionType));
+                    if (result == null) {
+                        result = (T) tempList;
+                    } else if (tempList != null) {
+                        ((List) result).addAll(tempList);
+                    }
+                }
+            }
         }
-        return null;
+        return result;
     }
 
     @SuppressWarnings("unchecked")
