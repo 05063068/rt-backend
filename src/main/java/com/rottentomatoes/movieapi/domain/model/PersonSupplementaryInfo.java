@@ -1,5 +1,6 @@
 package com.rottentomatoes.movieapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
@@ -15,12 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 @JsonApiResource(type = "personSupplementaryInfo")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 public class PersonSupplementaryInfo extends AbstractModel {
 
     protected String summaryBiography;
-    protected String longBiography;
     @JsonDeserialize(using = DeSerializeZonedDateTime.class)
     protected ZonedDateTime dateOfBirth;
     protected String placeOfBirth;
