@@ -20,13 +20,12 @@ public enum Country {
     public static Country getCountryEnumFromString(String country) {
         switch(country.toLowerCase()) {
             case "uk":
-            case "ie":
-                return UNITED_KINGDOM; // Ireland uses UK data as of 12/15/2016.
+            case "ie": // Ireland uses UK data as of 12/15/2016.
+                return UNITED_KINGDOM;
             case "us":
             case "ca": // Canada is using US data as of 11/22/2016 for all objects.
                 return UNITED_STATES;
-            case "nz":
-                return NEW_ZEALAND;
+            case "nz": // New Zealand using Austraila data as of 12/29/2016
             case "au":
                 return AUSTRALIA;
             default:
