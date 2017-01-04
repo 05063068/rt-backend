@@ -7,6 +7,7 @@ import java.util.Map;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Affiliate;
 
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import org.springframework.stereotype.Component;
 
 import io.katharsis.queryParams.RequestParams;
@@ -16,6 +17,8 @@ import io.katharsis.response.MetaInformation;
 
 @Component
 public class AffiliateRepository extends AbstractRepository implements ResourceRepository<Affiliate, String>, MetaRepository<Affiliate> {
+    private EmsClient emsClient;
+
     @Override
     public <S extends Affiliate> S save(S entity) {
         return null;
@@ -32,8 +35,8 @@ public class AffiliateRepository extends AbstractRepository implements ResourceR
         Map<String, Object> selectParams = new HashMap<>();
         String movieId = id.substring(0, id.length() - 2);
 
-        PreEmsClient preEmsClient = new PreEmsClient<Affiliate>(preEmsConfig);
-        Affiliate affiliate = (Affiliate)preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id, Affiliate.class);
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        Affiliate affiliate = (Affiliate)emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id, Affiliate.class);
 
         return affiliate;
     }
@@ -55,8 +58,8 @@ public class AffiliateRepository extends AbstractRepository implements ResourceR
         Map<String, Object> selectParams = new HashMap<>();
         String id = castedResourceId.toString();
         String movieId = id.substring(0, id.length() - 2);
-        PreEmsClient preEmsClient = new PreEmsClient<RootMetaDataInformation>(preEmsConfig);
-        RootMetaDataInformation metaData = (RootMetaDataInformation) preEmsClient.callPreEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        RootMetaDataInformation metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;
     }

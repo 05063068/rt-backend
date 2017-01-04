@@ -1,9 +1,11 @@
 package com.rottentomatoes.movieapi.domain.repository;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.model.Critic;
+
 import java.util.HashMap;
 
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Review;
@@ -11,12 +13,8 @@ import com.rottentomatoes.movieapi.domain.model.Review;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getLimit;
-import static com.rottentomatoes.movieapi.utils.RepositoryUtils.getOffset;
 
 @Component
 public class ReviewRepository extends AbstractRepository implements ResourceRepository<Review, String> {
@@ -33,8 +31,8 @@ public class ReviewRepository extends AbstractRepository implements ResourceRepo
 
     @Override
     public Review findOne(String reviewId, RequestParams requestParams) {
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Review review = (Review) preEmsClient.callPreEmsEntity(new HashMap<String,Object>(), "review", reviewId, Review.class);
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        Review review = (Review) emsClient.callEmsEntity(new HashMap<String,Object>(), "review", reviewId, Review.class);
         return review;
     }
 
@@ -42,16 +40,16 @@ public class ReviewRepository extends AbstractRepository implements ResourceRepo
     public Iterable<Review> findAll(RequestParams requestParams) {
         // Return list of all reviews, latest first
         Map<String, Object> selectParams = new HashMap<>();
-        selectParams.put("limit", getLimit("", requestParams));
-        selectParams.put("offset", getOffset("", requestParams));
+        selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
+        selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
 
         // Accepted category filter values are: 'theatrical', 'dvd' or 'quick'
         if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("category")) {
             selectParams.put("category", requestParams.getFilters().get("category"));
         }
 
-        PreEmsClient preEmsClient = new PreEmsClient<List<Review>>(preEmsConfig);
-        List<Review> reviews = (List<Review>)preEmsClient.callPreEmsList(selectParams, "review", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        List<Review> reviews = (List<Review>)emsClient.callEmsList(selectParams, "review", null, TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
 
         return reviews;
     }

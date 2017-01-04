@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.flixster.image.ImageType;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import org.springframework.stereotype.Component;
 
 import com.rottentomatoes.movieapi.domain.model.Image;
@@ -48,8 +49,8 @@ public class ImageRepository extends AbstractRepository implements ResourceRepos
         selectParams.put("type", imageType);
         selectParams.put("imageTable", imageTable);
 
-        PreEmsClient preEmsClient = new PreEmsClient(preEmsConfig);
-        Image image = (Image) preEmsClient.callPreEmsEntity(selectParams, "image", imageId, Image.class);
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        Image image = (Image) emsClient.callEmsEntity(selectParams, "image", imageId, Image.class);
         return image;
     }
 

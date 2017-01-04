@@ -1,4 +1,24 @@
 # Catalog API/RT Backend
+## V2.4 Release Notes
+* Fixed sorting of movie top lists.
+* Added quote and image relationships for person
+* Added movieFilmography, highestRated and lowestRated movies for celebrity
+* Added tvFilmography for celebrity
+* Added "order" filter for seasons in series, accepting values "asc" or "desc"
+
+## V2.3 Release Notes
+* Added category filter for movie to reviews relationship.
+* Reordered packaging in the repository directory to make it cleaner.
+* Added relationships for images, video, reviews, and cast for both tv episodes and seasons
+* Default to US internally for all requests for country code 'ca' (Canada)
+* Added vanity endpoints for tv episodes, seasons, and series
+* Added relationships for images, video, and cast for tv series
+* TopTomatometer for tvSeries and tvSeasons
+* Added relationships for first, last, and  next episodes for tv series
+* Added list of seasons for tv series
+
+## V2.2 Release Notes
+
 ## V2.1 Release Notes
 * Placeholder note. V2.1 is the Pre-EMS port of V1.2.
 
