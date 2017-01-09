@@ -96,6 +96,15 @@ public class SqlParameterUtils {
         return selectParams;
     }
     
+    public static String getBoxofficeWeek(RequestParams requestParams) {
+        // set parameters specific to this top list
+        if (requestParams.getFilters() != null && requestParams.getFilters().containsKey("box-office-week")) {
+            return "weeks/" + (String) requestParams.getFilters().get("box-office-week");
+        } else {
+            return "";
+        }
+    }
+    
     public static Map<String, Object> setTopForYearParams(Map<String, Object> selectParams, RequestParams requestParams) {
         // set parameters specific to this top list
         if (requestParams.getFilters() != null && requestParams.getFilters().containsKey("year")) {
