@@ -31,6 +31,11 @@ public class Publication extends AbstractModel {
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
+    protected Iterable<Review> tvReviews;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
     protected Iterable<Critic> affiliatedCritics;
 
 }
