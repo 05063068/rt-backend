@@ -17,6 +17,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public class Review extends AbstractModel {
 
     protected Long movieId;
+    protected Integer mediaId;
+    protected String mediaType;
     protected String scoreOri;
     protected String quote;
     protected String url;
