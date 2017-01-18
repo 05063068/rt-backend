@@ -69,6 +69,8 @@ public class TvSeriesToImageRepository extends AbstractRepository implements Rel
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
         Map<String, Object> selectParams = new HashMap<>();
+        // arbitrarily high limit
+        selectParams.put("limit", 10000);
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
 
