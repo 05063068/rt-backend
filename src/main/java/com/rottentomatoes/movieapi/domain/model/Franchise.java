@@ -21,6 +21,7 @@ public class Franchise extends AbstractModel {
     protected String description;
     protected Image mainImage;
     protected Image bannerImage;
+    protected Image heroImage;
 
     protected String topMovieId;
     protected String topTvSeriesId;
