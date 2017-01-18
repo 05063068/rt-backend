@@ -5,6 +5,7 @@ import com.rottentomatoes.movieapi.domain.model.Franchise;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.repository.tvseries.TvSeriesRepository;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
@@ -48,7 +49,7 @@ public class FranchiseToTvSeriesRepository extends AbstractRepository implements
         List<String> tvSeriesIds = (List<String>) emsClient.callEmsList(selectParams, "franchise", franchiseId + "/series",
                 TypeFactory.defaultInstance().constructCollectionType(List.class,  String.class));
 
-        emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        emsClient = emsRouter.fetchEmsClientForEndpoint(TvSeriesRepository.class);
         if (tvSeriesIds != null && tvSeriesIds.size() > 0) {
             String ids = String.join(",", tvSeriesIds);
             List<TvSeries> tvSeriesList = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv/series", ids,

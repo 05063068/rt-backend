@@ -3,16 +3,22 @@ package com.rottentomatoes.movieapi.domain.repository.franchise;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Franchise;
 import com.rottentomatoes.movieapi.domain.model.Movie;
+import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.repository.movie.MovieRepository;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class FranchiseToMovieRepository extends AbstractRepository implements RelationshipRepository<Franchise, String, Movie, String> {
@@ -45,14 +51,19 @@ public class FranchiseToMovieRepository extends AbstractRepository implements Re
         selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        List<String> movieIds = (List<String>) emsClient.callEmsList(selectParams, "franchise", franchiseId + "/movie",
-                TypeFactory.defaultInstance().constructCollectionType(List.class,  String.class));
+        List<String> movieIds = (List<String>) emsClient.callEmsList(selectParams, "franchise", franchiseId + "/movies",
+                TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
 
-        emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        emsClient = emsRouter.fetchEmsClientForEndpoint(MovieRepository.class);
         if (movieIds != null && movieIds.size() > 0) {
-            String ids = String.join(",", movieIds);
-            List<Movie> movieList = (List<Movie>) emsClient.callEmsList(selectParams, "movie", ids,
+            selectParams.put("ids", StringUtils.join(movieIds, ","));
+            List<Movie> movieList = (List<Movie>) emsClient.callEmsList(selectParams, "movie", null,
                     TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+            if (movieList != null && movieList.size() > 0) {
+                Collections.sort(movieList,
+                        Comparator.comparing(item -> movieIds.indexOf(((Movie) item).getId())));
+                Collections.reverse(movieList);
+            }
             return movieList;
         }
         return null;
