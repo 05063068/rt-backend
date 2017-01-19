@@ -66,12 +66,6 @@ public class AffiliateRepository extends AbstractRepository implements ResourceR
 
     @Override
     public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
-        Map<String, Object> selectParams = new HashMap<>();
-        String id = castedResourceId.toString();
-        String movieId = id.substring(0, id.length() - 2);
-        RootMetaDataInformation metaData = new RootMetaDataInformation();
-        metaData.setTotalCount(1);
-        metaData.setRequestParams(requestParams);
-        return metaData;
+         return null;
     }
 }
