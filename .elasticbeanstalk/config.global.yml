@@ -1,5 +1,5 @@
 global:
-  application_name: movie-api
+  application_name: rt-client-facade
   default_ec2_keyname: flx-dev
   default_platform: 64bit Amazon Linux 2015.09 v2.0.8 running Tomcat 8 Java 8
   default_region: us-west-2
