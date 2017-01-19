@@ -6,9 +6,12 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @JsonApiResource(type = "affiliate")
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Affiliate extends AbstractModel {
 
     protected String url;

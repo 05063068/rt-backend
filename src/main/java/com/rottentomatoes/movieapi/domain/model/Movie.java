@@ -51,6 +51,8 @@ public class Movie extends AbstractModel {
             }
         }
     }
+    
+    MovieBoxOfficeInfo movieBoxOfficeInfo;
 
     // relationships
     @JsonApiToOne

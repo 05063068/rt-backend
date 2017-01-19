@@ -41,6 +41,14 @@ public abstract class EmsClient<T> {
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .maximumSize(5000)
             .build();
+    
+    public String getPathBase(String proposedPathBase) {
+        return proposedPathBase;
+    }
+    
+    public String getIdString(String prefix, String id, String suffix) {
+        return prefix + id + suffix;
+    }
 
     public T callEmsEntity(Map<String, Object> selectParams, String pathBase, String id, Class c) {
         return callEmsCommon(selectParams, pathBase, id, constructJsonEntityDecoder(c));

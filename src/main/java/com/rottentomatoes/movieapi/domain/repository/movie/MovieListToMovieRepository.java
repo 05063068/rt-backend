@@ -83,6 +83,11 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         switch (listId) {
+            case "all-box-office":
+                String boxOfficeWeek = SqlParameterUtils.getBoxofficeWeek(requestParams);
+                List<Movie> allBoxofficeMovies = (List<Movie>) emsClient.callEmsList(selectParams, emsClient.getPathBase(listId), 
+                        boxOfficeWeek, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                return allBoxofficeMovies;
             case "top-box-office":
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
                 List<Movie> movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
@@ -146,6 +151,13 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
         selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         switch ((String) castedResourceId) {
+            case "all-box-office":
+                emsClient = emsRouter.fetchEmsClientForPath("all-box-office");
+                String boxOfficeWeek = SqlParameterUtils.getBoxofficeWeek(requestParams);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, emsClient.getPathBase("all-box-office"), 
+                        boxOfficeWeek, RootMetaDataInformation.class);
+                metaData.setRequestParams(requestParams);
+                break;
             case "top-box-office":
                 emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);

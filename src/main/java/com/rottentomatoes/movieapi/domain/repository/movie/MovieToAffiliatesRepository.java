@@ -61,7 +61,8 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        List<Affiliate> all_skus = (List<Affiliate>)emsClient.callEmsList(selectParams, "movie", movieId + "/affiliate", TypeFactory.defaultInstance().constructCollectionType(List.class,  Affiliate.class));
+        List<Affiliate> all_skus = (List<Affiliate>)emsClient.callEmsList(selectParams, emsClient.getPathBase("movie"), 
+                emsClient.getIdString("", movieId, "/affiliate"), TypeFactory.defaultInstance().constructCollectionType(List.class,  Affiliate.class));
 
         List<Affiliate> affiliates = new ArrayList<>();
         List<String> affiliateNames = new ArrayList<>();
@@ -70,6 +71,9 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
             String aName = a.getAffiliateName();
             if (!affiliateNames.contains(aName)) {
                 affiliateNames.add(aName);
+                // set Id to movieId, plus affiliate id
+                String affiliateId = movieId + a.getId().substring(a.getId().length() - 2);
+                a.setId(affiliateId);
                 affiliates.add(a);
             }
         }
@@ -84,7 +88,8 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
         String id = "all";
         Map<String, Object> selectParams = new HashMap<>();
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "movie", movieId + "/affiliate/" + id + "/meta", RootMetaDataInformation.class);
+        metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, emsClient.getPathBase("movie"), 
+                emsClient.getIdString("", movieId, "/affiliate/" + id + "/meta"), RootMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;
     }
