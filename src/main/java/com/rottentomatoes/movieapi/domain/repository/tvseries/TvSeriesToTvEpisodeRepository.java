@@ -39,7 +39,7 @@ public class TvSeriesToTvEpisodeRepository extends AbstractRepository implements
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Map tvEpisodes = (Map) emsClient.callEmsEntity(selectParams, "tv/series", id + "/episode-info", Map.class);
 
-        if (tvEpisodes != null && tvEpisodes.containsKey(fieldName)) {
+        if (tvEpisodes != null && tvEpisodes.containsKey(fieldName) && tvEpisodes.get(fieldName) != null) {
             String tvEpisodeId = Integer.toString((Integer) tvEpisodes.get(fieldName));
             if (tvEpisodeId != null) {
                 List<TvEpisode> episodes = (List<TvEpisode>) emsClient.callEmsList(selectParams, "tv/episode", tvEpisodeId,
