@@ -1,6 +1,8 @@
 package com.rottentomatoes.movieapi.domain.ems;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +32,7 @@ import com.rottentomatoes.movieapi.domain.repository.movie.MovieToAffiliatesRepo
 
 public class PerryEmsClient<T> extends EmsClient<T> {
     Class repository;
+    private String authHeader;
     
     private static final HashMap<Class,Class> modelToEMSClass = new HashMap<>();
     
@@ -41,9 +44,18 @@ public class PerryEmsClient<T> extends EmsClient<T> {
         modelToEMSClass.put(MovieListToMovieRepository.class, EmsMovieModel.class);
     }
 
-    public PerryEmsClient(EmsRouter config, String hostUrl, Class repository) {
+    public PerryEmsClient(EmsRouter config, String hostUrl, Class repository, String authHeader) {
         super(config, hostUrl);
         this.repository = repository;
+        this.authHeader = authHeader;
+    }
+
+    protected InputStream constructInputStream(URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setDoOutput(true);
+        connection.setRequestProperty("Authorization", authHeader);
+        return connection.getInputStream();
     }
 
     @Override
@@ -72,7 +84,7 @@ public class PerryEmsClient<T> extends EmsClient<T> {
     protected JsonDecoder constructJsonEntityDecoder(Class c) {
         return new JsonDecoder() {
             public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-                EmsModel m = (EmsModel) objectMapper.readValue(url, modelToEMSClass.get(c));
+                EmsModel m = (EmsModel) objectMapper.readValue(constructInputStream(url), modelToEMSClass.get(c));
                 return (T) m.convert(m);
             }
         };
@@ -87,7 +99,7 @@ public class PerryEmsClient<T> extends EmsClient<T> {
                 // in some cases, cfType will already be an emsXYZmodel, just use cfClass in that case
                 Class modelClass = (modelToEMSClass.get(cfClass) == null)? cfClass : modelToEMSClass.get(cfClass);
                 CollectionType c = TypeFactory.defaultInstance().constructCollectionType(List.class,  modelClass);
-                List<EmsModel> ml = objectMapper.readValue(url, c);
+                List<EmsModel> ml = objectMapper.readValue(constructInputStream(url), c);
                 if (ml.size() > 0) {
                     return (T) ml.get(0).convertCollection(ml);
                 }
@@ -126,7 +138,7 @@ public class PerryEmsClient<T> extends EmsClient<T> {
 
             // Field names that need to be translated
             namingMap.put("EmsAffiliateHostModel.id", "hostId");
-            namingMap.put("EmsMovieRtInfoModel.rtId", "rt-movie-id");
+            namingMap.put("EmsMovieFeaturesModel.rtId", "rt_id");
             namingMap.put("EmsMovieFeaturesModel.rtInfo", "rt_info");
         }
 
