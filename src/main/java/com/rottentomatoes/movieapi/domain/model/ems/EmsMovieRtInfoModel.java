@@ -11,13 +11,9 @@ import com.rottentomatoes.movieapi.domain.model.AbstractModel;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmsMovieRtInfoModel extends AbstractModel {
-    protected String rtId;
-    protected String consensus;
-    protected Integer rottenCount;
-    protected Integer movieReleaseYear;
-    protected Integer tomatometer;
-    protected Integer numReviews;
-    protected Boolean pendingCertified;
-    protected Boolean certifiedFresh;
-    protected Integer freshCount;
+    protected String vanityUrl;
+    protected String movieId;
+    protected String title;
+    protected Integer releaseYear;
+    protected String status;
 }

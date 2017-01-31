@@ -24,25 +24,26 @@ public class EmsMovieModel extends EmsModel<Movie, EmsMovieModel> {
     @Override
     public Movie convert(EmsMovieModel emsMovieModel) {
         Movie movie = new Movie();
-        movie.setId(emsMovieModel.movieFeatures.rtInfo.rtId);
+        movie.setId(emsMovieModel.movieFeatures.rtInfo.movieId);
         movie.setTitle(emsMovieModel.title);
-        movie.setYear(emsMovieModel.movieFeatures.rtInfo.movieReleaseYear);
-        if (emsMovieModel.movieFeatures.rtInfo.tomatometer != null &&
-                emsMovieModel.movieFeatures.rtInfo.numReviews != null &&
-                emsMovieModel.movieFeatures.rtInfo.numReviews >= 5) {
+        movie.setYear(emsMovieModel.movieFeatures.rtInfo.releaseYear);
+        movie.setVanity(emsMovieModel.movieFeatures.rtInfo.vanityUrl);
+        if (emsMovieModel.movieFeatures.tomatometer != null &&
+                emsMovieModel.movieFeatures.tomatometer.numReviews != null &&
+                emsMovieModel.movieFeatures.tomatometer.numReviews >= 5) {
             String tomatoMeterState = "rotten";
-            if (movieFeatures.rtInfo.certifiedFresh) {
+            if (movieFeatures.tomatometer.certifiedFresh) {
                 tomatoMeterState = "certified_fresh";
-            } else if (movieFeatures.rtInfo.tomatometer >= 60) {
+            } else if (movieFeatures.tomatometer.tomatometer >= 60) {
                 tomatoMeterState = "fresh";
             }
-            movie.set("value", movieFeatures.rtInfo.tomatometer.toString());
+            movie.set("value", movieFeatures.tomatometer.tomatometer.toString());
             movie.set("state", tomatoMeterState);
         }
         // need to add box office data
         MovieBoxOfficeInfo movieBoxOfficeInfo = new MovieBoxOfficeInfo();
         movie.setMovieBoxOfficeInfo(movieBoxOfficeInfo);
-        movieBoxOfficeInfo.setId(emsMovieModel.movieFeatures.rtInfo.rtId);
+        movieBoxOfficeInfo.setId(emsMovieModel.movieFeatures.rtInfo.movieId);
         movieBoxOfficeInfo.setRank(emsMovieModel.rank);
         movieBoxOfficeInfo.setTotalGross(emsMovieModel.totalGross);
         movieBoxOfficeInfo.setWeekendGross(emsMovieModel.weekendGross);

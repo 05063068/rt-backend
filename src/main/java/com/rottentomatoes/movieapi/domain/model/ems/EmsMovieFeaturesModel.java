@@ -11,5 +11,7 @@ import com.rottentomatoes.movieapi.domain.model.AbstractModel;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmsMovieFeaturesModel extends AbstractModel {
+    protected Integer rtId;
+    protected EmsTomatometerModel tomatometer;
     protected EmsMovieRtInfoModel rtInfo;
 }
