@@ -61,7 +61,7 @@
         <dependency>
             <groupId>io.katharsis</groupId>
             <artifactId>katharsis-core</artifactId>
-            <version>1.0.4-FLIXSTER</version>
+            <version>1.0.5-FLIXSTER</version>
         </dependency>
         <dependency>
             <groupId>io.katharsis</groupId>
