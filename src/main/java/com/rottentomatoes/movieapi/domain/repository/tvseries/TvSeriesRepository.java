@@ -61,6 +61,7 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
 
         if (requestParams.getFilters() != null && requestParams.getFilters().get("search") != null) {
             List<Long> tvSeriesIds;
+            String idList = null;
             JsonNode json;
 
             if (requestParams.getFilters().get("search") instanceof Map) {
@@ -68,10 +69,10 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
                 tvSeriesIds = new ArrayList<>();
                 if (json != null) {
                     ArrayNode resultArr = (ArrayNode) json.path("results");
-                    for (JsonNode movie : resultArr) {
-                        tvSeriesIds.add(Long.parseLong(movie.path("id").textValue()));
+                    for (JsonNode series : resultArr) {
+                        tvSeriesIds.add(Long.parseLong(series.path("id").textValue()));
                     }
-                    selectParams.put("ids", StringUtils.join(tvSeriesIds, ","));
+                    idList = StringUtils.join(tvSeriesIds, ",");
                 }
             }
             else {
@@ -79,7 +80,7 @@ public class TvSeriesRepository extends AbstractRepository implements ResourceRe
             }
 
             if(tvSeriesIds.size() > 0) {
-                tvSeries = new MetaDataEnabledList<>((List<TvSeries>) emsClient.callEmsList(selectParams, "tv-series", null, TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class)));
+                tvSeries = new MetaDataEnabledList<>((List<TvSeries>) emsClient.callEmsList(selectParams, "tv/series", idList, TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class)));
                 tvSeries.setMetaInformation(loadSearchMeta(json, requestParams));
             }
             else{
