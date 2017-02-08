@@ -89,9 +89,6 @@ public class EmsRouter {
     private static final List<String> PERRY_EMS_PATHS = Arrays.asList(
             "all-box-office");
 
-    protected String tvEmsHost;
-    protected String preEmsHost;
-
     public EmsClient fetchEmsClientForPath(String path) {
         if (TV_EMS_PATHS.contains(path)) {
             return new TvEmsClient(this, env.getProperty(TV_EMS_DATASOURCE_PROPERTY), env.getProperty(TV_EMS_AUTH_HEADER));

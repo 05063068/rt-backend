@@ -1,10 +1,13 @@
 package com.rottentomatoes.movieapi.domain.ems;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,13 +34,15 @@ public abstract class EmsClient<T> {
 
     protected EmsRouter emsRouter;
     protected String hostUrl;
+    protected String authHeader;
 
-    public EmsClient(EmsRouter config, String hostUrl) {
+    public EmsClient(EmsRouter config, String hostUrl, String authHeader) {
         this.emsRouter = config;
         this.hostUrl = hostUrl;
+        this.authHeader = authHeader;
     }
 
-    private static final Cache<String, Object> localCache = CacheBuilder.newBuilder()
+    protected static final Cache<String, Object> localCache = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .maximumSize(5000)
             .build();
@@ -92,12 +97,8 @@ public abstract class EmsClient<T> {
                 params.add(p, selectParams.get(p).toString().replaceAll("%", "%25").replaceAll(" ", "%20").replaceAll("&", "%26"));
             }
             String urlString = UriComponentsBuilder.fromUriString(constructUrl(pathBase, id)).queryParams(params).build(true).toString();
-            jsonResult = (T) localCache.getIfPresent(urlString);
-            if (jsonResult == null) {
-                URL url = new URL(urlString);
-                jsonResult = jsonDecoder.doDecode(url);
-                localCache.put(urlString, jsonResult);
-            }
+            URL url = new URL(urlString);
+            jsonResult = jsonDecoder.doDecode(url);
         } catch (MalformedURLException mue) {
             emsRouter.log("Malformed URL: ", mue);
         } catch (JsonMappingException | JsonParseException jme) {
@@ -106,6 +107,23 @@ public abstract class EmsClient<T> {
             emsRouter.log("Malformed URL: ", ioe);
         }
         return jsonResult;
+    }
+
+    // Used to get the Http response from either the ems server or the local cache
+    protected String getEmsResponse(URL url) throws IOException {
+        String response = (String) localCache.getIfPresent(url.toString());
+        if (response == null) {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            if (authHeader != null) {
+                connection.setRequestProperty("Authorization", authHeader);
+            }
+            Scanner scanner = new Scanner(connection.getInputStream(), StandardCharsets.UTF_8.name());
+            response = scanner.useDelimiter("\\A").next();
+            localCache.put(url.toString(), response);
+        }
+        return response;
     }
 
     protected abstract String constructUrl(String pathBase, String id);
