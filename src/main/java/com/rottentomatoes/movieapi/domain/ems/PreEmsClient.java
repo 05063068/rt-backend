@@ -14,7 +14,7 @@ import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
 public class PreEmsClient<T> extends EmsClient<T> {
 
     public PreEmsClient(EmsRouter config, String hostUrl) {
-        super(config, hostUrl);
+        super(config, hostUrl, null);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class PreEmsClient<T> extends EmsClient<T> {
     protected JsonDecoder constructJsonEntityDecoder(Class c) {
         return new JsonDecoder() {
             public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-                return (T) objectMapper.readValue(url, c);
+                return (T) objectMapper.readValue(getEmsResponse(url), c);
             }
         };
     }
@@ -35,7 +35,7 @@ public class PreEmsClient<T> extends EmsClient<T> {
     protected JsonDecoder constructJsonListDecoder(CollectionType collectionType) {
         return new JsonDecoder() {
             public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-                return (T) objectMapper.readValue(url, collectionType);
+                return (T) objectMapper.readValue(getEmsResponse(url), collectionType);
             }
         };
     }
