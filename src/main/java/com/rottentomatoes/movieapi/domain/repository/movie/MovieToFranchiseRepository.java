@@ -1,8 +1,10 @@
 package com.rottentomatoes.movieapi.domain.repository.movie;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Franchise;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
@@ -37,11 +39,11 @@ public class MovieToFranchiseRepository extends AbstractRepository implements Re
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        Franchise franchise = (Franchise) emsClient.callEmsEntity(selectParams, "movie", movieId + "/franchise", Franchise.class);
-        if (franchise != null && franchise.getId() == null) {
-            franchise = null;
+        List<Franchise> list = (List<Franchise>) emsClient.callEmsIdList(selectParams, "movie", movieId + "/franchise", "franchise", TypeFactory.defaultInstance().constructCollectionType(List.class, Franchise.class));
+        if (list != null && list.size() > 0) {
+            return list.get(0);
         }
-        return franchise;
+        return null;
     }
 
     @Override
