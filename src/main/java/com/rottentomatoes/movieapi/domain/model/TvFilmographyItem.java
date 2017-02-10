@@ -19,6 +19,9 @@ public class TvFilmographyItem extends AbstractModel {
 
     protected Iterable<String> characters;
 
+    protected Iterable<Integer> appearances;
+
     @JsonApiToOne
     protected TvSeries tvSeries;
+
 }
