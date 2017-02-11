@@ -54,20 +54,20 @@ public class FranchiseRepository extends AbstractRepository implements ResourceR
             franchise = franchises.get(0);
 
             // Get top movie associated with id field
-            if (franchise != null && franchise.getTopMovieId() != null) {
-                emsClient = emsRouter.fetchEmsClientForEndpoint(MovieRepository.class);
-                franchise.setTopMovie((Movie) emsClient.callEmsEntity(selectParams, "movie", franchise.getTopMovieId(), Movie.class));
-            }
+//            if (franchise != null && franchise.getTopMovieId() != null) {
+//                emsClient = emsRouter.fetchEmsClientForEndpoint(MovieRepository.class);
+//                franchise.setTopMovie((Movie) emsClient.callEmsEntity(selectParams, "movie", franchise.getTopMovieId(), Movie.class));
+//            }
 
             // Get top series associated with id field
-            if (franchise != null && franchise.getTopTvSeriesId() != null) {
-                emsClient = emsRouter.fetchEmsClientForEndpoint(TvSeriesRepository.class);
-                List<TvSeries> series = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv/series", franchise.getTopTvSeriesId(), TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
-
-                if (series != null && series.size() > 0) {
-                    franchise.setTopTvSeries(series.get(0));
-                }
-            }
+//            if (franchise != null && franchise.getTopTvSeriesId() != null) {
+//                emsClient = emsRouter.fetchEmsClientForEndpoint(TvSeriesRepository.class);
+//                List<TvSeries> series = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv/series", franchise.getTopTvSeriesId(), TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
+//
+//                if (series != null && series.size() > 0) {
+//                    franchise.setTopTvSeries(series.get(0));
+//                }
+//            }
             return franchise;
         }
         return null;
