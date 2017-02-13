@@ -120,8 +120,11 @@ public abstract class EmsClient<T> {
                 connection.setRequestProperty("Authorization", authHeader);
             }
             Scanner scanner = new Scanner(connection.getInputStream(), StandardCharsets.UTF_8.name());
-            response = scanner.useDelimiter("\\A").next();
-            localCache.put(url.toString(), response);
+            scanner.useDelimiter("\\A");
+            if (scanner.hasNext()) {
+                response = scanner.next();
+                localCache.put(url.toString(), response);
+            }
         }
         return response;
     }
