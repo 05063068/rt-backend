@@ -30,6 +30,7 @@ public class PublicationRepository extends AbstractRepository implements Resourc
     public Publication findOne(String id, RequestParams requestParams) {
 
         Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
         Publication publication = (Publication) emsClient.callEmsEntity(selectParams, "publication", id, Publication.class);
@@ -42,6 +43,7 @@ public class PublicationRepository extends AbstractRepository implements Resourc
 
 
         Map<String, Object> selectParams = new HashMap<>();
+        selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
         selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
         selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
 
