@@ -10,6 +10,7 @@ import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
+import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.MetaInformation;
 import org.springframework.stereotype.Component;
 
@@ -50,46 +51,52 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
     @Override
     public Iterable<Review> findManyTargets(String criticId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
-
-        if(requestParams.getFilters() != null) {
-            // order of the reviews, can be one of "best" or "worst"
-            if (requestParams.getFilters().containsKey("order")) {
-                selectParams.put("order", requestParams.getFilters().get("order"));
-            }
-            // Accepted category filter values are "movie", "dvd", or "quick"
-            if (requestParams.getFilters().containsKey("category")) {
-                selectParams.put("category", requestParams.getFilters().get("category"));
-            }
-            // Accepted category filter values are "fresh" or "rotten"
-            if (requestParams.getFilters().containsKey("score")) {
-                selectParams.put("score", requestParams.getFilters().get("score"));
-            }
-        }
-
         selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
         selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
-        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        return (Iterable<Review>) emsClient.callEmsList(selectParams, "critic", criticId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class,  Review.class));
-    }
+        EmsClient emsClient;
+        MetaDataEnabledList<Review> reviewList;
+        RelatedMetaDataInformation metaData;
 
+        switch (fieldName) {
+            case "tvReviews":
+                emsClient = emsRouter.fetchEmsClientForPath("critic/" + fieldName);
+                reviewList =  new MetaDataEnabledList((List<Review>) emsClient.callEmsIdList(selectParams, "critic", criticId + "/tv-reviews", "tv/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Review.class)));
+
+                selectParams.put("limit", 10000);
+                List idList = (List<Integer>) emsClient.callEmsList(selectParams, "critic", criticId + "/tv-reviews", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
+                if (idList != null) {
+                    metaData = new RelatedMetaDataInformation();
+                    metaData.setTotalCount(idList.size());
+                    reviewList.setMetaInformation(metaData);
+                }
+                break;
+            case "reviews":
+            default:
+                if (requestParams.getFilters() != null) {
+                    // order of the reviews, can be one of "best" or "worst"
+                    if (requestParams.getFilters().containsKey("order")) {
+                        selectParams.put("order", requestParams.getFilters().get("order"));
+                    }
+                    // Accepted category filter values are "movie", "dvd", or "quick"
+                    if (requestParams.getFilters().containsKey("category")) {
+                        selectParams.put("category", requestParams.getFilters().get("category"));
+                    }
+                    // Accepted category filter values are "fresh" or "rotten"
+                    if (requestParams.getFilters().containsKey("score")) {
+                        selectParams.put("score", requestParams.getFilters().get("score"));
+                    }
+                }
+
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+                reviewList =  new MetaDataEnabledList((List<Review>) emsClient.callEmsList(selectParams, "critic", criticId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Review.class)));
+                reviewList.setMetaInformation((RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", criticId + "/review/meta", RelatedMetaDataInformation.class));
+        }
+        return reviewList;
+    }
 
     @Override
     public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable criticId) {
-        RelatedMetaDataInformation metaData;
-        Map<String, Object> selectParams = new HashMap<>();
-
-        if (requestParams.getFilters() != null) {
-            if (requestParams.getFilters().containsKey("category")) {
-                selectParams.put("category", requestParams.getFilters().get("category"));
-            }
-            if (requestParams.getFilters().containsKey("score")) {
-                selectParams.put("score", requestParams.getFilters().get("score"));
-            }
-        }
-        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", criticId.toString() + "/review/meta", RelatedMetaDataInformation.class);
-        metaData.setRequestParams(requestParams);
-        return metaData;
+        return null;
     }
 }

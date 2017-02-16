@@ -81,6 +81,7 @@ public class EmsRouter {
             "FranchiseToImageRepository",
             "FranchiseToVideoClipRepository");
     private static final List<String> TV_EMS_PATHS = Arrays.asList(
+            "critic/tvReviews",
             "publication/tvReviews",
             // Top Lists
             "top-for-year",

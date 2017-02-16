@@ -99,12 +99,12 @@ public class Movie extends AbstractModel {
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MetaDataEnabledList<AudienceReview> audienceReviews;
+    protected Iterable<AudienceReview> audienceReviews;
 
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MetaDataEnabledList<VideoClip> videoClips;
+    protected Iterable<VideoClip> videoClips;
 
     @JsonApiToMany
     @JsonApiLazy

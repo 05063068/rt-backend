@@ -68,7 +68,7 @@ public class TvEpisode extends AbstractModel {
     @JsonApiToMany
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
-    protected MetaDataEnabledList<VideoClip> videoClips;
+    protected Iterable<VideoClip> videoClips;
 
     @JsonApiToMany
     @JsonApiLazy

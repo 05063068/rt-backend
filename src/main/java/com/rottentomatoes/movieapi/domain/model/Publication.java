@@ -5,6 +5,7 @@ import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToMany;
+import io.katharsis.response.MetaDataEnabledList;
 import lombok.Getter;
 import lombok.Setter;
 

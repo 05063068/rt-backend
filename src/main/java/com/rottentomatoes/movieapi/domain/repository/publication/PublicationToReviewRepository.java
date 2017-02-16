@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.katharsis.response.MetaDataEnabledList;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -55,34 +56,43 @@ public class PublicationToReviewRepository extends AbstractRepository implements
         Map<String, Object> selectParams = new HashMap<>();
         selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
         selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
+
         EmsClient emsClient;
-        List<Review> reviewList;
+        MetaDataEnabledList<Review> reviewList;
+        RelatedMetaDataInformation metaData;
 
         switch (fieldName) {
             case "tvReviews":
                 emsClient = emsRouter.fetchEmsClientForPath("publication/" + fieldName);
-                reviewList = (List<Review>) emsClient.callEmsIdList(selectParams, "tv/publication",
+                reviewList = new MetaDataEnabledList((List<Review>) emsClient.callEmsIdList(selectParams, "tv/publication",
                         publicationId + "/review", "tv/review",
-                        TypeFactory.defaultInstance().constructCollectionType(List.class,
-                                Review.class));
+                        TypeFactory.defaultInstance().constructCollectionType(List.class, Review.class)));
+
+                selectParams = new HashMap<>();
+                selectParams.put("limit", 10000);
+                List idList = (List<Integer>) emsClient.callEmsList(selectParams, "tv/publication", publicationId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
+                if (idList != null) {
+                    metaData = new RelatedMetaDataInformation();
+                    metaData.setTotalCount(idList.size());
+                    reviewList.setMetaInformation(metaData);
+                }
                 return reviewList;
             case "reviews":
             default:
                 emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-                reviewList = (List<Review>) emsClient.callEmsList(selectParams, "publication",
+                reviewList = new MetaDataEnabledList((List<Review>) emsClient.callEmsList(selectParams, "publication",
                         publicationId + "/review", TypeFactory.defaultInstance()
-                                .constructCollectionType(List.class, Review.class));
+                                .constructCollectionType(MetaDataEnabledList.class, Review.class)));
+
+                metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "publication",
+                        publicationId + "/review/meta", RelatedMetaDataInformation.class);
+                reviewList.setMetaInformation(metaData);
                 return reviewList;
         }
     }
 
     @Override
     public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable publicationId) {
-        Map<String, Object> selectParams = new HashMap<>();
-
-        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        RelatedMetaDataInformation metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "publication", publicationId + "/review/meta", RelatedMetaDataInformation.class);
-        metaData.setRequestParams(requestParams);
-        return metaData;
+        return null;
     }
 }

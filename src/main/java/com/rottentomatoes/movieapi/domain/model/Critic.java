@@ -6,6 +6,7 @@ import io.katharsis.resource.annotations.JsonApiLookupIncludeAutomatically;
 import io.katharsis.resource.annotations.JsonApiResource;
 import io.katharsis.resource.annotations.JsonApiToOne;
 import io.katharsis.resource.annotations.JsonApiToMany;
+import io.katharsis.response.MetaDataEnabledList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +33,11 @@ public class Critic extends AbstractModel {
     @JsonApiLazy
     @JsonApiLookupIncludeAutomatically
     protected Iterable<Review> reviews;
+
+    @JsonApiToMany
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
+    protected Iterable<Review> tvReviews;
 
     @JsonApiToMany
     @JsonApiLazy
