@@ -15,8 +15,14 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.awt.*;
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Setter;
+
 @JsonApiResource(type = "image")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class Image extends AbstractModel {
     protected String thumborId;
     protected Integer height;
@@ -94,42 +100,4 @@ public class Image extends AbstractModel {
         this.caption = caption;
     }
 
-    public String getThumborId() {
-        return thumborId;
-    }
-
-    public void setThumborId(String thumborId) {
-        this.thumborId = thumborId;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
-
-    public Integer getWidth() {
-        return width;
-    }
-
-    public void setWidth(Integer width) {
-        this.width = width;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-    public String getCaption() {
-        return caption;
-    }
-    
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
 }
