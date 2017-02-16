@@ -124,6 +124,8 @@ public abstract class EmsClient<T> {
             if (scanner.hasNext()) {
                 response = scanner.next();
                 localCache.put(url.toString(), response);
+            } else {
+                return "";
             }
         }
         return response;
