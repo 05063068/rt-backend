@@ -7,7 +7,9 @@ import com.flixster.image.IdGenerator;
 import com.flixster.image.IdGenerator.IdGeneratorBuilder;
 import com.flixster.image.ImageFormat;
 import com.flixster.image.ImageType;
+
 import io.katharsis.resource.annotations.JsonApiResource;
+
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.awt.*;
@@ -20,6 +22,7 @@ public class Image extends AbstractModel {
     protected Integer height;
     protected Integer width;
     protected String format;
+    protected String caption;
     
     public Image() {
         
@@ -51,7 +54,7 @@ public class Image extends AbstractModel {
         }
     }
 
-    public Image(String id, Integer originalHeight, Integer originalWidth, String format, String mediaType) {
+    public Image(String id, Integer originalHeight, Integer originalWidth, String format, String mediaType, String caption) {
         if (id == null || mediaType == null) {
             throw new RuntimeException("Neither Image Id nor Media type can be null.");
         }
@@ -88,6 +91,7 @@ public class Image extends AbstractModel {
         this.height = originalHeight;
         this.width = originalWidth;
         this.format = format;
+        this.caption = caption;
     }
 
     public String getThumborId() {
@@ -120,5 +124,12 @@ public class Image extends AbstractModel {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+    public String getCaption() {
+        return caption;
+    }
+    
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 }
