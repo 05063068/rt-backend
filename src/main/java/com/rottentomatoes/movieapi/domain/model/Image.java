@@ -7,19 +7,28 @@ import com.flixster.image.IdGenerator;
 import com.flixster.image.IdGenerator.IdGeneratorBuilder;
 import com.flixster.image.ImageFormat;
 import com.flixster.image.ImageType;
+
 import io.katharsis.resource.annotations.JsonApiResource;
+
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.awt.*;
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Setter;
+
 @JsonApiResource(type = "image")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class Image extends AbstractModel {
     protected String thumborId;
     protected Integer height;
     protected Integer width;
     protected String format;
+    protected String caption;
     
     public Image() {
         
@@ -51,7 +60,7 @@ public class Image extends AbstractModel {
         }
     }
 
-    public Image(String id, Integer originalHeight, Integer originalWidth, String format, String mediaType) {
+    public Image(String id, Integer originalHeight, Integer originalWidth, String format, String mediaType, String caption) {
         if (id == null || mediaType == null) {
             throw new RuntimeException("Neither Image Id nor Media type can be null.");
         }
@@ -88,37 +97,7 @@ public class Image extends AbstractModel {
         this.height = originalHeight;
         this.width = originalWidth;
         this.format = format;
+        this.caption = caption;
     }
 
-    public String getThumborId() {
-        return thumborId;
-    }
-
-    public void setThumborId(String thumborId) {
-        this.thumborId = thumborId;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
-
-    public Integer getWidth() {
-        return width;
-    }
-
-    public void setWidth(Integer width) {
-        this.width = width;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
 }
