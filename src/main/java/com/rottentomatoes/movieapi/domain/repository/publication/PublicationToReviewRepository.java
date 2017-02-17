@@ -59,40 +59,47 @@ public class PublicationToReviewRepository extends AbstractRepository implements
 
         EmsClient emsClient;
         MetaDataEnabledList<Review> reviewList;
-        RelatedMetaDataInformation metaData;
 
         switch (fieldName) {
             case "tvReviews":
                 emsClient = emsRouter.fetchEmsClientForPath("publication/" + fieldName);
-                reviewList = new MetaDataEnabledList((List<Review>) emsClient.callEmsIdList(selectParams, "tv/publication",
-                        publicationId + "/review", "tv/review",
-                        TypeFactory.defaultInstance().constructCollectionType(List.class, Review.class)));
-
-                selectParams = new HashMap<>();
-                selectParams.put("limit", 10000);
-                List idList = (List<Integer>) emsClient.callEmsList(selectParams, "tv/publication", publicationId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
-                if (idList != null) {
-                    metaData = new RelatedMetaDataInformation();
-                    metaData.setTotalCount(idList.size());
-                    reviewList.setMetaInformation(metaData);
-                }
-                return reviewList;
+                reviewList = (MetaDataEnabledList<Review>) emsClient.callEmsIdList(selectParams, "tv/publication", publicationId + "/review", "tv/review", TypeFactory.defaultInstance().constructCollectionType(MetaDataEnabledList.class, Review.class));
+                break;
             case "reviews":
             default:
                 emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-                reviewList = new MetaDataEnabledList((List<Review>) emsClient.callEmsList(selectParams, "publication",
-                        publicationId + "/review", TypeFactory.defaultInstance()
-                                .constructCollectionType(MetaDataEnabledList.class, Review.class)));
-
-                metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "publication",
-                        publicationId + "/review/meta", RelatedMetaDataInformation.class);
-                reviewList.setMetaInformation(metaData);
-                return reviewList;
+                reviewList = (MetaDataEnabledList<Review>) emsClient.callEmsList(selectParams, "publication", publicationId + "/review", TypeFactory.defaultInstance().constructCollectionType(MetaDataEnabledList.class, Review.class));
+                break;
         }
+        return reviewList;
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable publicationId) {
-        return null;
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
+        Map<String, Object> selectParams = new HashMap<>();
+        EmsClient emsClient;
+        RelatedMetaDataInformation metaData;
+
+        switch (fieldName) {
+            case "tvReviews":
+                selectParams.put("limit", 10000);
+                emsClient = emsRouter.fetchEmsClientForPath("publication/" + fieldName);
+                List idList = (List<Integer>) emsClient.callEmsList(selectParams, "tv/publication", castedResourceId.toString() + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
+
+                metaData = new RelatedMetaDataInformation();
+                if (idList != null) {
+                    metaData.setTotalCount(idList.size());
+                }
+                break;
+            case "reviews":
+            default:
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+                metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "publication", castedResourceId.toString() + "/review/meta", RelatedMetaDataInformation.class);
+        }
+
+        if (metaData != null && root instanceof RelationshipRepository) {
+            metaData.setRequestParams(requestParams);
+        }
+        return metaData;
     }
 }
