@@ -26,7 +26,7 @@ public class TvSeasonRepository extends AbstractRepository implements ResourceRe
     public <S extends TvSeason> S save(S s) {return null;}
 
     @Override
-    public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable serializable) {
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
         return null;
     }
 

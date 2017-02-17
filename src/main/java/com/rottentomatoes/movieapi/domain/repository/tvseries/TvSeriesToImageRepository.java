@@ -67,7 +67,7 @@ public class TvSeriesToImageRepository extends AbstractRepository implements Rel
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
         Map<String, Object> selectParams = new HashMap<>();
         // arbitrarily high limit
         selectParams.put("limit", 10000);

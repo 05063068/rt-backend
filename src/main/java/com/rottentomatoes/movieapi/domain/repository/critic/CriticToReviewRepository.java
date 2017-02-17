@@ -61,15 +61,7 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
         switch (fieldName) {
             case "tvReviews":
                 emsClient = emsRouter.fetchEmsClientForPath("critic/" + fieldName);
-                reviewList =  new MetaDataEnabledList((List<Review>) emsClient.callEmsIdList(selectParams, "critic", criticId + "/tv-reviews", "tv/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Review.class)));
-
-                selectParams.put("limit", 10000);
-                List idList = (List<Integer>) emsClient.callEmsList(selectParams, "critic", criticId + "/tv-reviews", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
-                if (idList != null) {
-                    metaData = new RelatedMetaDataInformation();
-                    metaData.setTotalCount(idList.size());
-                    reviewList.setMetaInformation(metaData);
-                }
+                reviewList =  (MetaDataEnabledList<Review>) emsClient.callEmsIdList(selectParams, "critic", criticId + "/tv-reviews", "tv/review", TypeFactory.defaultInstance().constructCollectionType(MetaDataEnabledList.class, Review.class));
                 break;
             case "reviews":
             default:
@@ -87,16 +79,46 @@ public class CriticToReviewRepository extends AbstractRepository implements Rela
                         selectParams.put("score", requestParams.getFilters().get("score"));
                     }
                 }
-
                 emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-                reviewList =  new MetaDataEnabledList((List<Review>) emsClient.callEmsList(selectParams, "critic", criticId + "/review", TypeFactory.defaultInstance().constructCollectionType(List.class, Review.class)));
-                reviewList.setMetaInformation((RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", criticId + "/review/meta", RelatedMetaDataInformation.class));
+                reviewList =  (MetaDataEnabledList<Review>) emsClient.callEmsList(selectParams, "critic", criticId + "/review", TypeFactory.defaultInstance().constructCollectionType(MetaDataEnabledList.class, Review.class));
         }
         return reviewList;
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable criticId) {
-        return null;
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
+        Map<String, Object> selectParams = new HashMap<>();
+        EmsClient emsClient;
+        RelatedMetaDataInformation metaData;
+
+        switch (fieldName) {
+            case "tvReviews":
+                selectParams.put("limit", 10000);
+                emsClient = emsRouter.fetchEmsClientForPath("critic/" + fieldName);
+                List idList = (List<Integer>) emsClient.callEmsList(selectParams, "critic", castedResourceId.toString() + "/tv-reviews", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
+
+                metaData = new RelatedMetaDataInformation();
+                if (idList != null) {
+                    metaData.setTotalCount(idList.size());
+                }
+                break;
+            case "reviews":
+            default:
+                if (requestParams.getFilters() != null) {
+                    if (requestParams.getFilters().containsKey("category")) {
+                        selectParams.put("category", requestParams.getFilters().get("category"));
+                    }
+                    if (requestParams.getFilters().containsKey("score")) {
+                        selectParams.put("score", requestParams.getFilters().get("score"));
+                    }
+                }
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+                metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", castedResourceId.toString() + "/review/meta", RelatedMetaDataInformation.class);
+        }
+
+        if (metaData != null && root instanceof RelationshipRepository) {
+            metaData.setRequestParams(requestParams);
+        }
+        return metaData;
     }
 }

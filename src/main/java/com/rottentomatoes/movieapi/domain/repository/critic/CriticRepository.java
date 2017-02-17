@@ -114,7 +114,7 @@ public class CriticRepository extends AbstractRepository implements ResourceRepo
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable s) {
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
         return null;
     }
 

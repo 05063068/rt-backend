@@ -61,12 +61,12 @@ public class CriticToCriticGroupRepository extends AbstractRepository implements
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object o, Iterable iterable, RequestParams requestParams, Serializable criticId) {
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
         RelatedMetaDataInformation metaData;
         Map<String, Object> selectParams = new HashMap<>();
 
         EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-        metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", criticId.toString() + "/group/meta", RelatedMetaDataInformation.class);
+        metaData = (RelatedMetaDataInformation) emsClient.callEmsEntity(selectParams, "critic", castedResourceId.toString() + "/group/meta", RelatedMetaDataInformation.class);
         metaData.setRequestParams(requestParams);
         return metaData;
     }

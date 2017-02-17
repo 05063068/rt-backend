@@ -75,7 +75,7 @@ public class TvEpisodeToPersonnelRepository extends AbstractRepository implement
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
         return null;
     }
 }

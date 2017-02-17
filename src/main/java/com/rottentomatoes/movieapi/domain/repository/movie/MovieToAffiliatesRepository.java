@@ -82,7 +82,7 @@ public class MovieToAffiliatesRepository extends AbstractRepository implements R
     }
     
     @Override
-    public MetaInformation getMetaInformation(Object root, Iterable resources, RequestParams requestParams, Serializable castedResourceId) {
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
         RootMetaDataInformation metaData = null;
         String movieId = castedResourceId.toString();
         String id = "all";

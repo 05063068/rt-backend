@@ -60,8 +60,7 @@ public class TvEpisodeRepository extends AbstractRepository implements
     }
 
     @Override
-    public MetaInformation getMetaInformation(Object o, Iterable iterable,
-            RequestParams requestParams, Serializable serializable) {
+    public MetaInformation getMetaInformation(Object root, Iterable resources, Serializable castedResourceId, String fieldName, RequestParams requestParams) {
         return null;
     }
 }
