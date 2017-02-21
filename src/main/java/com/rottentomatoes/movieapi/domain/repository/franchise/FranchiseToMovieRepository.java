@@ -41,6 +41,18 @@ public class FranchiseToMovieRepository extends AbstractRepository implements Re
 
     @Override
     public Movie findOneTarget(String id, String fieldName, RequestParams requestParams) {
+        Map<String, Object> selectParams = new HashMap<>();
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+
+        if (fieldName.equals("topMovie")) {
+            String movieId = (String) emsClient.callEmsEntity(selectParams, "franchise", id + "/top-movie", String.class);
+
+            if (movieId != null && !movieId.equals("")) {
+                emsClient = emsRouter.fetchEmsClientForEndpoint(MovieRepository.class);
+                selectParams.put("country", RepositoryUtils.getCountry(requestParams).getCountryCode());
+                return (Movie) emsClient.callEmsEntity(selectParams, "movie", movieId, Movie.class);
+            }
+        }
         return null;
     }
 

@@ -2,9 +2,11 @@ package com.rottentomatoes.movieapi.domain.repository.franchise;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Franchise;
+import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.repository.movie.MovieRepository;
 import com.rottentomatoes.movieapi.domain.repository.tvseries.TvSeriesRepository;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
@@ -36,6 +38,22 @@ public class FranchiseToTvSeriesRepository extends AbstractRepository implements
 
     @Override
     public TvSeries findOneTarget(String id, String fieldName, RequestParams requestParams) {
+        Map<String, Object> selectParams = new HashMap<>();
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+
+        if (fieldName.equals("topTvSeries")) {
+            String tvSeriesId = (String) emsClient.callEmsEntity(selectParams, "franchise", id + "/top-series", String.class);
+
+            if (tvSeriesId != null && !tvSeriesId.equals("")) {
+                List<TvSeries> series = (List<TvSeries>) emsClient.callEmsList(selectParams, "tv/series", tvSeriesId,
+                        TypeFactory.defaultInstance().constructCollectionType(List.class, TvSeries.class));
+
+                // Necessary because endpoint returns a list of 1 element
+                if (series != null && series.size() > 0) {
+                    return series.get(0);
+                }
+            }
+        }
         return null;
     }
 

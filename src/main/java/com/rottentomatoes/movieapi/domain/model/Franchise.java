@@ -23,10 +23,14 @@ public class Franchise extends AbstractModel {
     protected Image bannerImage;
     protected Image heroImage;
 
-    protected String topMovieId;
-    protected String topTvSeriesId;
-
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
     protected TvSeries topTvSeries;
+
+    @JsonApiToOne
+    @JsonApiLazy
+    @JsonApiLookupIncludeAutomatically
     protected Movie topMovie;
 
     @JsonApiToMany
