@@ -17,6 +17,7 @@ public class Publication extends AbstractModel {
 
     protected String name;
     protected String country;
+    protected String status;
     protected boolean tomatometerApproved;
     protected boolean topPublication;
 

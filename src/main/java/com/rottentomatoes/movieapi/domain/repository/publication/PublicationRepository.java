@@ -47,6 +47,9 @@ public class PublicationRepository extends AbstractRepository implements Resourc
         selectParams.put("limit", RepositoryUtils.getLimit("", requestParams));
         selectParams.put("offset", RepositoryUtils.getOffset("", requestParams));
 
+        if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("legacy")){
+            selectParams.put("legacy",requestParams.getFilters().get("legacy"));
+        }
         if(requestParams.getFilters() != null && requestParams.getFilters().containsKey("initial")){
             selectParams.put("initial",requestParams.getFilters().get("initial")+"%");
         }
