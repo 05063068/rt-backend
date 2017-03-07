@@ -1,16 +1,22 @@
 package com.rottentomatoes.movieapi.domain.ems;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.rottentomatoes.movieapi.domain.model.clients.Client;
+import com.rottentomatoes.movieapi.domain.model.requests.AbstractJsonRequest;
 import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
 
+/**
+ * Client that handles requests/responses for pre-EMS
+ * 
+ * Deprecated - use {@link Client} and {@link AbstractJsonRequest} to make HTTP requests
+ */
+@Deprecated
+@SuppressWarnings({ "unchecked", "rawtypes", "serial" })
 public class PreEmsClient<T> extends EmsClient<T> {
 
     public PreEmsClient(EmsRouter config, String hostUrl) {
@@ -25,8 +31,8 @@ public class PreEmsClient<T> extends EmsClient<T> {
     @Override
     protected JsonDecoder constructJsonEntityDecoder(Class c) {
         return new JsonDecoder() {
-            public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-                return (T) objectMapper.readValue(getEmsResponse(url), c);
+            public T doDecode(String response) throws JsonParseException, JsonMappingException, IOException {
+                return (T) objectMapper.readValue(response, c);
             }
         };
     }
@@ -34,8 +40,8 @@ public class PreEmsClient<T> extends EmsClient<T> {
     @Override
     protected JsonDecoder constructJsonListDecoder(CollectionType collectionType) {
         return new JsonDecoder() {
-            public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-                return (T) objectMapper.readValue(getEmsResponse(url), collectionType);
+            public T doDecode(String response) throws JsonParseException, JsonMappingException, IOException {
+                return (T) objectMapper.readValue(response, collectionType);
             }
         };
     }
