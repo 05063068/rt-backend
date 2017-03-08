@@ -4,12 +4,20 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.rottentomatoes.movieapi.domain.model.clients.Client;
+import com.rottentomatoes.movieapi.domain.model.requests.AbstractJsonRequest;
 import com.rottentomatoes.movieapi.domain.repository.EmsRouter;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 
+/**
+ * Client that handles requests/responses for TV-EMS.
+ * 
+ * Deprecated - use {@link Client} and {@link AbstractJsonRequest} to make HTTP requests
+ */
+@Deprecated
+@SuppressWarnings({ "unchecked", "rawtypes", "serial" })
 public class TvEmsClient<T> extends EmsClient<T> {
 
     public TvEmsClient(EmsRouter config, String hostUrl, String authHeader) {
@@ -24,8 +32,8 @@ public class TvEmsClient<T> extends EmsClient<T> {
     @Override
     protected JsonDecoder constructJsonEntityDecoder(Class c) {
         return new JsonDecoder() {
-            public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-                return (T) objectMapper.readValue(getEmsResponse(url), c);
+            public T doDecode(String response) throws JsonParseException, JsonMappingException, IOException {
+                return (T) objectMapper.readValue(response, c);
             }
         };
     }
@@ -33,8 +41,8 @@ public class TvEmsClient<T> extends EmsClient<T> {
     @Override
     protected JsonDecoder constructJsonListDecoder(CollectionType collectionType) {
         return new JsonDecoder() {
-            public T doDecode(URL url) throws JsonParseException, JsonMappingException, IOException {
-                return (T) objectMapper.readValue(getEmsResponse(url), collectionType);
+            public T doDecode(String response) throws JsonParseException, JsonMappingException, IOException {
+                return (T) objectMapper.readValue(response, collectionType);
             }
         };
     }

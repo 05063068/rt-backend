@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieList;
+import com.rottentomatoes.movieapi.domain.model.apicalldelegators.ems.MovieListToMovieAllBoxOfficeApiCall;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
@@ -84,10 +85,9 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
         switch (listId) {
             case "all-box-office":
-                String boxOfficeWeek = SqlParameterUtils.getBoxofficeWeek(requestParams);
-                List<Movie> allBoxofficeMovies = (List<Movie>) emsClient.callEmsList(selectParams, emsClient.getPathBase(listId), 
-                        boxOfficeWeek, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
-                return allBoxofficeMovies;
+                MovieListToMovieAllBoxOfficeApiCall apiCallDelegator = new MovieListToMovieAllBoxOfficeApiCall(
+                        environment, fieldName, requestParams);
+                return apiCallDelegator.process();
             case "top-box-office":
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
                 List<Movie> movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
@@ -152,10 +152,11 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
         switch ((String) castedResourceId) {
             case "all-box-office":
-                emsClient = emsRouter.fetchEmsClientForPath("all-box-office");
-                String boxOfficeWeek = SqlParameterUtils.getBoxofficeWeek(requestParams);
-                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, emsClient.getPathBase("all-box-office"), 
-                        boxOfficeWeek, RootMetaDataInformation.class);
+                MovieListToMovieAllBoxOfficeApiCall apiCallDelegator = new MovieListToMovieAllBoxOfficeApiCall(
+                        environment, fieldName, requestParams);
+                List<Movie> movies = apiCallDelegator.process();
+                metaData = new RootMetaDataInformation();
+                metaData.setTotalCount(movies.size());
                 metaData.setRequestParams(requestParams);
                 break;
             case "top-box-office":
