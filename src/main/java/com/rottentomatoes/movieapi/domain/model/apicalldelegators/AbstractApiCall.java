@@ -4,9 +4,9 @@
 
 package com.rottentomatoes.movieapi.domain.model.apicalldelegators;
 
-import java.util.Map;
-
 import org.springframework.core.env.Environment;
+
+import io.katharsis.queryParams.RequestParams;
 
 /**
  * Represents an abstract API implementation for a client facade endpoint
@@ -16,12 +16,14 @@ import org.springframework.core.env.Environment;
 public abstract class AbstractApiCall {
 
     protected Environment environment;
-    protected Map<String, String> queryParams;
+    protected String fieldName;
+    protected RequestParams requestParams;
 
-    protected AbstractApiCall(final Environment environment,
-            final Map<String, String> queryParams) {
+    protected AbstractApiCall(final Environment environment, final String fieldName,
+            final RequestParams requestParams) {
         this.environment = environment;
-        this.queryParams = queryParams;
+        this.fieldName = fieldName;
+        this.requestParams = requestParams;
     }
 
     /**
