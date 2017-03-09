@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieList;
+import com.rottentomatoes.movieapi.domain.model.apicalldelegators.AbstractApiCall;
 import com.rottentomatoes.movieapi.domain.model.apicalldelegators.ems.MovieListToMovieAllBoxOfficeApiCall;
+import com.rottentomatoes.movieapi.domain.model.apicalldelegators.ems.MovieListToMovieOpeningApiCall;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
@@ -85,9 +87,8 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
         switch (listId) {
             case "all-box-office":
-                MovieListToMovieAllBoxOfficeApiCall apiCallDelegator = new MovieListToMovieAllBoxOfficeApiCall(
-                        environment, fieldName, requestParams);
-                return apiCallDelegator.process();
+                return (new MovieListToMovieAllBoxOfficeApiCall(environment, fieldName,
+                        requestParams)).process();
             case "top-box-office":
                 selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
                 List<Movie> movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
@@ -104,8 +105,9 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "opening":
-                selectParams = SqlParameterUtils.setOpeningParams(selectParams);
-                return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                // selectParams = SqlParameterUtils.setOpeningParams(selectParams);
+                // return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                return (new MovieListToMovieOpeningApiCall(environment, fieldName, requestParams)).process();
 
             case "top-rentals":
                 selectParams = SqlParameterUtils.setTopRentalsParams(selectParams);
@@ -152,11 +154,10 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
 
         switch ((String) castedResourceId) {
             case "all-box-office":
-                MovieListToMovieAllBoxOfficeApiCall apiCallDelegator = new MovieListToMovieAllBoxOfficeApiCall(
-                        environment, fieldName, requestParams);
-                List<Movie> movies = apiCallDelegator.process();
+                List<Movie> allBoxOfficeMovies = (new MovieListToMovieAllBoxOfficeApiCall(environment,
+                        fieldName, requestParams)).process();
                 metaData = new RootMetaDataInformation();
-                metaData.setTotalCount(movies.size());
+                metaData.setTotalCount(allBoxOfficeMovies.size());
                 metaData.setRequestParams(requestParams);
                 break;
             case "top-box-office":
@@ -182,9 +183,13 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 break;
 
             case "opening":
-                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-                selectParams = SqlParameterUtils.setOpeningParams(selectParams);
-                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "opening", "meta", RootMetaDataInformation.class);
+                // emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+                // selectParams = SqlParameterUtils.setOpeningParams(selectParams);
+                // metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "opening", "meta", RootMetaDataInformation.class);
+                List<Movie> openingMovies = (new MovieListToMovieOpeningApiCall(environment,
+                        fieldName, requestParams)).process();
+                metaData = new RootMetaDataInformation();
+                metaData.setTotalCount(openingMovies.size());
                 metaData.setRequestParams(requestParams);
                 break;
 
