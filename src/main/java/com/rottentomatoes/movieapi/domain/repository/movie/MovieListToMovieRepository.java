@@ -1,33 +1,37 @@
 package com.rottentomatoes.movieapi.domain.repository.movie;
 
+import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getTodayPST;
+import static java.time.temporal.TemporalAdjusters.previous;
+
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
-import com.rottentomatoes.movieapi.utils.RepositoryUtils;
-import com.rottentomatoes.movieapi.utils.SqlParameterUtils;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.rottentomatoes.movieapi.domain.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieList;
-import com.rottentomatoes.movieapi.domain.model.apicalldelegators.AbstractApiCall;
 import com.rottentomatoes.movieapi.domain.model.apicalldelegators.ems.MovieListToMovieAllBoxOfficeApiCall;
 import com.rottentomatoes.movieapi.domain.model.apicalldelegators.ems.MovieListToMovieOpeningApiCall;
+import com.rottentomatoes.movieapi.domain.model.apicalldelegators.ems.MovieListToMovieTopBoxOfficeApiCall;
+import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
+import com.rottentomatoes.movieapi.utils.RepositoryUtils;
+import com.rottentomatoes.movieapi.utils.SqlParameterUtils;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
 import io.katharsis.resource.exception.ResourceNotFoundException;
 import io.katharsis.response.MetaInformation;
-import static com.rottentomatoes.movieapi.utils.SqlParameterUtils.getTodayPST;
-import static java.time.temporal.TemporalAdjusters.previous;
 
 @Component
 public class MovieListToMovieRepository extends AbstractRepository implements RelationshipRepository<MovieList, String, Movie, String>, MetaRepository<Movie> {
@@ -90,12 +94,13 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 return (new MovieListToMovieAllBoxOfficeApiCall(environment, fieldName,
                         requestParams)).process();
             case "top-box-office":
-                selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
-                List<Movie> movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
-                if (movies.isEmpty()) {
-                    movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, "fallback", TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
-                }
-                return movies;
+                // selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
+                // List<Movie> movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                // if (movies.isEmpty()) {
+                //     movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, "fallback", TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                // }
+                return (new MovieListToMovieTopBoxOfficeApiCall(environment, fieldName,
+                        requestParams)).process();
             case "expand-list":
                 List<Movie> expandedMovies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
                 return expandedMovies;      
@@ -161,17 +166,21 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 metaData.setRequestParams(requestParams);
                 break;
             case "top-box-office":
-                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-                selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
-                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "meta", RootMetaDataInformation.class);
-                if (metaData.totalCount == 0) {
-                    LocalDate now = getTodayPST();
+                // emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+                // selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
+                // metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "meta", RootMetaDataInformation.class);
+                // if (metaData.totalCount == 0) {
+                //     LocalDate now = getTodayPST();
 
-                    //exclusive, so if today == Sunday, return last week (so it flips on Monday)
-                    LocalDate mostRecentSunday = now.with(previous(DayOfWeek.SUNDAY));
-                    selectParams.put("startDate", mostRecentSunday);
-                    metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "fallback/meta", RootMetaDataInformation.class);
-                }
+                //     //exclusive, so if today == Sunday, return last week (so it flips on Monday)
+                //     LocalDate mostRecentSunday = now.with(previous(DayOfWeek.SUNDAY));
+                //     selectParams.put("startDate", mostRecentSunday);
+                //     metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "fallback/meta", RootMetaDataInformation.class);
+                // }
+                List<Movie> topBoxOfficeMovies = (new MovieListToMovieTopBoxOfficeApiCall(environment, fieldName,
+                        requestParams)).process();
+                metaData = new RootMetaDataInformation();
+                metaData.setTotalCount(topBoxOfficeMovies.size());
                 metaData.setRequestParams(requestParams);
                 break;
 

@@ -23,7 +23,7 @@ public abstract class AbstractEmsRequest extends AbstractJsonRequest {
     private static final String BASE_URL_PROPERTY = "datasource.perry-ems.url";
     private static final String AUTHENTICATION_HEADER_PROPERTY = "datasource.perry-ems.auth";
 
-    public AbstractEmsRequest(final Environment environment, final HttpMethod httpMethod,
+    protected AbstractEmsRequest(final Environment environment, final HttpMethod httpMethod,
             final String relativeUrl, @Nullable final Map<String, String> queryParameters,
             @Nullable final Map<String, String> httpHeaders, @Nullable final String apiStatName) {
 
