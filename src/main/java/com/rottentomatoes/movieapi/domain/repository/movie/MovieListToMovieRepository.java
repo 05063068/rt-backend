@@ -94,13 +94,15 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 return (new MovieListToMovieAllBoxOfficeApiCall(environment, fieldName,
                         requestParams)).process();
             case "top-box-office":
-                // selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
-                // List<Movie> movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
-                // if (movies.isEmpty()) {
-                //     movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, "fallback", TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
-                // }
-                return (new MovieListToMovieTopBoxOfficeApiCall(environment, fieldName,
-                        requestParams)).process();
+                selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
+                List<Movie> movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                if (movies.isEmpty()) {
+                    movies = (List<Movie>) emsClient.callEmsList(selectParams, listId, "fallback", TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                }
+                return movies;
+                /* TODO RTBE-770
+                   return (new MovieListToMovieTopBoxOfficeApiCall(environment, fieldName, requestParams)).process();
+                 */
             case "expand-list":
                 List<Movie> expandedMovies = (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
                 return expandedMovies;      
@@ -110,9 +112,11 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             case "opening":
-                // selectParams = SqlParameterUtils.setOpeningParams(selectParams);
-                // return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
-                return (new MovieListToMovieOpeningApiCall(environment, fieldName, requestParams)).process();
+                selectParams = SqlParameterUtils.setOpeningParams(selectParams);
+                return (List<Movie>) emsClient.callEmsList(selectParams, listId, null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
+                /* TODO RTBE-770
+                   return (new MovieListToMovieOpeningApiCall(environment, fieldName, requestParams)).process();
+                 */
 
             case "top-rentals":
                 selectParams = SqlParameterUtils.setTopRentalsParams(selectParams);
@@ -166,22 +170,24 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 metaData.setRequestParams(requestParams);
                 break;
             case "top-box-office":
-                // emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-                // selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
-                // metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "meta", RootMetaDataInformation.class);
-                // if (metaData.totalCount == 0) {
-                //     LocalDate now = getTodayPST();
-
-                //     //exclusive, so if today == Sunday, return last week (so it flips on Monday)
-                //     LocalDate mostRecentSunday = now.with(previous(DayOfWeek.SUNDAY));
-                //     selectParams.put("startDate", mostRecentSunday);
-                //     metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "fallback/meta", RootMetaDataInformation.class);
-                // }
-                List<Movie> topBoxOfficeMovies = (new MovieListToMovieTopBoxOfficeApiCall(environment, fieldName,
-                        requestParams)).process();
-                metaData = new RootMetaDataInformation();
-                metaData.setTotalCount(topBoxOfficeMovies.size());
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+                selectParams = SqlParameterUtils.setTopBoxOfficeParams(selectParams);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "meta", RootMetaDataInformation.class);
+                if (metaData.totalCount == 0) {
+                    LocalDate now = getTodayPST();
+                    //exclusive, so if today == Sunday, return last week (so it flips on Monday)
+                    LocalDate mostRecentSunday = now.with(previous(DayOfWeek.SUNDAY));
+                    selectParams.put("startDate", mostRecentSunday);
+                    metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "top-box-office", "fallback/meta", RootMetaDataInformation.class);
+                }
                 metaData.setRequestParams(requestParams);
+                /* TODO RTBE-770
+                   List<Movie> topBoxOfficeMovies = (new MovieListToMovieTopBoxOfficeApiCall(environment, fieldName,
+                           requestParams)).process();
+                   metaData = new RootMetaDataInformation();
+                   metaData.setTotalCount(topBoxOfficeMovies.size());
+                   metaData.setRequestParams(requestParams);
+                 */
                 break;
 
             case "upcoming":
@@ -192,14 +198,17 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
                 break;
 
             case "opening":
-                // emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-                // selectParams = SqlParameterUtils.setOpeningParams(selectParams);
-                // metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "opening", "meta", RootMetaDataInformation.class);
-                List<Movie> openingMovies = (new MovieListToMovieOpeningApiCall(environment,
-                        fieldName, requestParams)).process();
-                metaData = new RootMetaDataInformation();
-                metaData.setTotalCount(openingMovies.size());
+                emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+                selectParams = SqlParameterUtils.setOpeningParams(selectParams);
+                metaData = (RootMetaDataInformation) emsClient.callEmsEntity(selectParams, "opening", "meta", RootMetaDataInformation.class);
                 metaData.setRequestParams(requestParams);
+                /* TODO RTBE-770
+                   List<Movie> openingMovies = (new MovieListToMovieOpeningApiCall(environment,
+                           fieldName, requestParams)).process();
+                   metaData = new RootMetaDataInformation();
+                   metaData.setTotalCount(openingMovies.size());
+                   metaData.setRequestParams(requestParams);
+                 */
                 break;
 
             case "top-rentals":
