@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.AudienceReview;
 import com.rottentomatoes.movieapi.domain.model.Movie;
+import com.rottentomatoes.movieapi.domain.model.apicalldelegators.MovieToAudienceReviewApiCall;
 
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
@@ -57,11 +58,15 @@ public class MovieToAudienceReviewRepository extends AbstractRepository implemen
         selectParams.put("limit", RepositoryUtils.getLimit(fieldName, requestParams));
         selectParams.put("offset", RepositoryUtils.getOffset(fieldName, requestParams));
 
-          EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-          List<AudienceReview> rawReviewList = (List<AudienceReview>)emsClient.callEmsList(selectParams, "movie", movieId + "/audience-review", TypeFactory.defaultInstance().constructCollectionType(List.class,  AudienceReview.class));
-          reviewList = new MetaDataEnabledList(rawReviewList);
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        List<AudienceReview> rawReviewList = (List<AudienceReview>)emsClient.callEmsList(selectParams, "movie", movieId + "/audience-review", TypeFactory.defaultInstance().constructCollectionType(List.class,  AudienceReview.class));
+        reviewList = new MetaDataEnabledList(rawReviewList);
 
-          return reviewList;
+        return reviewList;
+        /* TODO RTBE-774
+           List<AudienceReview> rawReviewList = (new MovieToAudienceReviewApiCall(environment, fieldName, requestParams, movieId)).process();
+           return new MetaDataEnabledList<AudienceReview>(rawReviewList);
+         */
     }
 
     @Override

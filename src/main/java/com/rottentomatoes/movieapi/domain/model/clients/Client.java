@@ -84,11 +84,13 @@ public class Client {
     private static MultiValueMap<String, String> prepareQueryParams(
             Map<String, String> queryParams) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-        for (String key : queryParams.keySet()) {
-            String value = queryParams.get(key);
-            if (value != null) {
-                params.add(key,
-                        value.replaceAll("%", "%25").replaceAll(" ", "%20").replaceAll("&", "%26"));
+        if (queryParams != null) {
+            for (String key : queryParams.keySet()) {
+                String value = queryParams.get(key);
+                if (value != null) {
+                    params.add(key, value.replaceAll("%", "%25").replaceAll(" ", "%20")
+                            .replaceAll("&", "%26"));
+                }
             }
         }
         return params;
@@ -96,10 +98,12 @@ public class Client {
 
     private static void setHttpHeaders(HttpURLConnection connection,
             Map<String, String> httpHeaders) {
-        for (String key : httpHeaders.keySet()) {
-            String value = httpHeaders.get(key);
-            if (value != null) {
-                connection.setRequestProperty(key, value);
+        if (httpHeaders != null) {
+            for (String key : httpHeaders.keySet()) {
+                String value = httpHeaders.get(key);
+                if (value != null) {
+                    connection.setRequestProperty(key, value);
+                }
             }
         }
     }
