@@ -13,16 +13,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Represents a response from the EMS Box Office endpoint
+ * Represents a response from an EMS endpoint that returns a list of {@link EmsMovie}
  * 
  * @author harry
  */
 @Getter
 @Setter
-public class EmsBoxOfficeResponse {
+public class EmsMovieListResponse {
     private List<EmsMovie> emsMovies;
 
-    public EmsBoxOfficeResponse(final String json) {
+    public EmsMovieListResponse(final String json) {
         this.emsMovies = JsonUtilities.deserialize(json, new TypeReference<List<EmsMovie>>() {});
     }
 }

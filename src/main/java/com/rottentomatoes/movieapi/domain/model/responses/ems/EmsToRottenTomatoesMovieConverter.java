@@ -11,8 +11,7 @@ import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieBoxOfficeInfo;
 
 /**
- * This class is responsible for converting Ems {@link EmsBoxOfficeResponse} to a List
- * of normalized Rotten Tomatoes {@link Movie}
+ * This class is responsible for converting a list of {@link EmsMovie} to a list  Rotten Tomatoes {@link Movie}
  *
  * @author harry
  */

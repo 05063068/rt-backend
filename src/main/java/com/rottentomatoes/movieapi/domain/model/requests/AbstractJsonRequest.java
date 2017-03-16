@@ -62,7 +62,7 @@ public abstract class AbstractJsonRequest {
     @JsonIgnore
     protected String apiStatName = null;
 
-    public AbstractJsonRequest(HttpMethod httpMethod, String absoluteUrl,
+    protected AbstractJsonRequest(HttpMethod httpMethod, String absoluteUrl,
             @Nullable Map<String, String> queryParameters,
             @Nullable Map<String, String> httpHeaders, @Nullable String apiStatName) {
 

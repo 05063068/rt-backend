@@ -2,17 +2,19 @@ package com.rottentomatoes.movieapi.enums;
 
 public enum Country {
 
-    UNITED_STATES("us"),
-    UNITED_KINGDOM("uk"),
-    NEW_ZEALAND("nz"),
-    AUSTRALIA("au"),
-    CANADA("ca"),
-    IRELAND("ie");
+    UNITED_STATES("us", "usa"),
+    UNITED_KINGDOM("uk", "gbr"),
+    NEW_ZEALAND("nz", "nzl"),
+    AUSTRALIA("au", "aus"),
+    CANADA("ca", "can"),
+    IRELAND("ie", "irl");
 
     private final String countryCode;
+    private final String countryCodeThreeLetter;
 
-    Country(String countryCode) {
+    Country(String countryCode, String countryCodeThreeLetter) {
         this.countryCode = countryCode;
+        this.countryCodeThreeLetter = countryCodeThreeLetter;
     }
 
     // Only supporting 'first class' countries since these are all we
@@ -35,5 +37,10 @@ public enum Country {
     public String getCountryCode() {
         return countryCode;
     }
+
+    public String getThreeLetterCountryCode() {
+        return countryCodeThreeLetter;
+    }
+
     public static Country getDefault() { return Country.UNITED_STATES; }
 }
