@@ -5,13 +5,16 @@
 package com.rottentomatoes.movieapi.domain.clients;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -37,25 +40,32 @@ public class Client {
 
         // Check for cached value
         String response = (String) localCache.getIfPresent(url);
-        if (response == null) {
-            response = callApi(url, request.getHttpMethod().name(), request.getHttpHeaders());
+        if (response == null || request.getHttpMethod() != HttpMethod.GET) {
+            response = callApi(url, request.getHttpMethod().name(), request.getHttpHeaders(), request.getRequestPayload());
         }
 
         // Return response
         return response;
     }
 
-    private static String callApi(final String url, final String httpMethod,
-            final Map<String, String> httpHeaders) {
+    private static String callApi(final String url, final String httpMethod, final Map<String, String> httpHeaders, final String payload) {
         String responseString = "";
+        OutputStream outputStream = null;
         Scanner scanner = null;
         try {
             // Prepare HTTP request
-            final HttpURLConnection connection = (HttpURLConnection) (new URL(url))
-                    .openConnection();
+            final HttpURLConnection connection = (HttpURLConnection) (new URL(url)).openConnection();
             connection.setRequestMethod(httpMethod);
             connection.setDoOutput(true);
             setHttpHeaders(connection, httpHeaders);
+
+            // Construct payload to send as part of HTTP request
+            if (payload != null && !payload.trim().equals("") && !payload.trim().equals("null")) {
+                byte[] payloadBytes = payload.getBytes(StandardCharsets.UTF_8.name());
+                connection.setRequestProperty("Content-length", payloadBytes.length + "");
+                OutputStream os = connection.getOutputStream();
+                os.write(payloadBytes);
+            }
 
             // Call HTTP request and get response
             scanner = new Scanner(connection.getInputStream(), StandardCharsets.UTF_8.name());
@@ -64,10 +74,20 @@ public class Client {
                 responseString = scanner.next();
                 localCache.put(url, responseString);
             }
-        } catch (IOException e) {
+        } catch (MalformedURLException mue) {
+            mue.printStackTrace();
+        } catch (IOException ioe) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            ioe.printStackTrace();
         } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException ioe) {
+                    // TODO Auto-generated catch block
+                    ioe.printStackTrace();
+                }
+            }
             if (scanner != null) {
                 scanner.close();
             }

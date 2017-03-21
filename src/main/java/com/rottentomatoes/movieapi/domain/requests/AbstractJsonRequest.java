@@ -56,6 +56,13 @@ public abstract class AbstractJsonRequest {
     @JsonIgnore
     protected Map<String, String> httpHeaders;
 
+    /*
+     * Represents the payload sent as part of the HTTP request
+     */
+    @JsonIgnore
+    protected String requestPayload;
+
+
     /**
      * Represents the stats name for the API to be used for statsD purposes
      */
