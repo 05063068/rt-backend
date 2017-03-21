@@ -16,13 +16,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
-import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.model.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieList;
-import com.rottentomatoes.movieapi.domain.model.apicalldelegators.MovieListToMovieAllBoxOfficeApiCall;
-import com.rottentomatoes.movieapi.domain.model.apicalldelegators.MovieListToMovieOpeningApiCall;
-import com.rottentomatoes.movieapi.domain.model.apicalldelegators.MovieListToMovieTopBoxOfficeApiCall;
+import com.rottentomatoes.movieapi.domain.apicalldelegators.ems.MovieListToMovieAllBoxOfficeApiCall;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import com.rottentomatoes.movieapi.utils.SqlParameterUtils;

@@ -7,11 +7,11 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
-import com.rottentomatoes.movieapi.domain.meta.RelatedMetaDataInformation;
+import com.rottentomatoes.movieapi.domain.model.meta.RelatedMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Image;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 

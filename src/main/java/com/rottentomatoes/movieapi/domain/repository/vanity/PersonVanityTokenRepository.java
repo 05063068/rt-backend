@@ -2,7 +2,7 @@ package com.rottentomatoes.movieapi.domain.repository.vanity;
 
 import com.rottentomatoes.movieapi.domain.model.PersonVanityToken;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.ResourceRepository;
 import org.springframework.stereotype.Component;

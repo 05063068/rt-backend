@@ -3,7 +3,7 @@ package com.rottentomatoes.movieapi.domain.repository;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 
