@@ -1,6 +1,6 @@
 package com.rottentomatoes.movieapi.domain.repository.vanity;
 
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.model.TvVanityToken;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import io.katharsis.queryParams.RequestParams;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.util.HashMap;
 
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.rottentomatoes.movieapi.domain.repository.person;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.model.Person;
 import com.rottentomatoes.movieapi.domain.model.TvFilmographyItem;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;

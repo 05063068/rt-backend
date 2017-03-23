@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
-import com.rottentomatoes.movieapi.domain.ems.PreEmsClient;
-import com.rottentomatoes.movieapi.domain.ems.TvEmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.PreEmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.TvEmsClient;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -2,10 +2,9 @@ package com.rottentomatoes.movieapi.domain.repository.tvseries;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.TopTomatometer;
-import com.rottentomatoes.movieapi.domain.model.TvSeason;
 import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.RelationshipRepository;

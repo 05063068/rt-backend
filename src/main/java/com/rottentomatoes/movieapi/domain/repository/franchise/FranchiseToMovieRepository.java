@@ -3,9 +3,8 @@ package com.rottentomatoes.movieapi.domain.repository.franchise;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.rottentomatoes.movieapi.domain.model.Franchise;
 import com.rottentomatoes.movieapi.domain.model.Movie;
-import com.rottentomatoes.movieapi.domain.model.TvSeries;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.repository.movie.MovieRepository;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import io.katharsis.queryParams.RequestParams;
@@ -18,7 +17,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class FranchiseToMovieRepository extends AbstractRepository implements RelationshipRepository<Franchise, String, Movie, String> {

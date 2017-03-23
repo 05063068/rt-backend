@@ -1,12 +1,12 @@
 package com.rottentomatoes.movieapi.domain.repository.movie;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.rottentomatoes.movieapi.domain.meta.RootMetaDataInformation;
+import com.rottentomatoes.movieapi.domain.model.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Affiliate;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
-import com.rottentomatoes.movieapi.domain.ems.EmsClient;
+import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import io.katharsis.queryParams.RequestParams;
 import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.RelationshipRepository;
