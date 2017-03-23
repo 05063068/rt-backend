@@ -1,9 +1,7 @@
 package com.rottentomatoes.movieapi.domain.converters;
 
-public abstract class AbstractConverter {
+public interface AbstractConverter<T> {
 
-    public static Object convert(final Object response) {
-        return null;
-    }
-
+    // converts one or more response objects into the desired output object
+    T convert();
 }

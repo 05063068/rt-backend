@@ -20,7 +20,7 @@ import com.rottentomatoes.movieapi.domain.clients.ems.EmsClient;
 import com.rottentomatoes.movieapi.domain.model.meta.RootMetaDataInformation;
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieList;
-import com.rottentomatoes.movieapi.domain.apicalldelegators.ems.MovieListToMovieAllBoxOfficeApiCall;
+import com.rottentomatoes.movieapi.domain.apicalldelegators.movielist.MovieListToMovieAllBoxOfficeApiCall;
 import com.rottentomatoes.movieapi.domain.repository.AbstractRepository;
 import com.rottentomatoes.movieapi.utils.RepositoryUtils;
 import com.rottentomatoes.movieapi.utils.SqlParameterUtils;
@@ -56,14 +56,14 @@ public class MovieListToMovieRepository extends AbstractRepository implements Re
     }
     
     private Iterable<Movie> hydrateIdList(EmsClient emsClient, EmsClient emsHydrationClient, Map<String, Object> selectParams) {
-        // get Ids from (tv)ems endpoint
+        // get Ids from (tv)movielist endpoint
         List<Integer> movieIds = (List<Integer>) emsClient.callEmsList(selectParams, "movie-list", "top", TypeFactory.defaultInstance().constructCollectionType(List.class, Integer.class));
         if (movieIds != null && movieIds.size() > 0) {
             List<String> idList = movieIds.stream()
                     .map(elt -> elt.toString())
                     .collect(Collectors.toList());
             selectParams.put("ids", String.join(",", idList));
-            // hydrate list using pre-ems endpoint
+            // hydrate list using pre-movielist endpoint
             List movies = (List<Movie>) emsHydrationClient.callEmsList(selectParams, "movie", null, TypeFactory.defaultInstance().constructCollectionType(List.class, Movie.class));
 
             // Assure the movie order is returned to intended order which is set by the movie id list.

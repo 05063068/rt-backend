@@ -1,12 +1,18 @@
-package com.rottentomatoes.movieapi.domain.converters.urating;
+package com.rottentomatoes.movieapi.domain.converters.review;
 
 import com.rottentomatoes.movieapi.domain.model.AudienceReview;
 import com.rottentomatoes.movieapi.domain.converters.AbstractConverter;
 import com.rottentomatoes.movieapi.domain.responses.urating.UserRatingResponse;
 
-public class UserRatingResponseToAudienceReviewConverter extends AbstractConverter {
+public class AudienceReviewConverter implements AbstractConverter<AudienceReview> {
 
-    public AudienceReview convert(UserRatingResponse response) {
+    UserRatingResponse response;
+
+    public AudienceReviewConverter(UserRatingResponse response) {
+        this.response = response;
+    }
+
+    public AudienceReview convert() {
         AudienceReview audienceReview = new AudienceReview();
         audienceReview.setMovieId(response.getMovieId());
         audienceReview.setUserId(response.getUserId());

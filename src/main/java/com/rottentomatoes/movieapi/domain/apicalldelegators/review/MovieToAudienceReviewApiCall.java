@@ -2,14 +2,14 @@
  * Flixster Inc. Copyright (c) 2017. All Rights Reserved.
  */
 
-package com.rottentomatoes.movieapi.domain.apicalldelegators.urating;
+package com.rottentomatoes.movieapi.domain.apicalldelegators.review;
 
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.rottentomatoes.movieapi.domain.apicalldelegators.AbstractApiCall;
-import com.rottentomatoes.movieapi.domain.converters.ListConverter;
-import com.rottentomatoes.movieapi.domain.converters.urating.UserRatingResponseToAudienceReviewConverter;
+import com.rottentomatoes.movieapi.domain.converters.movie.ListConverter;
+import com.rottentomatoes.movieapi.domain.converters.review.AudienceReviewListConverter;
 import com.rottentomatoes.movieapi.domain.responses.urating.UserRatingResponse;
 import com.rottentomatoes.movieapi.utils.JsonUtilities;
 import org.springframework.core.env.Environment;
@@ -42,7 +42,9 @@ public class MovieToAudienceReviewApiCall extends AbstractApiCall {
         UserRatingsTopRatingsRequest request = new UserRatingsTopRatingsRequest(environment, movieId);
         List<UserRatingResponse> response = JsonUtilities.deserialize(Client.makeApiCall(request),
                 new TypeReference<List<UserRatingResponse>>() {});
-        return ListConverter.convert(response, new UserRatingResponseToAudienceReviewConverter());
+        AudienceReviewListConverter converter =
+                new AudienceReviewListConverter(response);
+        return converter.convert();
     }
 
 }

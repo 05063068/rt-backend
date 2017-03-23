@@ -2,14 +2,13 @@
  * Flixster Inc. Copyright (c) 2017. All Rights Reserved.
  */
 
-package com.rottentomatoes.movieapi.domain.apicalldelegators.ems;
+package com.rottentomatoes.movieapi.domain.apicalldelegators.movielist;
 
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.rottentomatoes.movieapi.domain.apicalldelegators.AbstractApiCall;
-import com.rottentomatoes.movieapi.domain.converters.ListConverter;
-import com.rottentomatoes.movieapi.domain.converters.ems.MovieResponseToMovieConverter;
+import com.rottentomatoes.movieapi.domain.converters.movie.MovieListConverter;
 import com.rottentomatoes.movieapi.domain.responses.ems.MovieResponse;
 import com.rottentomatoes.movieapi.utils.JsonUtilities;
 import org.springframework.core.env.Environment;
@@ -38,6 +37,7 @@ public class MovieListToMovieAllBoxOfficeApiCall extends AbstractApiCall {
     public List<Movie> process() {
         EmsBoxOfficeRequest request = new EmsBoxOfficeRequest(environment, fieldName, requestParams);
         List<MovieResponse> response = JsonUtilities.deserialize(Client.makeApiCall(request), new TypeReference<List<MovieResponse>>() {});
-        return ListConverter.convert(response, new MovieResponseToMovieConverter());
+        MovieListConverter converter = new MovieListConverter(response);
+        return converter.convert();
     }
 }

@@ -1,4 +1,4 @@
-package com.rottentomatoes.movieapi.domain.converters.ems;
+package com.rottentomatoes.movieapi.domain.converters.movie;
 
 import com.rottentomatoes.movieapi.domain.model.Movie;
 import com.rottentomatoes.movieapi.domain.model.MovieBoxOfficeInfo;
@@ -8,7 +8,7 @@ import com.rottentomatoes.movieapi.domain.responses.ems.MpaaRatingResponse;
 import com.rottentomatoes.movieapi.domain.responses.ems.RtInfoResponse;
 import com.rottentomatoes.movieapi.domain.responses.ems.TomatometerResponse;
 
-public class MovieResponseToMovieConverter extends AbstractConverter {
+public class MovieConverter implements AbstractConverter<Movie> {
 
     private static final String TOMATOMETER_STATE_CERTIFIED_FRESH = "certified_fresh";
     private static final String TOMATOMETER_STATE_FRESH = "fresh";
@@ -18,7 +18,13 @@ public class MovieResponseToMovieConverter extends AbstractConverter {
     private static final String TOMATOMETER_STATE = "state";
     private static final String TOMATOMETER_VALUE = "value";
 
-    public static Movie convert(MovieResponse response) {
+    private MovieResponse response;
+
+    public MovieConverter(MovieResponse response) {
+        this.response = response;
+    }
+
+    public Movie convert() {
         Movie movie = new Movie();
 
         movie.setTitle(response.getTitle());
