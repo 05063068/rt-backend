@@ -39,10 +39,9 @@ public class MovieToAudienceReviewApiCall extends AbstractApiCall {
     @Override
     public List<AudienceReview> process() {
         MovieTopRatingsRequest request = new MovieTopRatingsRequest(environment, movieId);
-        List<MovieUserRatingResponse> response = JsonUtilities.deserialize(Client.makeApiCall(request),
-                new TypeReference<List<MovieUserRatingResponse>>() {});
-        AudienceReviewListConverter converter =
-                new AudienceReviewListConverter(response);
+        List<MovieUserRatingResponse> response = JsonUtilities.deserialize(
+                Client.makeApiCall(request), new TypeReference<List<MovieUserRatingResponse>>() {});
+        AudienceReviewListConverter converter = new AudienceReviewListConverter(response);
         return converter.convert();
     }
 

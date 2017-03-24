@@ -54,12 +54,14 @@ public class TvSeasonToAudienceReviewsRepository extends AbstractRepository impl
         Map<String, Object> selectParams = new HashMap<>();
         MetaDataEnabledList<TvAudienceReview> reviewList = null;
 
-          EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
-          List<TvAudienceReview> rawReviewList = (List<TvAudienceReview>)emsClient.callEmsList(selectParams, "tv/season", tvSeasonId + "/audience-reviews", TypeFactory.defaultInstance().constructCollectionType(List.class,  TvAudienceReview.class));
-          StringSanitizationUtils.sanitizeTvAudienceReviews(rawReviewList);
-          reviewList = new MetaDataEnabledList(rawReviewList);
+        EmsClient emsClient = emsRouter.fetchEmsClientForEndpoint(this.getClass());
+        List<TvAudienceReview> rawReviewList = (List<TvAudienceReview>)emsClient.callEmsList(selectParams, "tv/season", tvSeasonId + "/audience-reviews", TypeFactory.defaultInstance().constructCollectionType(List.class,  TvAudienceReview.class));
+        // TODO RTBE-774
+        // List<TvAudienceReview> rawReviewList = new TvSeasonToTvAudienceReviewApiCall(environment, fieldName, requestParams, tvSeasonId).process();
+        StringSanitizationUtils.sanitizeTvAudienceReviews(rawReviewList);
+        reviewList = new MetaDataEnabledList(rawReviewList);
 
-          return reviewList;
+        return reviewList;
     }
 
     @Override
