@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.rottentomatoes.movieapi.domain.model.DeSerializeZonedDateTime;
 
-import com.rottentomatoes.movieapi.domain.converters.AbstractConverter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +24,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class UserRatingResponse {
+public class MovieUserRatingResponse {
 
     @JsonProperty("movie_id")
     public Long movieId;
