@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.rottentomatoes.movieapi.domain.apicalldelegators.AbstractApiCall;
-import com.rottentomatoes.movieapi.domain.converters.movie.ListConverter;
 import com.rottentomatoes.movieapi.domain.converters.review.AudienceReviewListConverter;
 import com.rottentomatoes.movieapi.domain.responses.urating.UserRatingResponse;
 import com.rottentomatoes.movieapi.utils.JsonUtilities;
