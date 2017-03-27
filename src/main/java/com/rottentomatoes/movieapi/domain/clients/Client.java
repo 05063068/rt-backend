@@ -41,8 +41,9 @@ public class Client {
         // Check for cached value
         String response = (String) localCache.getIfPresent(url);
         if (response == null || request.getHttpMethod() != HttpMethod.GET) {
-            response = callApi(url, request.getHttpMethod().name(), request.getHttpHeaders(), request.getRequestPayload());
+            response = callApi(url, request.getHttpMethod().name(), request.getHttpHeaders(), request.serialize());
         }
+
 
         // Return response
         return response;
@@ -60,7 +61,7 @@ public class Client {
             setHttpHeaders(connection, httpHeaders);
 
             // Construct payload to send as part of HTTP request
-            if (payload != null && !payload.trim().equals("") && !payload.trim().equals("null")) {
+            if (payload != null && !payload.trim().equals("")) {
                 byte[] payloadBytes = payload.getBytes(StandardCharsets.UTF_8.name());
                 connection.setRequestProperty("Content-length", payloadBytes.length + "");
                 OutputStream os = connection.getOutputStream();

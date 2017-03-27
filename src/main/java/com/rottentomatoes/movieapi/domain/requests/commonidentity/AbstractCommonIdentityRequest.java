@@ -1,7 +1,5 @@
 package com.rottentomatoes.movieapi.domain.requests.commonidentity;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rottentomatoes.movieapi.domain.requests.AbstractJsonRequest;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -17,15 +15,9 @@ public abstract class AbstractCommonIdentityRequest extends AbstractJsonRequest 
 
     public AbstractCommonIdentityRequest(final Environment environment, final HttpMethod httpMethod, final String urlService,
                                          final String urlPath, @Nullable final Map<String, String> queryParameters,
-                                         @Nullable final Map<String, String> httpHeaders, @Nullable Object payloadObject,
-                                         @Nullable final String apiStatName) {
+                                         @Nullable final Map<String, String> httpHeaders, @Nullable final String apiStatName) {
         super(httpMethod, prepareAbsoluteUrl(environment, urlService, urlPath), queryParameters,
                 prepareHttpHeaders(httpHeaders), apiStatName);
-        try {
-            this.setRequestPayload((new ObjectMapper()).writeValueAsString(payloadObject));
-        } catch (JsonProcessingException e) {
-            // TODO throw error for failing to construct payload
-        }
     }
 
     private static Map<String, String> prepareHttpHeaders(final Map<String,String> additionalHeaders) {

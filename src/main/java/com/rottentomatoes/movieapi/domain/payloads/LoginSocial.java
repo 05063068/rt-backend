@@ -1,6 +1,7 @@
-package com.rottentomatoes.movieapi.domain.model.account;
+package com.rottentomatoes.movieapi.domain.payloads;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rottentomatoes.movieapi.domain.model.account.Login;
 import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,5 +12,6 @@ import lombok.Setter;
 @JsonIgnoreProperties({"id","identityToken","session","user"})
 public class LoginSocial extends Login {
 
-    protected String accessToken;
+    protected String social;
+    protected String token;
 }

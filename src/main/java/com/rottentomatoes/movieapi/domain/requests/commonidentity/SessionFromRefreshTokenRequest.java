@@ -14,7 +14,7 @@ public class SessionFromRefreshTokenRequest extends AbstractCommonIdentityReques
     public static final String API_STAT_NAME = "COMMON_IDENTITY_SESSION_REFRESH";
 
     public SessionFromRefreshTokenRequest(final Environment environment, String refreshToken) {
-        super(environment, HttpMethod.GET, "commonauth", "refreshAccessToken", null, prepareHttpHeaders(refreshToken), null, API_STAT_NAME);
+        super(environment, HttpMethod.GET, "commonauth", "refreshAccessToken", null, prepareHttpHeaders(refreshToken), API_STAT_NAME);
     }
 
     private static Map<String, String> prepareHttpHeaders(String refreshToken) {

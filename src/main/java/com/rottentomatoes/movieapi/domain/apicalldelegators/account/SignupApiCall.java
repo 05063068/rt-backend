@@ -6,7 +6,7 @@ import com.rottentomatoes.movieapi.domain.clients.Client;
 import com.rottentomatoes.movieapi.domain.converters.account.IdentityTokenConverter;
 import com.rottentomatoes.movieapi.domain.converters.account.SessionConverter;
 import com.rottentomatoes.movieapi.domain.converters.account.UserConverter;
-import com.rottentomatoes.movieapi.domain.model.account.SignupEmail;
+import com.rottentomatoes.movieapi.domain.payloads.SignupEmail;
 import com.rottentomatoes.movieapi.domain.model.account.Signup;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.AbstractCommonIdentityRequest;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.SignupWithEmailRequest;

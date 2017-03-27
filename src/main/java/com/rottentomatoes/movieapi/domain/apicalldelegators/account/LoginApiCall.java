@@ -6,9 +6,9 @@ import com.rottentomatoes.movieapi.domain.clients.Client;
 import com.rottentomatoes.movieapi.domain.converters.account.IdentityTokenConverter;
 import com.rottentomatoes.movieapi.domain.converters.account.SessionConverter;
 import com.rottentomatoes.movieapi.domain.converters.account.UserConverter;
-import com.rottentomatoes.movieapi.domain.model.account.LoginEmail;
+import com.rottentomatoes.movieapi.domain.payloads.LoginEmail;
 import com.rottentomatoes.movieapi.domain.model.account.Login;
-import com.rottentomatoes.movieapi.domain.model.account.LoginSocial;
+import com.rottentomatoes.movieapi.domain.payloads.LoginSocial;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.AbstractCommonIdentityRequest;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.LoginWithEmailRequest;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.LoginWithFacebookRequest;
@@ -84,7 +84,7 @@ public class LoginApiCall extends AbstractApiCall {
     }
 
     private boolean hasSocialFieldsPopulated() {
-        return loginObject != null && loginObject instanceof LoginSocial && ((LoginSocial) loginObject).getAccessToken() != null;
+        return loginObject != null && loginObject instanceof LoginSocial && ((LoginSocial) loginObject).getToken() != null;
     }
 
 //    private void clearPassword() {

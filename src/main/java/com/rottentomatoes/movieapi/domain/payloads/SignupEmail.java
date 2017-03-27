@@ -1,6 +1,7 @@
-package com.rottentomatoes.movieapi.domain.model.account;
+package com.rottentomatoes.movieapi.domain.payloads;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rottentomatoes.movieapi.domain.model.account.Signup;
 import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;

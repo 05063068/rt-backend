@@ -14,7 +14,7 @@ public class UserProfileFromAccessTokenRequest extends AbstractCommonIdentityReq
     public static final String API_STAT_NAME = "COMMON_IDENTITY_USER_PROFILE";
 
     public UserProfileFromAccessTokenRequest(final Environment environment, String accessToken) {
-        super(environment, HttpMethod.GET, "commonaccount", "account/profile", null, prepareHttpHeaders(accessToken), null, API_STAT_NAME);
+        super(environment, HttpMethod.GET, "commonaccount", "account/profile", null, prepareHttpHeaders(accessToken), API_STAT_NAME);
     }
 
     private static Map<String, String> prepareHttpHeaders(String accessToken) {

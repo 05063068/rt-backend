@@ -4,7 +4,6 @@
 
 package com.rottentomatoes.movieapi.domain.requests.commonidentity;
 
-import com.rottentomatoes.movieapi.domain.responses.commonidentity.IdentityTokenResponse;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 
@@ -15,7 +14,7 @@ public class SessionFromIdentityTokenRequest extends AbstractCommonIdentityReque
     public static final String API_STAT_NAME = "COMMON_IDENTITY_SESSION_FETCH";
 
     public SessionFromIdentityTokenRequest(final Environment environment, String identityToken) {
-        super(environment, HttpMethod.GET, "commonauth", "session", null, prepareHttpHeaders(identityToken), null, API_STAT_NAME);
+        super(environment, HttpMethod.GET, "commonauth", "session", null, prepareHttpHeaders(identityToken), API_STAT_NAME);
     }
 
     private static Map<String, String> prepareHttpHeaders(String identityToken) {

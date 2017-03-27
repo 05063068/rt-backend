@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.HttpMethod;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -80,8 +81,16 @@ public abstract class AbstractJsonRequest {
         setApiStatName(apiStatName);
     }
 
-    public String serialize() throws JsonProcessingException {
-        return (new ObjectMapper()).writeValueAsString(this);
+    public String serialize() {
+        try {
+            return (new ObjectMapper()).writeValueAsString(this);
+        } catch (JsonMappingException e) {
+            // ignore, not all responses require serializers
+        } catch (JsonProcessingException e) {
+            // TODO throw invalid request exception
+            e.printStackTrace();
+        }
+        return null;
     }
 
     protected static Map<String, String> prepareAuthenticationHttpHeader(
