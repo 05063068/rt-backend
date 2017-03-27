@@ -6,7 +6,9 @@ import com.rottentomatoes.movieapi.domain.clients.Client;
 import com.rottentomatoes.movieapi.domain.converters.account.IdentityTokenConverter;
 import com.rottentomatoes.movieapi.domain.converters.account.SessionConverter;
 import com.rottentomatoes.movieapi.domain.converters.account.UserConverter;
+import com.rottentomatoes.movieapi.domain.model.account.LoginEmail;
 import com.rottentomatoes.movieapi.domain.model.account.Login;
+import com.rottentomatoes.movieapi.domain.model.account.LoginSocial;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.AbstractCommonIdentityRequest;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.LoginWithEmailRequest;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.LoginWithFacebookRequest;
@@ -30,21 +32,23 @@ public class LoginApiCall extends AbstractApiCall {
     @SuppressWarnings("unchecked")
     @Override
     public Login process() {
+        Login response = new Login();
         if (hasLoginFieldsPopulated()) {
             AbstractCommonIdentityRequest request = null;
 
             // fetch identity token
             if (hasEmailFieldsPopulated()) {
-                request = new LoginWithEmailRequest(environment, loginObject);
+                request = new LoginWithEmailRequest(environment, (LoginEmail) loginObject);
             } else if (hasSocialFieldsPopulated()) {
-                request = new LoginWithFacebookRequest(environment, loginObject);
+                request = new LoginWithFacebookRequest(environment, (LoginSocial) loginObject);
             } else {
                 // TODO throw invalid request error
                 return null;
             }
+
             IdentityTokenResponse idTokenResponse = JsonUtilities.deserialize(Client.makeApiCall(request),
                         new TypeReference<IdentityTokenResponse>() {});
-            loginObject.setIdentityToken(new IdentityTokenConverter(idTokenResponse).convert());
+            response.setIdentityToken(new IdentityTokenConverter(idTokenResponse).convert());
 
             // fetch session given identityToken
             if (idTokenResponse != null) {
@@ -52,7 +56,7 @@ public class LoginApiCall extends AbstractApiCall {
                 SessionResponse sessionResponse = JsonUtilities.deserialize(Client.makeApiCall(request),
                         new TypeReference<SessionResponse>() {
                         });
-                loginObject.setSession(new SessionConverter(sessionResponse).convert());
+                response.setSession(new SessionConverter(sessionResponse).convert());
 
                 // fetch user profile given accessToken
                 if (sessionResponse != null) {
@@ -60,15 +64,15 @@ public class LoginApiCall extends AbstractApiCall {
                     UserProfileResponse userProfileResponse = JsonUtilities.deserialize(Client.makeApiCall(request),
                             new TypeReference<UserProfileResponse>() {
                             });
-                    loginObject.setUser(new UserConverter(userProfileResponse).convert());
+                    response.setUser(new UserConverter(userProfileResponse).convert());
                 }
             }
         } else {
             // TODO throw invalid request error
         }
 
-        clearPassword();
-        return loginObject;
+//        clearPassword();
+        return response;
     }
 
     private boolean hasLoginFieldsPopulated() {
@@ -76,15 +80,15 @@ public class LoginApiCall extends AbstractApiCall {
     }
 
     private boolean hasEmailFieldsPopulated() {
-        return loginObject != null && loginObject.getEmail() != null && loginObject.getPassword() != null;
+        return loginObject != null && loginObject instanceof LoginEmail && ((LoginEmail) loginObject).getEmail() != null && ((LoginEmail) loginObject).getPassword() != null;
     }
 
     private boolean hasSocialFieldsPopulated() {
-        return loginObject != null && loginObject.getAccessToken() != null;
+        return loginObject != null && loginObject instanceof LoginSocial && ((LoginSocial) loginObject).getAccessToken() != null;
     }
 
-    private void clearPassword() {
-        loginObject.setPassword(null);
-    }
+//    private void clearPassword() {
+//        loginObject.setPassword(null);
+//    }
 
 }

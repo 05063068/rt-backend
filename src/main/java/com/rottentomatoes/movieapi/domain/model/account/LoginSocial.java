@@ -5,10 +5,11 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonApiResource(type = "signup")
+@JsonApiResource(type = "login-social")
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Signup extends Login {
+@JsonIgnoreProperties({"id","identityToken","session","user"})
+public class LoginSocial extends Login {
 
+    protected String accessToken;
 }

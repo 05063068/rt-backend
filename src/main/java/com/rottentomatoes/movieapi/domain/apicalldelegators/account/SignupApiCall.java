@@ -6,6 +6,7 @@ import com.rottentomatoes.movieapi.domain.clients.Client;
 import com.rottentomatoes.movieapi.domain.converters.account.IdentityTokenConverter;
 import com.rottentomatoes.movieapi.domain.converters.account.SessionConverter;
 import com.rottentomatoes.movieapi.domain.converters.account.UserConverter;
+import com.rottentomatoes.movieapi.domain.model.account.SignupEmail;
 import com.rottentomatoes.movieapi.domain.model.account.Signup;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.AbstractCommonIdentityRequest;
 import com.rottentomatoes.movieapi.domain.requests.commonidentity.SignupWithEmailRequest;
@@ -29,46 +30,40 @@ public class SignupApiCall extends AbstractApiCall {
     @SuppressWarnings("unchecked")
     @Override
     public Signup process() {
+        Signup response = new Signup();
         if (hasSignupFieldsPopulated()) {
             // fetch identity token
-            AbstractCommonIdentityRequest request = new SignupWithEmailRequest(environment, signupObject);
+            AbstractCommonIdentityRequest request = new SignupWithEmailRequest(environment, (SignupEmail) signupObject);
             IdentityTokenResponse idTokenResponse = JsonUtilities.deserialize(Client.makeApiCall(request),
                         new TypeReference<IdentityTokenResponse>() {});
-            signupObject.setIdentityToken(new IdentityTokenConverter(idTokenResponse).convert());
+            response.setIdentityToken(new IdentityTokenConverter(idTokenResponse).convert());
 
             // fetch session given identityToken
             if (idTokenResponse != null) {
                 request = new SessionFromIdentityTokenRequest(environment, idTokenResponse.getIdentityToken());
                 SessionResponse sessionResponse = JsonUtilities.deserialize(Client.makeApiCall(request),
                         new TypeReference<SessionResponse>() {});
-                signupObject.setSession(new SessionConverter(sessionResponse).convert());
+                response.setSession(new SessionConverter(sessionResponse).convert());
 
                 // fetch user profile given accessToken
                 if (sessionResponse != null) {
                     request = new UserProfileFromAccessTokenRequest(environment, sessionResponse.getAccessToken());
                     UserProfileResponse userProfileResponse = JsonUtilities.deserialize(Client.makeApiCall(request),
                             new TypeReference<UserProfileResponse>() {});
-                    signupObject.setUser(new UserConverter(userProfileResponse).convert());
+                    response.setUser(new UserConverter(userProfileResponse).convert());
                 }
             }
         } else {
             // TODO throw invalid request error
         }
-
-        clearPassword();
         return signupObject;
     }
 
     private boolean hasSignupFieldsPopulated() {
-        return signupObject != null &&
-                signupObject.getEmail() != null &&
-                signupObject.getPassword() != null &&
-                signupObject.getFirstName() != null &&
-                signupObject.getLastName() != null;
+        return signupObject != null && signupObject instanceof SignupEmail &&
+                ((SignupEmail) signupObject).getEmail() != null &&
+                ((SignupEmail) signupObject).getPassword() != null &&
+                ((SignupEmail) signupObject).getFirstName() != null &&
+                ((SignupEmail) signupObject).getLastName() != null;
     }
-
-    private void clearPassword() {
-        signupObject.setPassword(null);
-    }
-
 }

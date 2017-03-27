@@ -6,16 +6,12 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonApiResource(type = "login")
+@JsonApiResource(type = "login-email")
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Login extends AbstractModel {
+@JsonIgnoreProperties({"id","identityToken","session","user"})
+public class LoginEmail extends Login {
 
-    protected IdentityToken identityToken;
-
-    protected Session session;
-
-    protected User user;
-
+    protected String email;
+    protected String password;
 }
