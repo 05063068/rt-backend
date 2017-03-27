@@ -14,10 +14,19 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends AbstractModel {
 
+    protected String vipId;
+    protected String userKey;
+    protected String sourceType;
+    protected String status;
+    protected String createDate;
+    protected String lastLoginDate;
+
     protected String mainImage;
+    protected String email;
     protected String firstName;
     protected String lastName;
     protected String gender;
+    protected String country;
     protected Date dateOfBirth;
 
     protected AccessToken accessToken;

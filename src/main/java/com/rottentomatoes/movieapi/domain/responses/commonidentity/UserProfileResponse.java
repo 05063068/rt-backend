@@ -15,19 +15,28 @@ import java.util.Date;
 public class UserProfileResponse {
 
     @JsonProperty("rt_id")
-    public String rtId;
+    protected String rtId;
+    @JsonProperty("vip_id")
+    protected String vipId;
+    protected String userKey;
+    protected String accessToken;
+    protected String sourceType;
+    protected String status;
 
-    public String firstName;
-
-    public String lastName;
-
-    public String mainImage;
-
-    public String gender;
-
+    protected String mainImage;
+    protected String email;
+    protected String firstName;
+    protected String lastName;
+    protected String gender;
+    protected String country;
     @JsonProperty("dob")
-    public Date dateOfBirth;
+    protected Date dateOfBirth;
 
-    public String accessToken;
+    protected String createDate;
+    protected String lastLoginDate;
+
+    protected String ipAddress;
+    protected String hashAlgorithm;
+    protected String passwordSalt;
 
 }

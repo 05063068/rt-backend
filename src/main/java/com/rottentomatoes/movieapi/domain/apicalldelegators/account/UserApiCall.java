@@ -25,8 +25,8 @@ public class UserApiCall extends AbstractApiCall {
         User user = null;
         AbstractCommonIdentityRequest request = null;
         switch (fieldName) {
-            // fetch user for given identity token
-            case "token":
+            // fetch current signed in user for given access token
+            case "current":
                 String token = null;
                 if (requestParams != null) {
                     if (requestParams.getFilters()!= null && requestParams.getFilters().containsKey("accessToken")) {
@@ -38,6 +38,7 @@ public class UserApiCall extends AbstractApiCall {
                 }
                 request = new UserProfileFromAccessTokenRequest(environment, token);
                 break;
+            // fetch user based on rt user id
             default:
                 // TODO add request for fetching user for an ID
                 return user;

@@ -16,10 +16,20 @@ public class UserConverter implements AbstractConverter<User> {
         if (response != null) {
             user.setId(response.getRtId());
             user.setMainImage(response.getMainImage());
+            user.setEmail(response.getEmail());
             user.setFirstName(response.getFirstName());
             user.setLastName(response.getLastName());
-            user.setDateOfBirth(response.getDateOfBirth());
             user.setGender(response.getGender());
+            user.setCountry(response.getCountry());
+            user.setDateOfBirth(response.getDateOfBirth());
+
+            user.setVipId(response.getVipId());
+            user.setUserKey(response.getUserKey());
+            user.setSourceType(response.getSourceType());
+            user.setStatus(response.getStatus());
+            user.setCreateDate(response.getCreateDate());
+            user.setLastLoginDate(response.getLastLoginDate());
+
             user.setAccessToken(new AccessTokenConverter(response.getAccessToken()).convert());
         }
         return user;
