@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.rottentomatoes.movieapi.domain.model.DeSerializeZonedDateTime;
 
-import com.rottentomatoes.movieapi.domain.converters.AbstractConverter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,10 +24,13 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class UserRatingResponse {
+public class TvSeasonUserRatingResponse {
 
-    @JsonProperty("movie_id")
-    public Long movieId;
+    @JsonProperty("series_id")
+    public Long seriesId;
+
+    @JsonProperty("season_id")
+    public Long seasonId;
 
     @JsonProperty("user_id")
     public Long userId;

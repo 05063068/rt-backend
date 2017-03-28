@@ -2,13 +2,13 @@ package com.rottentomatoes.movieapi.domain.converters.review;
 
 import com.rottentomatoes.movieapi.domain.model.AudienceReview;
 import com.rottentomatoes.movieapi.domain.converters.AbstractConverter;
-import com.rottentomatoes.movieapi.domain.responses.urating.UserRatingResponse;
+import com.rottentomatoes.movieapi.domain.responses.urating.MovieUserRatingResponse;
 
 public class AudienceReviewConverter implements AbstractConverter<AudienceReview> {
 
-    UserRatingResponse response;
+    MovieUserRatingResponse response;
 
-    public AudienceReviewConverter(UserRatingResponse response) {
+    public AudienceReviewConverter(MovieUserRatingResponse response) {
         this.response = response;
     }
 
