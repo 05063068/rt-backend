@@ -82,15 +82,19 @@ public abstract class AbstractJsonRequest {
     }
 
     public String serialize() {
+        String s = null;
         try {
-            return (new ObjectMapper()).writeValueAsString(this);
+            s = (new ObjectMapper()).writeValueAsString(this);
         } catch (JsonMappingException e) {
             // ignore, not all responses require serializers
         } catch (JsonProcessingException e) {
             // TODO throw invalid request exception
             e.printStackTrace();
         }
-        return null;
+        if (s == null || s.trim().equals("") || s.trim().equals("{}")) {
+            return null;
+        }
+        return s;
     }
 
     protected static Map<String, String> prepareAuthenticationHttpHeader(
